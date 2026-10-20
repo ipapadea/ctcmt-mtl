@@ -1,0 +1,23 @@
+# S5 / E20 --- conflict-aware dynamic auxiliary weighting.
+#
+# The cheapest alternative to explicit gradient surgery: keep one joint update
+# but scale the whole auxiliary objective by how much it currently agrees with
+# detection,
+#
+#     gamma_t = max(0, cos(g_det, g_aux))
+#     L       = L_det + gamma_t * L_aux
+#
+# gamma_t is a detached scalar, so this is exactly a loss reweighting and it
+# scales the auxiliary gradient on the segmentation head too -- unlike E16/E18,
+# which touch shared parameters only. Deliberately un-tuned: one bounded
+# mapping, no thresholds, so the screening isolates the mechanism.
+#
+# ONE factor vs E13a: CTCMT_CONFLICT_MODE.
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_CONFLICT_MODE: "dyn_weight"
+  CTCMT_GRAD_DIAG: True
+  CTCMT_GRAD_DIAG_EVERY: 50
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e20_dynweight"

@@ -1,0 +1,9 @@
+# AMROD baseline on Cityscapes-C, evaluated on the SAME Panoptic-FPN MTL source
+# checkpoint used by CTCMT_MTL (same-source comparison for AMROD Table 2/3).
+_BASE_: "./amrod_pfn_R_50_ACDC.yaml"
+
+DATASETS:
+  TRAIN: ("cityscapes_fine_instance_seg_train",)
+  TEST: ("defocus_blur","glass_blur","motion_blur","zoom_blur","snow","frost","fog","brightness","contrast","elastic_transform","pixelate","jpeg_compression")
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/amrod_pfnsrc_cs_c"

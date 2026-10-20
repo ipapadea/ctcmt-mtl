@@ -1,0 +1,92 @@
+# ST-S --- true semantic specialist under our semantic CTTA.
+#
+# SPECIALIST / SOURCE-MODEL STUDY. Changes the source checkpoint, so it is NOT
+# same-source with E13a/E15/E21 and must never appear in the main ablation
+# table. What it isolates versus E21 is the source model + architecture:
+#   E21  = seg-only adaptation on the Panoptic-FPN MTL checkpoint
+#   ST-S = seg-only adaptation on a Semantic FPN R50 specialist checkpoint
+#
+# The question: E21's mIoU peaks at round 4 (29.2) and decays to 26.7, i.e. the
+# segmentation self-distillation collapses even with no detection branch. If a
+# dedicated Semantic FPN collapses the same way, the instability belongs to the
+# objective and is architecture-independent. If it stays flat, the MTL trunk is
+# implicated instead.
+#
+# Every SOLVER value is copied verbatim from E21's resolved config. No CTCMT_Seg
+# meta-arch, no prototype loss, no extra machinery -- CTCMT_MTL with
+# CTCMT_SEG_ONLY, exactly as E21 ran it. Verified by
+# scripts/verify_specialist_configs.py.
+_BASE_: "./semantic_R_50_FPN_singletask.yaml"
+
+MODEL:
+  META_ARCHITECTURE: "CTCMT_MTL"
+  CTCMT_STUDENT_META_ARCH: "SemanticSegmentor"
+  WEIGHTS: "/workspace/output/semantic_R50_cityscapes/model_final.pth"
+  MASK_ON: False
+
+DATASETS:
+  TRAIN: ("cityscapes_fine_sem_seg_train",)
+  # Semantic-only dataset names: a SemanticSegmentor emits no detections, so the
+  # MTL variants would attach a COCO evaluator with nothing to evaluate.
+  TEST: ("fog_semseg", "motion_blur_semseg", "snow_semseg", "brightness_semseg", "defocus_blur_semseg")
+
+SOLVER:
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.001
+  WEIGHT_DECAY: 0.0001
+  STEPS: (50000,)
+  MAX_ITER: 70000
+  WARMUP_ITERS: 0
+
+  # --- mean teacher + restoration
+  MT: 0.9998
+  RST_M: 0.01
+  CTCMT_CROSS_TASK_FISHER: True
+  CTCMT_BACKBONE_RST_FACTOR: 0.1
+  CTCMT_FISHER_RESTORE: False
+
+  # --- dynamic thresholds / score gate (inert under SEG_ONLY, kept for parity)
+  THRESHOLD_INIT: 0.80
+  THRESHOLD_MAX: 0.80
+  THRESHOLD_MINI: 0.7
+  ALPHA_DT: 1.3
+  GAMMA_DT: 0.95
+  SCORE_EM: 0.5
+  SCORE_GAMMA: 0.7
+  SCORE_THRESH: 1.4
+
+  # --- loss weights (cross-task terms are inert under SEG_ONLY)
+  CTCMT_WEIGHT_DET: 1.0
+  CTCMT_WEIGHT_SEG: 1.0
+  CTCMT_WEIGHT_CTCL: 0.5
+  CTCMT_WEIGHT_CTCR: 0.3
+  CTCMT_CTCR_MODE: "soft_seg_global"
+  CTCMT_CTCR_WEIGHT_FLOOR: 0.2
+  CTCMT_CTCR_MASK_THRESH: 0.3
+  CTCMT_CTCL_ENABLED: True
+  CTCMT_CTCL_SEG_VIEW: True
+  CTCMT_CTCL_TEMPERATURE: 0.07
+  CTCMT_CTCL_PROJ_DIM: 128
+
+  # --- the segmentation recipe that is actually active here
+  CTCMT_CLASS_BALANCED_CE: True
+  CTCMT_CLASS_BALANCE_BETA: 0.5
+  CTCMT_CLASS_MARGINAL_EMA: 0.999
+  CTCMT_SEG_LOSS_SCALE_PRESERVE: True
+  CTCMT_ANCHOR_MARGINAL_WEIGHT: 0.1
+  CTCMT_SEG_AUG_ENABLED: True
+  CTCMT_SEG_AUG_CONF_THRESH: 0.95
+  CTCMT_SEG_AUG_SCALES: (0.75, 1.0, 1.25)
+  CTCMT_SEG_AUG_FLIPS: (False, True)
+
+  # --- student sees the strong view, teacher the weak one
+  CTCMT_STRONG_AUG_STUDENT: True
+
+  # --- single-task switches
+  CTCMT_DET_ONLY: False
+  CTCMT_SEG_ONLY: True
+  CTCMT_CTPV_ENABLED: False
+  CTCMT_PROTO_ANCHOR: False
+  CTCMT_CONFLICT_MODE: "none"
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/sts_semfpn"

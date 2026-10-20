@@ -1,0 +1,9 @@
+# AMROD + V2: backbone-protected Fisher restore.
+# Common source: Mask R-CNN R-50 FPN (same as plain AMROD run).
+_BASE_: "./amrod_mask_rcnn_R_50_ACDC.yaml"
+
+SOLVER:
+  # V2: backbone/FPN params restored 10x less frequently than head params.
+  CTCMT_BACKBONE_RST_FACTOR: 0.1
+
+OUTPUT_DIR: "/workspace/output/amrod_v2_mask_rcnn_R50_C2ACDC"

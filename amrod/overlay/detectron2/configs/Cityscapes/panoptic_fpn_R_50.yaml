@@ -1,0 +1,50 @@
+_BASE_: "../COCO-PanopticSegmentation/Base-Panoptic-FPN.yaml"
+MODEL:
+  # ResNet-50 + FPN backbone, initialized from Mask R-CNN COCO 3x pretrained
+  # for a strong starting point (same init that Cityscapes/mask_rcnn_R_50_FPN.yaml uses).
+  WEIGHTS: "detectron2://COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x/137849600/model_final_f10217.pkl"
+  # Standard Panoptic FPN: box + mask + sem_seg. For the MTL baseline we only
+  # report bbox AP + mIoU (mask AP and PQ are extra freebies).
+  MASK_ON: True
+  RESNETS:
+    DEPTH: 50
+  ROI_HEADS:
+    NUM_CLASSES: 8
+  SEM_SEG_HEAD:
+    NUM_CLASSES: 19
+    IGNORE_VALUE: 255
+    LOSS_WEIGHT: 0.5
+
+INPUT:
+  # Standard Cityscapes AMROD/Detectron2 multi-scale short-side sampling.
+  MIN_SIZE_TRAIN: (800, 832, 864, 896, 928, 960, 992, 1024)
+  MIN_SIZE_TRAIN_SAMPLING: "choice"
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TRAIN: 2048
+  MAX_SIZE_TEST: 2048
+
+DATASETS:
+  # Custom merged dataset: instance annotations (bbox + polygon masks) from
+  # cityscapes_fine_instance_seg_* PLUS sem_seg_file_name from cityscapes_fine_sem_seg_*.
+  # Registered in detectron2/data/datasets/builtin.py.
+  TRAIN: ("cityscapes_fine_mtl_train",)
+  TEST: ("cityscapes_fine_mtl_val",)
+
+DATALOADER:
+  FILTER_EMPTY_ANNOTATIONS: False
+  NUM_WORKERS: 4
+
+SOLVER:
+  # Original Cityscapes MaskRCNN uses IMS_PER_BATCH=8, BASE_LR=0.01, MAX_ITER=24000.
+  # Single-GPU here: batch=4 -> half LR, 2x iters (linear scaling rule).
+  IMS_PER_BATCH: 4
+  BASE_LR: 0.005
+  STEPS: (36000,)
+  MAX_ITER: 48000
+  CHECKPOINT_PERIOD: 4000
+  WARMUP_ITERS: 1000
+
+TEST:
+  EVAL_PERIOD: 4000
+
+OUTPUT_DIR: "/workspace/output/panoptic_fpn_R50_cityscapes"

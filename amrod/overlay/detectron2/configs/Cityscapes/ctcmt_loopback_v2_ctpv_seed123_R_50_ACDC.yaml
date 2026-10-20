@@ -1,0 +1,4 @@
+# loopback_v2_ctpv seed 123.
+_BASE_: "./ctcmt_loopback_v2_ctpv_R_50_ACDC.yaml"
+SEED: 123
+OUTPUT_DIR: "/workspace/output/ctcmt_loopback_v2_ctpv_seed123"

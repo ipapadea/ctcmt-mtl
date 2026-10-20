@@ -1,0 +1,22 @@
+# S4 / E19 --- frozen shared trunk, task-specific adaptation only.
+#
+# Structural parameter isolation instead of gradient-level arbitration: if the
+# two tasks never write to the same tensor, shared-trunk negative transfer is
+# impossible by construction. The ResNet bottom-up stack and the FPN necks
+# (everything under `backbone.`) are frozen before the optimizer is built, so
+# they enter no param group; proposal_generator / roi_heads / sem_seg_head keep
+# adapting under exactly the E13a losses.
+#
+# Simplest meaningful version first -- no adapters, no architectural redesign.
+# The question is whether detection recovers toward the E15 ceiling (26.80)
+# while segmentation keeps the full-MTL benefit. If frozen features are too
+# restrictive for BOTH tasks, that itself answers the question and motivates
+# low-rank residual adapters as the next step.
+#
+# ONE factor vs E13a: CTCMT_FREEZE_SHARED_TRUNK.
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_FREEZE_SHARED_TRUNK: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e19_frozentrunk"

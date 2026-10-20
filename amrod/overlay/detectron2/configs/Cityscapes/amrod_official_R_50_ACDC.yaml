@@ -1,0 +1,9 @@
+# AMROD with the OFFICIAL pre-trained source weights (cityscapes_train_final.pth).
+# Use this to replicate the AMROD paper's ACDC numbers exactly.
+# Normal amrod track uses our own Mask R-CNN trained from COCO.
+_BASE_: "./amrod_mask_rcnn_R_50_ACDC.yaml"
+
+MODEL:
+  WEIGHTS: "/workspace/weights/cityscapes_train_final.pth"
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/amrod_official"

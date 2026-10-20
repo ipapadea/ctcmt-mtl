@@ -1,0 +1,17 @@
+# E12 — DIAGNOSTIC ONLY. Not a paper row.
+#
+# E10 (strong aug + class balance + anchor marginal) with AMROD's gradient-
+# magnitude "Randomized Restoration" (Wei et al.) substituted for our uniform
+# random restore.
+#
+# Purpose: our Cityscapes-C curve peaks at round 6 and declines (24.83 at R10)
+# while AMROD climbs monotonically to 30.78 on the same checkpoint. This tests
+# whether that divergence is caused by the restoration rule. If it is, we design
+# our own multi-task answer (conflict-driven restoration); if not, we look
+# elsewhere. The result must never be reported as one of our contributions.
+_BASE_: "./ctcmt_e10_both_scaled.yaml"
+
+SOLVER:
+  CTCMT_FISHER_RESTORE: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e12_bothsc_fisherdiag"

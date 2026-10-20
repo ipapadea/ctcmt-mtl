@@ -1,0 +1,7 @@
+_BASE_: "./newsrc_acdc_base.yaml"
+
+SOLVER:
+  CTCMT_CTCL_ENABLED: True
+  CTCMT_WEIGHT_CTCL: 0.5
+  CTCMT_WEIGHT_CTCR: 0.0
+  CTCMT_CTPV_ENABLED: False

@@ -1,0 +1,8 @@
+# CTCMT_Seg without prototype anchor: V2 only.
+# Ablation: does proto hurt fog? If no proto > proto on fog, proto is responsible.
+_BASE_: "./ctcmt_seg_semfpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_PROTO_WEIGHT: 0.0
+
+OUTPUT_DIR: "/workspace/output/ctcmt_seg_sf_no_proto_R50_C2ACDC"

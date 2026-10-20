@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Smoke test for the new CTCMT_Det MR-CNN configs (Table 1 row).
+# Fog-only, streams output live, tees to /tmp for reference.
+set -euo pipefail
+GPU=${1:-0}
+
+CONFIGS=(
+  "detectron2/configs/Cityscapes/ctcmt_det_mr_seed0_R_50_ACDC.yaml"
+)
+
+for CFG in "${CONFIGS[@]}"; do
+  NAME="$(basename "${CFG}" .yaml)"
+  OUT="/workspace/output/smoke_${NAME}"
+  LOG="/tmp/smoke_${NAME}.log"
+  echo "=== SMOKE: ${NAME} (streaming; also tee -> ${LOG}) ==="
+  docker run --rm --gpus "\"device=${GPU}\"" --shm-size=8g \
+    --user "$(id -u):$(id -g)" \
+    -v /home/ilias/AMROD:/workspace/amrod \
+    -v /data/vgcmt/datasets/cityscapes:/data/vgcmt/datasets/cityscapes:ro \
+    -v /data/ilias/cityscapes_pfn:/datasets/cityscapes:ro \
+    -v /data/ilias/panoptic_fpn/output/coco_annotations:/datasets/annotations:ro \
+    -v /data/ilias/acdc:/datasets/ACDC:ro \
+    -v /data/vgcmt/datasets/cityscapes_foggy:/datasets/cityscapes_foggy:ro \
+    -v /data/ilias/panoptic_fpn/output:/workspace/output \
+    -w /workspace/amrod \
+    -e DETECTRON2_DATASETS=/datasets \
+    -e PYTHONPATH=/workspace/amrod/detectron2 \
+    amrod:latest bash -c "
+      export HOME=/tmp
+      pip install --quiet --user --no-warn-script-location shapely
+      timeout 300 python -u detectron2/tools/train_net.py \
+        --config-file ${CFG} \
+        --eval-only --num-gpus 1 \
+        DATASETS.TEST '(\"acdc_fog\",)' \
+        OUTPUT_DIR ${OUT}
+    " 2>&1 | tee "${LOG}" || { echo "SMOKE_FAIL: ${NAME}"; exit 1; }
+  echo "=== SMOKE OK: ${NAME} ==="
+done
+
+echo "ALL SMOKE TESTS PASSED"

@@ -1,0 +1,10 @@
+[batch] stage=final gpu=0 repo=<repo> out=<out> ckpt_md5=a0112af8b39ad763d59043f4d264a9ea
+[batch] 2026-10-19T10:36:19+03:00 start ctcmt_acdc4_lr3e-5_clip1000_s0 (frames=1600)
+[batch] 2026-10-19T10:58:47+03:00 end   ctcmt_acdc4_lr3e-5_clip1000_s0: [MEAN over 4 domains] AP=0.3245 AP50=0.4988 [SEGMEAN over 4 domains] mIoU=0.4605 
+[batch] 2026-10-19T10:58:47+03:00 start ctcmt_csc12_lr3e-5_clip1000_s0 (frames=6000)
+[batch] 2026-10-19T12:17:18+03:00 end   ctcmt_csc12_lr3e-5_clip1000_s0: [MEAN over 12 domains] AP=0.1765 AP50=0.2710 [SEGMEAN over 12 domains] mIoU=0.3830 
+[batch] 2026-10-19T12:17:18+03:00 start ctcmt_acdcLT_lr3e-5_clip1000_s0 (frames=16000)
+[batch] 2026-10-19T15:56:52+03:00 end   ctcmt_acdcLT_lr3e-5_clip1000_s0: [MEAN over 40 domains] AP=0.3127 AP50=0.4646 [SEGMEAN over 40 domains] mIoU=0.4820 
+[batch] 2026-10-19T15:56:52+03:00 start ctcmt_cscLT_lr3e-5_clip1000_s0 (frames=25000)
+[batch] 2026-10-19T21:23:52+03:00 end   ctcmt_cscLT_lr3e-5_clip1000_s0: [MEAN over 50 domains] AP=0.2065 AP50=0.3107 [SEGMEAN over 50 domains] mIoU=0.4600 
+[batch] 2026-10-19T21:23:52+03:00 queue gpu0 done

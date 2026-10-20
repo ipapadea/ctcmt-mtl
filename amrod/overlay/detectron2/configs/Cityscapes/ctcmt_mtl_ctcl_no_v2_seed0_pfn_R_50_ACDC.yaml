@@ -1,0 +1,4 @@
+# Table 4 ablation: CT-CL, no V2. Seed 0 for variance estimation.
+_BASE_: "./ctcmt_mtl_ctcl_no_v2_pfn_R_50_ACDC.yaml"
+SEED: 0
+OUTPUT_DIR: "/workspace/output/ctcmt_mtl_ctcl_no_v2_seed0"

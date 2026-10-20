@@ -1,0 +1,11 @@
+# aug-avg + stronger proto (weight=0.5): more aggressive pull counters aug drift.
+_BASE_: "./ctcmt_seg_semfpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_SEG_AUG_ENABLED: True
+  CTCMT_SEG_AUG_CONF_THRESH: 0.95
+  CTCMT_SEG_AUG_SCALES: (0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0)
+  CTCMT_SEG_AUG_FLIPS: (False, True)
+  CTCMT_PROTO_WEIGHT: 0.5
+
+OUTPUT_DIR: "/workspace/output/ctcmt_seg_sf_aug_sp_R50_C2ACDC"

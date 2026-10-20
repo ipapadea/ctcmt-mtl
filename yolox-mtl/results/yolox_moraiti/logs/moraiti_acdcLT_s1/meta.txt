@@ -1,0 +1,6 @@
+config=configs/continuous/mean_teacher_adapter_yolox/moraiti_acdcLT.py
+checkpoint=<checkpoint dir>/yolox_x_8xb4-24e_cityscapes.pth
+checkpoint_md5=f79e0f1f6cbc56513756ddd1d1dfaeb0
+repo_copy=
+start=2026-10-17T22:04:30+03:00
+end=2026-10-18T02:30:50+03:00

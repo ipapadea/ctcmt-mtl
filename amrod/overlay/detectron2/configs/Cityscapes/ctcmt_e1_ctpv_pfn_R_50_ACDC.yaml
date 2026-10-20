@@ -1,0 +1,8 @@
+# CTPV — cross-task pseudo-label verification (seg head vetoes disagreeing det boxes).
+_BASE_: "./ctcmt_v2_cross_fisher_pfn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_CTPV_ENABLED: True
+  CTCMT_CTPV_THRESH: 0.3
+
+OUTPUT_DIR: "/workspace/output/ctcmt_e1_ctpv"

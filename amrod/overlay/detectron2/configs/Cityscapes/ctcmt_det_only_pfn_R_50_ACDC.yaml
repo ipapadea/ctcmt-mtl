@@ -1,0 +1,19 @@
+# Single-task DETECTION adapter on the PFN MTL source.
+# Fair-source reference for CTCMT_MTL: same start weights, same meta-arch code,
+# same continual ACDC loop, but only the det branch (dyn-threshold pseudo-labels
+# + Faster-RCNN losses) is active. No sem_seg loss, no CT-CL, no CT-CR.
+_BASE_: "./ctcmt_mtl_panoptic_fpn_R_50_ACDC.yaml"
+MODEL:
+  META_ARCHITECTURE: "CTCMT_MTL"
+
+SOLVER:
+  CTCMT_DET_ONLY: True
+  CTCMT_SEG_ONLY: False
+  CTCMT_CTCL_ENABLED: False
+  CTCMT_WEIGHT_CTCR: 0.0
+  CTCMT_SEG_AUG_ENABLED: False
+  # Disable AMROD's score-EM gate: for a pure det-only run the seg branch
+  # is off, so we need every image to backprop through the det losses.
+  CTCMT_SKIP_SCORE_EM_GATE: True
+
+OUTPUT_DIR: "/workspace/output/ctcmt_det_only_pfn_R50_C2ACDC"

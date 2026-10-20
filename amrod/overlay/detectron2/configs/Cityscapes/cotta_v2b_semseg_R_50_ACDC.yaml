@@ -1,0 +1,12 @@
+# CoTTA + properly tuned V2: seg head restored aggressively, backbone protected.
+# Higher base restore (0.05) means the head gets pushed back toward source more
+# often (prevents overfitting to pseudo-labels in easy domains), while the
+# backbone restore (0.005 effective = 0.05 × 0.1) preserves cross-domain
+# features accumulated across weathers.
+_BASE_: "./cotta_semseg_R_50_ACDC.yaml"
+
+SOLVER:
+  COTTA_RESTORE_PROB: 0.05
+  CTCMT_BACKBONE_RST_FACTOR: 0.1
+
+OUTPUT_DIR: "/workspace/output/cotta_v2b_semseg_R50_C2ACDC"

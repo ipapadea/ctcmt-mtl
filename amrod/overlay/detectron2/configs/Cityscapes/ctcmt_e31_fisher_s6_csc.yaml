@@ -1,0 +1,25 @@
+# E31 --- DIAGNOSTIC ONLY. Not a paper row.
+#
+# S6 (seg-head-only gradient routing, E22) + AMROD's Randomized Restoration.
+# ONE factor from E22.
+#
+# Why: the two failures we measured have different causes. Detection loses
+# because segmentation gradients contaminate the shared trunk, which routing
+# fixes (S6 reaches 26.76 vs the 26.93 det-only ceiling). Segmentation collapses
+# because self-distillation is intrinsically unstable -- ST-S reproduces the
+# collapse on a dedicated Semantic FPN with no detector at all -- and routing
+# does nothing for it (S6 gives up 1.10 mIoU vs E15, and 2.2 on ACDC).
+# If restoration is the segmentation-side fix, this arm should hold both.
+#
+# It also isolates the cross term. Under aux_head_only with lambda = 0 the
+# shared-parameter gradient is just g_det, so Fisher there measures pure
+# detection importance with no (g_det . g_seg) contribution -- unlike E30.
+# E30 vs E31 therefore separates "importance" from "conflict".
+#
+# The restoration rule is AMROD's and must never be reported as ours.
+_BASE_: "./ctcmt_e22_seghead_only.yaml"
+
+SOLVER:
+  CTCMT_FISHER_RESTORE: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e31_fisher_s6_csc"

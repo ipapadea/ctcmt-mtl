@@ -1,0 +1,9 @@
+_BASE_: "./newsrc_acdc_base.yaml"
+
+SOLVER:
+  CTCMT_CTCL_ENABLED: False
+  CTCMT_WEIGHT_CTCL: 0.0
+  CTCMT_WEIGHT_CTCR: 0.3
+  CTCMT_CTCR_MODE: "soft_seg_global"
+  CTCMT_CTCR_WEIGHT_FLOOR: 0.2
+  CTCMT_CTPV_ENABLED: False

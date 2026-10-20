@@ -1,0 +1,12 @@
+[batch] stage=final gpu=0 repo=<repo> out=<out> ckpt_md5=a0112af8b39ad763d59043f4d264a9ea
+[batch] 2026-10-18T13:11:48+03:00 start ctcmt_acdc4_lr3e-5_s0 (frames=1600)
+[batch] 2026-10-18T13:34:14+03:00 end   ctcmt_acdc4_lr3e-5_s0: [MEAN over 4 domains] AP=0.3240 AP50=0.4972 [SEGMEAN over 4 domains] mIoU=0.4596 
+[batch] 2026-10-18T13:34:14+03:00 start ctcmt_csc12_lr3e-5_s0 (frames=6000)
+[batch] FAILED ctcmt_csc12_lr3e-5_s0
+[batch] 2026-10-18T14:49:32+03:00 end   ctcmt_csc12_lr3e-5_s0: 
+[batch] 2026-10-18T14:49:32+03:00 start ctcmt_acdcLT_lr3e-5_s0 (frames=16000)
+[batch] 2026-10-18T18:29:03+03:00 end   ctcmt_acdcLT_lr3e-5_s0: [MEAN over 40 domains] AP=0.3197 AP50=0.4765 [SEGMEAN over 40 domains] mIoU=0.4767 
+[batch] 2026-10-18T18:29:03+03:00 start ctcmt_cscLT_lr3e-5_s0 (frames=25000)
+[batch] FAILED ctcmt_cscLT_lr3e-5_s0
+[batch] 2026-10-18T23:50:50+03:00 end   ctcmt_cscLT_lr3e-5_s0: 
+[batch] 2026-10-18T23:50:50+03:00 queue gpu0 done

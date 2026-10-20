@@ -1,0 +1,9 @@
+# Table 4 ablation: MTL with full CT-CL+CR but no V2.
+# Shows V2 contribution on top of the full CT-CMT method.
+_BASE_: "./ctcmt_mtl_panoptic_fpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_CROSS_TASK_FISHER: False
+  CTCMT_BACKBONE_RST_FACTOR: 1.0
+
+OUTPUT_DIR: "/workspace/output/ctcmt_mtl_ctcl_no_v2_pfn_R50_C2ACDC"

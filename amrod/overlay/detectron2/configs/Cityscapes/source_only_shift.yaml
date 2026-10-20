@@ -1,0 +1,25 @@
+# Source-only baseline: SHIFT source model evaluated without any adaptation.
+# Faster R-CNN R-50 FPN, 6 classes (pedestrian/car/truck/bus/motorcycle/bicycle).
+_BASE_: "./mask_rcnn_R_50_FPN_singletask.yaml"
+
+MODEL:
+  META_ARCHITECTURE: "GeneralizedRCNN"
+  WEIGHTS: "/workspace/weights/shift_train_final.pth"
+  MASK_ON: False
+  RESNETS:
+    NORM: "FrozenBN"
+  ROI_HEADS:
+    NUM_CLASSES: 6
+
+INPUT:
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 2048
+
+DATASETS:
+  TRAIN: ("shift_train",)
+  TEST: ("shift_cloudy", "shift_overcast", "shift_rainy", "shift_foggy")
+
+DATALOADER:
+  NUM_WORKERS: 4
+
+OUTPUT_DIR: "/workspace/output/source_only_shift"

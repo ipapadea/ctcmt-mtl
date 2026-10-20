@@ -1,0 +1,17 @@
+# E15 — fourth cell of the plateau 2x2: seg branch OFF + lowered threshold.
+#
+#              | seg on          | seg off
+#   thr 0.9    | e11  23.69      | e14
+#   thr 0.8    | e13a 24.80      | e15  (this)
+#
+# e13a showed that +37% more pseudo-labels bought only +0.2 AP50 while the seg
+# branch was active. If the shared trunk is saturated by segmentation gradients,
+# the same extra supervision should become usable once the seg branch is off --
+# i.e. e15 should exceed e14 by more than e13a exceeded e11. Only this cell can
+# separate that interaction from two independent main effects.
+_BASE_: "./ctcmt_e14_detonly.yaml"
+
+SOLVER:
+  THRESHOLD_MAX: 0.80
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e15_detonly_thr080"

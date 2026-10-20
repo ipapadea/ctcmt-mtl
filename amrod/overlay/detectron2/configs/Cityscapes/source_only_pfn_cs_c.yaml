@@ -1,0 +1,25 @@
+# Source-only (no adaptation) evaluation of the Panoptic-FPN MTL checkpoint on
+# Cityscapes-C, in AMROD's Table-2 corruption order.
+#
+# Fills the "Source" row for BOTH Cityscapes-C tables at once:
+#   - Table 2 (short-term): all 12 corruptions, each seen once
+#   - Table 3 (long-term):  fog / motion_blur / snow / brightness / defocus_blur
+#     are a subset of these 12, and a frozen model does not drift, so round 10
+#     equals round 1.
+_BASE_: "./panoptic_fpn_R_50.yaml"
+
+MODEL:
+  META_ARCHITECTURE: "PanopticFPN"
+  WEIGHTS: "/workspace/output/panoptic_fpn_R50_cityscapes/model_final.pth"
+  MASK_ON: True
+
+INPUT:
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 2048
+
+DATASETS:
+  TEST: ("defocus_blur_mtl", "glass_blur_mtl", "motion_blur_mtl", "zoom_blur_mtl",
+         "snow_mtl", "frost_mtl", "fog_mtl", "brightness_mtl", "contrast_mtl",
+         "elastic_transform_mtl", "pixelate_mtl", "jpeg_compression_mtl")
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/source_only_pfn_cs_c"

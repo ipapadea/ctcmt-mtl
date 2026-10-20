@@ -1,0 +1,9 @@
+# E4b = directional gate with smaller CT-CL boost (1.5 instead of 2.0).
+_BASE_: "./ctcmt_v2_cross_fisher_pfn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_DIRECTIONAL_GATE: True
+  CTCMT_DIR_GATE_STABLE_BAND: 0.4
+  CTCMT_DIR_GATE_BOOST: 1.5
+
+OUTPUT_DIR: "/workspace/output/ctcmt_e4b_dir_gate_boost15"

@@ -1,0 +1,7 @@
+# CT-CMT-MTL v4b on Foggy Cityscapes — matches the best ACDC config.
+_BASE_: "./ctcmt_v4b_proto_pfn_R_50_ACDC.yaml"
+
+DATASETS:
+  TEST: ("foggy_cityscapes_val_mtl",)
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/ctcmt_v4b_foggy_mtl"

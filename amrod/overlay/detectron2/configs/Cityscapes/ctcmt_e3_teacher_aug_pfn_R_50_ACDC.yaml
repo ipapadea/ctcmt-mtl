@@ -1,0 +1,11 @@
+# Aug-avg triggered on TEACHER entropy, not frozen-anchor confidence.
+_BASE_: "./ctcmt_v2_cross_fisher_pfn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_AUG_TRIGGER_TEACHER_ENTROPY: True
+  CTCMT_AUG_TEACHER_ENTROPY_THRESH: 0.3
+  CTCMT_SEG_AUG_ENABLED: True
+  CTCMT_SEG_AUG_SCALES: (0.75, 1.0, 1.25)
+  CTCMT_SEG_AUG_FLIPS: (False, True)
+
+OUTPUT_DIR: "/workspace/output/ctcmt_e3_teacher_aug"

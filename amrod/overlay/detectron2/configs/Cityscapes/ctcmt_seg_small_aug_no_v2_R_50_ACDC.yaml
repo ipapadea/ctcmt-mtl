@@ -1,0 +1,8 @@
+# Table 2 ablation: small_aug + proto, NO V2 (backbone_rst_factor=1.0).
+# Shows V2 contribution on top of aug+proto.
+_BASE_: "./ctcmt_seg_sf_small_aug_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_BACKBONE_RST_FACTOR: 1.0
+
+OUTPUT_DIR: "/workspace/output/ctcmt_seg_small_aug_no_v2_R50_C2ACDC"

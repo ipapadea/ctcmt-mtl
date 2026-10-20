@@ -1,0 +1,4 @@
+# loopback_det_mr seed 42.
+_BASE_: "./ctcmt_loopback_det_mr_R_50_ACDC.yaml"
+SEED: 42
+OUTPUT_DIR: "/workspace/output/ctcmt_loopback_det_mr_seed42"

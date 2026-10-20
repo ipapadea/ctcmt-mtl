@@ -1,0 +1,5 @@
+# AMROD on Foggy Cityscapes (second benchmark for Table 1, baseline).
+_BASE_: "../Cityscapes/amrod_mask_rcnn_R_50_ACDC.yaml"
+DATASETS:
+  TEST: ("foggy_cityscapes_val",)
+OUTPUT_DIR: "/workspace/output/amrod_foggy_cs"

@@ -1,0 +1,11 @@
+# AMROD on Cityscapes-to-Cityscapes-C (Table 2 replica with our source model).
+_BASE_: "./amrod_mask_rcnn_R_50_ACDC.yaml"
+
+MODEL:
+  WEIGHTS: "/workspace/output/mask_rcnn_R50_cityscapes/model_final.pth"
+
+DATASETS:
+  TRAIN: ("cityscapes_fine_instance_seg_train",)
+  TEST: ("defocus_blur","glass_blur","motion_blur","zoom_blur","snow","frost","fog","brightness","contrast","elastic_transform","pixelate","jpeg_compression")
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/amrod_cs_c"

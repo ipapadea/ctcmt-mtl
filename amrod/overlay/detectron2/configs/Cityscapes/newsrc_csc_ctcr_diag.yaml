@@ -1,0 +1,11 @@
+_BASE_: "./newsrc_csc_ctcr.yaml"
+
+SOLVER:
+  # Keep the canonical full-sharing CT-CR behavior.
+  CTCMT_CONFLICT_MODE: "none"
+
+  # Diagnostic gradient decomposition only.
+  CTCMT_GRAD_DIAG: True
+  CTCMT_GRAD_DIAG_EVERY: 10
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/diag_newsrc_ctcr_cscLT_s0"

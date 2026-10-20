@@ -1,0 +1,1205 @@
+diff --git a/detectron2/detectron2/config/defaults.py b/detectron2/detectron2/config/defaults.py
+index 522cfcf..f8bef84 100644
+--- a/detectron2/detectron2/config/defaults.py
++++ b/detectron2/detectron2/config/defaults.py
+@@ -31,6 +31,10 @@ _C.MODEL.MASK_ON = False
+ _C.MODEL.KEYPOINT_ON = False
+ _C.MODEL.DEVICE = "cuda"
+ _C.MODEL.META_ARCHITECTURE = "GeneralizedRCNN"
++# CTCMT_MTL wraps a "student" of this meta-arch. Defaults to PanopticFPN for
++# MTL / seg-only / det-only-on-PFN configs; set to "GeneralizedRCNN" for
++# det-only on a Mask R-CNN source (single-task CTCMT_Det).
++_C.MODEL.CTCMT_STUDENT_META_ARCH = "PanopticFPN"
+ 
+ # Path (a file path, or URL like detectron2://.., https://..) to a checkpoint file
+ # to be loaded to the model. You can find available models in the model zoo.
+@@ -534,6 +538,241 @@ _C.SOLVER.SCORE_EM = 0.5
+ _C.SOLVER.SCORE_GAMMA = 0.9
+ _C.SOLVER.SCORE_THRESH = 1.4
+ 
++# TT-BBR (Test-Time Bounding Box Refinement) -- added 2026-07-28.
++# Second-pass RoI regression on teacher boxes; IoU-consistency filter.
++# Motivated by ViTPrompt (CVPR 2026) which shows box quality degrades
++# under corruption but is untouched by all prior CTTA-OD methods.
++_C.SOLVER.TTBBR_ENABLED = False
++# IoU(B_init, B_refined) >= threshold => refinement accepted;
++# below => keep original box or drop entirely (see TTBBR_DROP).
++_C.SOLVER.TTBBR_IOU_THRESH = 0.7
++# If True, drop proposals where refinement is inconsistent (stronger filter).
++# If False, keep the original box for those (safer).
++_C.SOLVER.TTBBR_DROP_INCONSISTENT = False
++
++# XAI-guided pseudo-label filter (Option 1) -- added 2026-07-28.
++# Drops teacher boxes whose evidence is spatially diffuse (low concentration).
++# Applied AFTER TT-BBR (if enabled) so it filters the refined-box set.
++_C.SOLVER.XAI_FILTER_ENABLED = False
++# Attribution technique used to score each box's evidence concentration.
++#   "eigencam"  : 1st principal component of RoI features (Muhammad & Yeasin 2020)
++#   "featnorm"  : L2 norm of channel activations per spatial location
++#   "gradcam"   : gradient of predicted-class logit x activation (Selvaraju ICCV'17)
++_C.SOLVER.XAI_METHOD = "eigencam"
++# Boxes with concentration < XAI_THRESHOLD are dropped (or down-weighted).
++# concentration = 1 - normalized_entropy(spatial_map), in [0, 1].
++# NOTE: measured range on FR-CNN 7x7 pooled features + Cityscapes-C is
++# ~[0.02, 0.15]; use small values here (<= 0.05 for a light filter).
++_C.SOLVER.XAI_THRESHOLD = 0.02
++# "drop"     : discard low-concentration boxes entirely.
++# "reweight" : multiply their scores by concentration (rank-preserving soft filter).
++_C.SOLVER.XAI_MODE = "drop"
++
++# ---- CoTTA (Wang et al. CVPR 2022) for SemanticSegmentor.
++_C.SOLVER.COTTA_EMA_DECAY = 0.999
++_C.SOLVER.COTTA_RESTORE_PROB = 0.01
++_C.SOLVER.COTTA_CONF_THRESH = 0.72
++_C.SOLVER.COTTA_AUG_SCALES = (0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0)
++_C.SOLVER.COTTA_AUG_FLIPS = (False, True)
++# ---- OBAO segmentation (Gong et al. ECCV 2024).
++_C.SOLVER.OBAO_LR = 0.0001
++_C.SOLVER.OBAO_EMA_DECAY = 0.999
++_C.SOLVER.OBAO_RESTORE_PROB = 0.01
++_C.SOLVER.OBAO_ANCHOR_CONFIDENCE = 0.69
++_C.SOLVER.OBAO_MARGIN = 0.02
++_C.SOLVER.OBAO_PCE_WEIGHT = 1.0
++_C.SOLVER.OBAO_TOPOLOGY_WEIGHT = 0.01
++_C.SOLVER.OBAO_AUG_SCALES = (0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0)
++_C.SOLVER.OBAO_AUG_FLIPS = (False, True)
++# ---- DAT-BF (Ni et al., arXiv:2309.13604; same-source Panoptic-FPN port, boundary-free).
++# Locked protocol values; see meta_arch/dat_pfn.py. Do not tune on target data.
++_C.SOLVER.DAT_LR = 3e-4
++_C.SOLVER.DAT_BETAS = (0.9, 0.999)
++_C.SOLVER.DAT_EPS = 1e-8
++_C.SOLVER.DAT_WEIGHT_DECAY = 0.0
++_C.SOLVER.DAT_EMA_DECAY = 0.999
++_C.SOLVER.DAT_ANCHOR_GATE = 0.69
++_C.SOLVER.DAT_DSP_THRESHOLD = 0.85
++_C.SOLVER.DAT_TRP_THRESHOLD = 0.99
++_C.SOLVER.DAT_SCORE_SCALES = (1.0, 1.25, 1.5)
++_C.SOLVER.DAT_AUG_SCALES = (0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0)
++_C.SOLVER.DAT_AUG_FLIPS = (False, True)
++_C.SOLVER.DAT_BUDGET_FRACTION = 0.10
++_C.SOLVER.DAT_K_FRACTION = 0.001
++_C.SOLVER.DAT_EXPECTED_TENSORS = 92
++_C.SOLVER.DAT_EXPECTED_ELEMENTS = 28425555
++_C.SOLVER.DAT_EXPECTED_SOURCE_MD5 = "5f63c7578cb925552fd1b9d69980937a"
++_C.SOLVER.DAT_SAVE_PREDICTIONS = True
++# Diagnostic-only structural audit (never aborts, never changes state); see DATPFN._audit.
++_C.SOLVER.DAT_AUDIT = True
++_C.SOLVER.DAT_OFFICIAL_REPO_SHA = "b8936ad1048936825f286fb62d9ac19cc97c9e0e"
++# ---- CT-CMT-MTL (Moraiti et al. 2026 extended) for PanopticFPN.
++_C.SOLVER.CTCMT_WEIGHT_DET = 1.0
++_C.SOLVER.CTCMT_WEIGHT_SEG = 1.0
++_C.SOLVER.CTCMT_WEIGHT_CTCL = 0.01
++_C.SOLVER.CTCMT_WEIGHT_CTCR = 0.0
++# CT-CR spatial supervision modes.
++# "full_box" preserves the legacy reproduction path exactly.
++# "per_box_full" is the A2 control: full bbox, but per-box normalized loss.
++# "hard_seg" keeps only teacher-semantic-supported pixels in each bbox.
++# "soft_seg" weights bbox pixels by teacher semantic probability.
++# "soft_seg_global" is the D cell: soft_seg weighting with A's global
++# target-map construction and per-pixel (not per-box) normalization.
++_C.SOLVER.CTCMT_CTCR_MODE = "full_box"
++_C.SOLVER.CTCMT_CTCR_MASK_THRESH = 0.3
++_C.SOLVER.CTCMT_CTCR_WEIGHT_FLOOR = 0.2
++_C.SOLVER.CTCMT_CTCL_ENABLED = True
++_C.SOLVER.CTCMT_CTCL_SEG_VIEW = True
++_C.SOLVER.CTCMT_CTCL_TEMPERATURE = 0.07
++_C.SOLVER.CTCMT_CTCL_ROI_OUTPUT = (7, 7)
++_C.SOLVER.CTCMT_CTCL_PROJ_DIM = 128
++# Single-task ablation switches.
++_C.SOLVER.CTCMT_DET_ONLY = False
++_C.SOLVER.CTCMT_SEG_ONLY = False
++# When True, ignore the AMROD score-EM gate so every image contributes a step.
++_C.SOLVER.CTCMT_SKIP_SCORE_EM_GATE = False
++# Evaluation protocol. False (default): report the EMA teacher's weak-view
++# prediction after this frame's update (adapt-then-predict). True: report the
++# prediction computed before the update (predict-then-adapt).
++_C.SOLVER.CTCMT_PREDICT_BEFORE_UPDATE = False
++# V1: per-task decoupled adaptation gates.
++_C.SOLVER.CTCMT_PER_TASK_GATE = False
++_C.SOLVER.CTCMT_PER_TASK_GATE_DET_THRESH = 0.8
++_C.SOLVER.CTCMT_PER_TASK_GATE_SEG_THRESH = 0.8
++# V2: task-aware (cross-task) stochastic restore.
++_C.SOLVER.CTCMT_CROSS_TASK_FISHER = False
++_C.SOLVER.CTCMT_BACKBONE_RST_FACTOR = 1.0  # V2 configs set this to 0.1
++
++# Feed the student a strong-augmented view (photometric + RandomErasing) while
++# the teacher keeps the weak view, as AMROD does. The strong view is already
++# produced by DatasetMapper as "image_strong".
++_C.SOLVER.CTCMT_STRONG_AUG_STUDENT = False
++
++# DIAGNOSTIC ONLY -- this is AMROD's "Randomized Restoration" (Wei et al.),
++# ported to measure how much of their advantage comes from restoration.
++# Must never be reported as one of our contributions.
++_C.SOLVER.CTCMT_FISHER_RESTORE = False
++
++# --- Experimental Fisher variants (paper26_fisher_*). Both default OFF. ---
++# Fisher-guided restoration: same per-tensor Binomial restore budget as the
++# random baseline, but the restored entries are the LOWEST empirical-Fisher
++# (g^2 of the final combined gradient) ones. Does not touch any gradient.
++# Independent of the AMROD-diagnostic CTCMT_FISHER_RESTORE above.
++_C.SOLVER.CTCMT_FISHER_RESTORE_ENABLED = False
++# Simple Fisher cross-task routing on shared ResNet params. DET = detection
++# gradient, AUX = seg + anchor + CT-CR gradient. On a conflicting element
++# (g_det*g_aux < 0) the task with higher (lagged, per-tensor-normalised) EMA
++# Fisher keeps full weight and the other is scaled by LAMBDA.
++# Requires CTCMT_CONFLICT_MODE == "none".
++_C.SOLVER.CTCMT_FISHER_XTASK_ENABLED = False
++_C.SOLVER.CTCMT_FISHER_XTASK_BETA = 0.99
++_C.SOLVER.CTCMT_FISHER_XTASK_WARMUP = 50      # detection-active updates
++_C.SOLVER.CTCMT_FISHER_XTASK_LAMBDA = 0.5
++_C.SOLVER.CTCMT_FISHER_XTASK_SCOPE = "resnet"       # only "resnet" implemented
++_C.SOLVER.CTCMT_FISHER_XTASK_GRANULARITY = "param"  # only "param" implemented
++
++# Class-balanced segmentation consistency: weight each pixel by the inverse
++# teacher class marginal ^ beta, countering minority-class collapse.
++_C.SOLVER.CTCMT_CLASS_BALANCED_CE = False
++_C.SOLVER.CTCMT_CLASS_BALANCE_BETA = 0.5
++_C.SOLVER.CTCMT_CLASS_MARGINAL_EMA = 0.999
++# Preserve the unweighted seg-loss magnitude when per-pixel reweighting is on,
++# so reweighting changes gradient direction only, not det/seg balance.
++_C.SOLVER.CTCMT_SEG_LOSS_SCALE_PRESERVE = False
++
++# Mode-covering KL(anchor || student) on the predicted class marginal.
++_C.SOLVER.CTCMT_ANCHOR_MARGINAL_WEIGHT = 0.0
++# V3: cross-task pseudo-label verification.
++_C.SOLVER.CTCMT_CTPV_ENABLED = False
++_C.SOLVER.CTCMT_CTPV_THRESH = 0.3
++# V4: cross-task prototype anchor.
++_C.SOLVER.CTCMT_PROTO_ANCHOR = False
++_C.SOLVER.CTCMT_PROTO_EMA = 0.999
++_C.SOLVER.CTCMT_PROTO_WEIGHT = 0.01
++# Confidence threshold for seg-only prototype update.
++_C.SOLVER.CTCMT_SEG_PROTO_CONF_THRESH = 0.9
++# When True, prototypes are initialized from the frozen anchor (source domain)
++# on the first image and kept fixed — pulls adaptation toward source class centers.
++_C.SOLVER.CTCMT_SEG_SOURCE_PROTO = False
++# --- Enhancements (E1..E5) tested in the "diagnostic-fix" batch, Aug 2026. ---
++# E2: down-weight uncertain pixels in seg soft-CE by (1 - normalized entropy).
++_C.SOLVER.CTCMT_ENTROPY_WEIGHTED_CE = False
++# E3: trigger seg aug-avg on TEACHER entropy instead of frozen-anchor confidence.
++_C.SOLVER.CTCMT_AUG_TRIGGER_TEACHER_ENTROPY = False
++_C.SOLVER.CTCMT_AUG_TEACHER_ENTROPY_THRESH = 0.3
++# E4: directional score-EM gate (skip on stability, boost CT-CL on shift onset).
++_C.SOLVER.CTCMT_DIRECTIONAL_GATE = False
++_C.SOLVER.CTCMT_DIR_GATE_STABLE_BAND = 0.4
++_C.SOLVER.CTCMT_DIR_GATE_BOOST = 2.0
++# E5: adaptive STR — the shared-trunk restore factor scales with measured drift.
++_C.SOLVER.CTCMT_ADAPTIVE_STR = False
++_C.SOLVER.CTCMT_ADAPTIVE_STR_BASE = 0.1
++_C.SOLVER.CTCMT_ADAPTIVE_STR_BOOST = 0.4
++_C.SOLVER.CTCMT_ADAPTIVE_STR_PIVOT = 0.05
++# CoTTA-style multi-scale aug-averaged seg pseudo-labels (kicks in when
++# the anchor's mean max-softmax is below the conf threshold).
++_C.SOLVER.CTCMT_SEG_AUG_ENABLED = False
++_C.SOLVER.CTCMT_SEG_AUG_CONF_THRESH = 0.9
++_C.SOLVER.CTCMT_SEG_AUG_SCALES = (0.75, 1.0, 1.25)
++_C.SOLVER.CTCMT_SEG_AUG_FLIPS = (False, True)
++
++# --- Negative-transfer screening batch (S1..S5, Sep 2026). ---
++# How the detection gradient and the aggregate non-detection ("aux") gradient
++# are combined on the SHARED backbone/FPN parameters.
++#   "none"          -- single joint backward (bit-identical to the old path).
++#   "protect_det"   -- S1: project g_aux off g_det whenever they conflict.
++#   "cagrad"        -- S2: symmetric CAGrad consensus (Liu et al., NeurIPS'21).
++#   "hard_decouple" -- S3: on conflict, shared trunk sees g_det only.
++#   "dyn_weight"    -- S5: L = L_det + max(0, cos) * L_aux.
++_C.SOLVER.CTCMT_CONFLICT_MODE = "none"
++# CAGrad alpha (constraint radius c = alpha * ||g_mean||).
++_C.SOLVER.CTCMT_CAGRAD_ALPHA = 0.5
++# S4: freeze the shared backbone/FPN; only task-specific heads adapt.
++_C.SOLVER.CTCMT_FREEZE_SHARED_TRUNK = False
++
++# Fraction of the auxiliary gradient allowed into the shared trunk under
++# CTCMT_CONFLICT_MODE="aux_head_only". 0.0 is S6 (segmentation adapts its own
++# head only), 1.0 reproduces the plain joint update, values between the two
++# interpolate. The auxiliary heads always receive their full gradient.
++_C.SOLVER.CTCMT_AUX_TRUNK_LAMBDA = 0.0
++# Gate that fraction on segmentation reliability: while the seg teacher stays
++# close to the frozen source anchor, allow lambda into the trunk; once it
++# drifts, stop the auxiliary gradient at the head. Self-calibrating - it
++# compares the agreement EMA against its own running maximum, so no absolute
++# threshold has to be guessed.
++_C.SOLVER.CTCMT_ADAPTIVE_ROUTING = False
++_C.SOLVER.CTCMT_ADAPTIVE_ROUTING_BETA = 0.98
++_C.SOLVER.CTCMT_ADAPTIVE_ROUTING_EMA = 0.99
++# Per-loss-component gradient-conflict diagnostics (extra backward per
++# component on the sampled steps). Logging only -- never changes the update.
++_C.SOLVER.CTCMT_GRAD_DIAG = False
++_C.SOLVER.CTCMT_GRAD_DIAG_EVERY = 50
++
++# Which shared parameters the conflict-mode coefficient applies to.
++# "shared" is every backbone parameter (the historical behaviour); "fpn"
++# restricts routing to the FPN, where the 2026-09-21 diagnostics put the
++# det/aux conflict (block cos 0.02, 28% negative, against 0.13-0.23 and
++# 11-15% for res3/res4/res5).
++_C.SOLVER.CTCMT_ROUTE_SCOPE = "shared"
++
++# --- Detector-dominant CT-CR (from the 2026-09-21 prior diagnostics) ---
++# CT-CR writes one box at a time into a shared target map, and detections
++# arrive score-DESCENDING, so the LOWEST-scoring box currently wins an
++# overlap. Iterate ascending instead, so the most confident box wins.
++_C.SOLVER.CTCMT_CTCR_SCORE_ORDER = False
++# Scale each box's CT-CR contribution by det_score ** gamma. Measured box
++# purity rises 0.36 -> 0.74 from score 0.7 to 0.9, yet every box currently
++# contributes equally.
++_C.SOLVER.CTCMT_CTCR_DET_SCORE_WEIGHT = False
++_C.SOLVER.CTCMT_CTCR_DET_SCORE_GAMMA = 1.0
++
++# Inverted CTPV: instead of letting segmentation veto detections, let a
++# confident detection suppress the segmentation soft-CE on the pixels inside
++# its box where the segmentation teacher disagrees with the mapped class.
++_C.SOLVER.CTCMT_SEG_DET_VETO = False
++_C.SOLVER.CTCMT_SEG_DET_VETO_SCORE = 0.9
++_C.SOLVER.CTCMT_SEG_DET_VETO_WEIGHT = 0.0
++
+ # Options: WarmupMultiStepLR, WarmupCosineLR.
+ # See detectron2/solver/build.py for definition.
+ _C.SOLVER.LR_SCHEDULER_NAME = "WarmupMultiStepLR"
+@@ -634,6 +873,53 @@ _C.TEST.AUG.FLIP = True
+ _C.TEST.PRECISE_BN = CN({"ENABLED": False})
+ _C.TEST.PRECISE_BN.NUM_ITER = 200
+ 
++# ---------------------------------------------------------------------------- #
++# CTAOD (Yoo et al., CVPR'24) online detection adaptation.
++# Namespaced separately from the unrelated legacy flag SOLVER.CTAOD (AMROD).
++# ---------------------------------------------------------------------------- #
++_C.TEST.CTAOD_YOO = CN()
++# Offline source-feature statistics produced by tools/collect_ctaod_source_stats.py
++_C.TEST.CTAOD_YOO.SOURCE_STATS_PATH = ""
++_C.TEST.CTAOD_YOO.GLOBAL_ALIGN = "KL"
++_C.TEST.CTAOD_YOO.FOREGROUND_ALIGN = "KL"
++_C.TEST.CTAOD_YOO.ALPHA_GLOBAL = 1.0
++_C.TEST.CTAOD_YOO.ALPHA_FOREGROUND = 1.0
++_C.TEST.CTAOD_YOO.TH_BG = 0.5
++_C.TEST.CTAOD_YOO.EMA_GAMMA = 128
++_C.TEST.CTAOD_YOO.FREQ_WEIGHT = True
++_C.TEST.CTAOD_YOO.ADAPTER_RATIO = 32
++# "" = always update (CTAOD).  "stat-period-ema" = official CTAOD-Skip.
++_C.TEST.CTAOD_YOO.SKIP_REDUNDANT = ""
++_C.TEST.CTAOD_YOO.SKIP_TAU = 1.1
++_C.TEST.CTAOD_YOO.SKIP_PERIOD = 10
++_C.TEST.CTAOD_YOO.SKIP_BETA = 1.05
++# Diagnostic only: for the first N frames, also run a post-update forward and
++# log how much the prediction would have changed.  0 disables.
++_C.TEST.CTAOD_YOO.DIAG_PREPOST_FRAMES = 0
++# Source-statistics collection (offline, source train split, GT boxes).
++_C.TEST.CTAOD_YOO.COLLECT_IOU_THR = 0.5
++_C.TEST.CTAOD_YOO.COLLECT_NUM_IMAGES = -1
++
++# ---------------------------------------------------------------------------- #
++# MT + object-level CL + SR (Moraiti et al., EJAI 2025), same-source port of the
++# official YOLOX implementation onto a Faster R-CNN detection branch.
++# Defaults are the values of the paper's Sec. 4.2 (Cityscapes row).
++# ---------------------------------------------------------------------------- #
++_C.TEST.MTCLSR = CN()
++_C.TEST.MTCLSR.STEPS = 5                 # student/EMA updates per image
++_C.TEST.MTCLSR.VIEWS = 2                 # strongly augmented student views
++_C.TEST.MTCLSR.EMA_ALPHA = 0.99965       # teacher = a*teacher + (1-a)*student
++_C.TEST.MTCLSR.RESTORE_PROB = 0.01       # Bernoulli restore prob, after last step
++_C.TEST.MTCLSR.W_CONSISTENCY = 0.005
++_C.TEST.MTCLSR.W_CONTRASTIVE = 0.003
++_C.TEST.MTCLSR.TEMPERATURE = 0.07
++_C.TEST.MTCLSR.PSEUDO_SCORE_THR = 0.7    # teacher boxes used by the contrastive loss
++_C.TEST.MTCLSR.PSEUDO_NMS_IOU = 0.7
++_C.TEST.MTCLSR.FEATURE_LEVELS = ("p3", "p4", "p5")  # strides 8/16/32 as in the paper
++# "last_step": teacher prediction taken at the start of the final step (what the
++# official code returns). "post": extra teacher pass after the last update + restore.
++_C.TEST.MTCLSR.PREDICT = "last_step"
++
+ # ---------------------------------------------------------------------------- #
+ # Misc options
+ # ---------------------------------------------------------------------------- #
+diff --git a/detectron2/detectron2/data/datasets/builtin.py b/detectron2/detectron2/data/datasets/builtin.py
+index 89191e4..9c12b6c 100644
+--- a/detectron2/detectron2/data/datasets/builtin.py
++++ b/detectron2/detectron2/data/datasets/builtin.py
+@@ -24,7 +24,7 @@ from detectron2.data import DatasetCatalog, MetadataCatalog
+ from .builtin_meta import ADE20K_SEM_SEG_CATEGORIES, _get_builtin_metadata
+ from .cityscapes import load_cityscapes_instances, load_cityscapes_semantic
+ from .cityscapes_panoptic import register_all_cityscapes_panoptic
+-from .coco import load_sem_seg, register_coco_instances
++from .coco import load_coco_json, load_sem_seg, register_coco_instances
+ from .coco_panoptic import register_coco_panoptic, register_coco_panoptic_separated
+ from .lvis import get_lvis_instances_meta, register_lvis_instances
+ from .pascal_voc import register_pascal_voc
+@@ -248,34 +248,220 @@ def register_all_ade20k(root):
+         )
+ 
+ def register_cityscapes_c(root):
+-    corruption_types = ["gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur", "glass_blur", 
+-                        "motion_blur", "zoom_blur", "snow", "frost", "fog", "brightness", "contrast", 
+-                        "elastic_transform", "pixelate", "jpeg_compression"]
+-    
+-    # corruption_types = ["fog", "motion_blur", "snow", "brightness", "defocus_blur"]
++    """
++    Register Cityscapes-C in three views:
++
++      <corruption>         : detection-only COCO dataset (legacy name)
++      <corruption>_semseg  : semantic-segmentation dataset
++      <corruption>_mtl     : detection + semantic segmentation
++
++    Cityscapes-C images preserve the original Cityscapes filenames, therefore
++    the clean Cityscapes val labelTrainIds are also the correct semantic GT.
++    """
++    corruption_types = [
++        "gaussian_noise", "shot_noise", "impulse_noise",
++        "defocus_blur", "glass_blur", "motion_blur", "zoom_blur",
++        "snow", "frost", "fog", "brightness", "contrast",
++        "elastic_transform", "pixelate", "jpeg_compression",
++    ]
++
+     cityscapes_root = os.path.join(root, "cityscapes")
++    gt_root = os.path.join(cityscapes_root, "gtFine", "val")
++    json_file = os.path.join(
++        cityscapes_root,
++        "annotations",
++        "instancesonly_filtered_gtFine_val.json",
++    )
++
++    cityscapes_meta = _get_builtin_metadata("cityscapes")
++
+     for corrupt_type in corruption_types:
+         corrupt_root = os.path.join(root, corrupt_type)
+-        register_coco_instances(corrupt_type,{},cityscapes_root + "/annotations/instancesonly_filtered_gtFine_val.json", corrupt_root)
+-        # if corrupt_type in ["fog", "motion_blur", "snow", "brightness", "defocus_blur"]:
+-        #     image_dir = corrupt_root+ "/leftImg8bit/val/"
+-        #     gt_dir = cityscapes_root+ "/gtFine/val/"
+-        #     dataset_name = "c_"+corrupt_type
+-        #     DatasetCatalog.register(
+-        #             dataset_name,
+-        #             lambda x = image_dir, y=gt_dir: load_cityscapes_instances(
+-        #                 x, y, from_json=True, to_polygons=True
+-        #             ),
+-        #         )
+-        #     MetadataCatalog.get(dataset_name).set(
+-        #         image_dir=image_dir, gt_dir=gt_dir, evaluator_type="coco", thing_classes=['person', 'rider', 'car', 'truck', 'bus', 'train', 'motorcycle', 'bicycle'], year = 2012
+-        #     )
++        image_root = os.path.join(corrupt_root, "leftImg8bit", "val")
++
++        # ------------------------------------------------------------------
++        # 1. Legacy detection-only registration.
++        # Keep this exact name/behaviour for all previous experiments.
++        # ------------------------------------------------------------------
++        register_coco_instances(
++            corrupt_type,
++            {},
++            json_file,
++            corrupt_root,
++        )
++
++        # ------------------------------------------------------------------
++        # 2. Semantic-segmentation view.
++        # ------------------------------------------------------------------
++        semseg_name = f"{corrupt_type}_semseg"
++
++        DatasetCatalog.register(
++            semseg_name,
++            lambda image_root=image_root, gt_root=gt_root:
++                load_cityscapes_semantic(image_root, gt_root),
++        )
++
++        MetadataCatalog.get(semseg_name).set(
++            image_dir=image_root,
++            gt_dir=gt_root,
++            image_root=image_root,
++            sem_seg_root=gt_root,
++            evaluator_type="sem_seg",
++            ignore_label=255,
++            stuff_classes=list(cityscapes_meta["stuff_classes"]),
++        )
++
++        # ------------------------------------------------------------------
++        # 3. Multi-task view: COCO bbox records + Cityscapes semantic GT.
++        # ------------------------------------------------------------------
++        mtl_name = f"{corrupt_type}_mtl"
++
++        def _load_cityscapes_c_mtl(
++            json_file=json_file,
++            corrupt_root=corrupt_root,
++            gt_root=gt_root,
++            dataset_name=mtl_name,
++        ):
++            dicts = load_coco_json(
++                json_file,
++                corrupt_root,
++                dataset_name=dataset_name,
++            )
++
++            missing = []
++            for d in dicts:
++                basename = os.path.basename(d["file_name"])
++                suffix = "_leftImg8bit.png"
++
++                if not basename.endswith(suffix):
++                    missing.append(d["file_name"])
++                    continue
++
++                stem = basename[:-len(suffix)]
++                city = stem.split("_", 1)[0]
++
++                sem_seg_file = os.path.join(
++                    gt_root,
++                    city,
++                    f"{stem}_gtFine_labelTrainIds.png",
++                )
++
++                if not os.path.isfile(sem_seg_file):
++                    missing.append(sem_seg_file)
++                    continue
++
++                d["sem_seg_file_name"] = sem_seg_file
++
++            if missing:
++                preview = "\n".join(str(x) for x in missing[:5])
++                raise FileNotFoundError(
++                    f"{dataset_name}: missing semantic GT for "
++                    f"{len(missing)} records. First entries:\n{preview}"
++                )
++
++            return dicts
++
++        DatasetCatalog.register(mtl_name, _load_cityscapes_c_mtl)
++
++        MetadataCatalog.get(mtl_name).set(
++            thing_classes=list(cityscapes_meta["thing_classes"]),
++            stuff_classes=list(cityscapes_meta["stuff_classes"]),
++            json_file=json_file,
++            image_root=corrupt_root,
++            sem_seg_root=gt_root,
++            evaluator_type="coco_sem_seg",
++            ignore_label=255,
++        )
++
+ 
+ def register_ACDC(root):
+     register_ACDC_instances("acdc_fog", root+"/ACDC/gt_detection/fog/instancesonly_fog_train_gt_detection.json", root+"/ACDC/rgb_anon")
+     register_ACDC_instances("acdc_night", root+"/ACDC/gt_detection/night/instancesonly_night_train_gt_detection.json", root+"/ACDC/rgb_anon")
+     register_ACDC_instances("acdc_rain", root+"/ACDC/gt_detection/rain/instancesonly_rain_train_gt_detection.json", root+"/ACDC/rgb_anon")
+     register_ACDC_instances("acdc_snow", root+"/ACDC/gt_detection/snow/instancesonly_snow_train_gt_detection.json", root+"/ACDC/rgb_anon")
++
++
++def register_foggy_cityscapes(root):
++    """Foggy Cityscapes val set (beta=0.02) for Cityscapes→FoggyCityscapes eval.
++
++    Also registers foggy_cityscapes_val_mtl which adds sem_seg_file_name from
++    Cityscapes gtFine/val (same GT labels, foggy images) so both bbox AP and
++    mIoU can be evaluated with evaluator_type='coco_sem_seg'.
++    """
++    from .ACDC import register_ACDC_instances as _reg, load_ACDC_json
++    from .ACDC import dataset_id_to_contiguous_id as _acdc_id_map, CLASS_NAMES as _acdc_classes
++    json_file = os.path.join(root, "cityscapes_foggy/annotations/instancesonly_filtered_gtFine_val_foggy_beta_0.02.json")
++    image_root = os.path.join(root, "cityscapes_foggy/leftImg8bit_foggyDBF/val")
++    cs_gt_root = os.path.join(root, "cityscapes/gtFine/val")
++
++    if not (os.path.isfile(json_file) and os.path.isdir(image_root)):
++        print(f"[builtin] foggy_cityscapes_val not registered (files not found under {root})")
++        return
++
++    _reg("foggy_cityscapes_val", json_file, image_root)
++
++    # MTL variant: det bbox annotations + semantic seg GT from Cityscapes gtFine.
++    # Image stem: {city}_{frame}_{idx}_leftImg8bit_foggy_beta_0.02.png
++    # GT label:   {cs_gt_root}/{city}/{city}_{frame}_{idx}_gtFine_labelTrainIds.png
++    if os.path.isdir(cs_gt_root):
++        cityscapes_meta = _get_builtin_metadata("cityscapes")
++
++        def _load_foggy_mtl(json_file=json_file, image_root=image_root, cs_gt_root=cs_gt_root):
++            dicts = load_ACDC_json(json_file, image_root, "foggy_cityscapes_val_mtl")
++            for d in dicts:
++                basename = os.path.basename(d["file_name"])
++                stem = basename.replace("_leftImg8bit_foggy_beta_0.02.png", "")
++                city = stem.split("_")[0]
++                label_path = os.path.join(cs_gt_root, city, f"{stem}_gtFine_labelTrainIds.png")
++                if os.path.isfile(label_path):
++                    d["sem_seg_file_name"] = label_path
++            return dicts
++
++        DatasetCatalog.register("foggy_cityscapes_val_mtl", _load_foggy_mtl)
++        MetadataCatalog.get("foggy_cityscapes_val_mtl").set(
++            thing_classes=list(_acdc_classes),
++            stuff_classes=cityscapes_meta["stuff_classes"],
++            thing_dataset_id_to_contiguous_id=dict(_acdc_id_map),
++            json_file=json_file,
++            image_root=image_root,
++            sem_seg_root=cs_gt_root,
++            evaluator_type="coco_sem_seg",
++            ignore_label=255,
++        )
++    else:
++        print(f"[builtin] foggy_cityscapes_val_mtl not registered (Cityscapes gtFine not found at {cs_gt_root})")
++
++    # cityscapes_val_mtl: clean Cityscapes val for loopback / forgetting eval.
++    # Reuses the foggy MTL machinery but points at clear-weather val images
++    # and their own annotations (bbox JSON is the same instancesonly_filtered
++    # file Cityscapes ships in annotations/).
++    cs_val_json = os.path.join(root, "cityscapes/annotations/instancesonly_filtered_gtFine_val.json")
++    cs_val_image_root = os.path.join(root, "cityscapes/leftImg8bit/val")
++    if os.path.isfile(cs_val_json) and os.path.isdir(cs_val_image_root) and os.path.isdir(cs_gt_root):
++        def _load_cs_val_mtl(json_file=cs_val_json, image_root=cs_val_image_root, cs_gt_root=cs_gt_root):
++            dicts = load_ACDC_json(json_file, image_root, "cityscapes_val_mtl")
++            for d in dicts:
++                basename = os.path.basename(d["file_name"])
++                stem = basename.replace("_leftImg8bit.png", "")
++                city = stem.split("_")[0]
++                label_path = os.path.join(cs_gt_root, city, f"{stem}_gtFine_labelTrainIds.png")
++                if os.path.isfile(label_path):
++                    d["sem_seg_file_name"] = label_path
++            return dicts
++
++        DatasetCatalog.register("cityscapes_val_mtl", _load_cs_val_mtl)
++        MetadataCatalog.get("cityscapes_val_mtl").set(
++            thing_classes=list(_acdc_classes),
++            stuff_classes=cityscapes_meta["stuff_classes"],
++            thing_dataset_id_to_contiguous_id=dict(_acdc_id_map),
++            json_file=cs_val_json,
++            image_root=cs_val_image_root,
++            sem_seg_root=cs_gt_root,
++            evaluator_type="coco_sem_seg",
++            ignore_label=255,
++        )
++    else:
++        print(f"[builtin] cityscapes_val_mtl not registered (missing {cs_val_json} or {cs_val_image_root})")
+     
+     
+ def register_shift(root):
+@@ -297,4 +483,174 @@ if __name__.endswith(".builtin"):
+     register_cityscapes_c(_root)
+     register_ACDC(_root)
+     register_shift(_root)
+-    
+\ No newline at end of file
++    try:
++        register_foggy_cityscapes(_root)
++    except Exception as e:
++        print(f"[builtin] foggy_cityscapes_val not registered: {e}")
++    # MTL-CTTA extension: register standard Cityscapes panoptic datasets and a
++    # merged instance+sem_seg variant ("cityscapes_fine_mtl_*") suitable for
++    # Panoptic-FPN-style joint det+seg training.
++    try:
++        register_all_cityscapes(_root)
++    except Exception as e:
++        print(f"[builtin] cityscapes_fine_{{instance_seg,sem_seg}} not registered: {e}")
++    try:
++        register_all_cityscapes_panoptic(_root)
++    except Exception as e:
++        print(f"[builtin] cityscapes_fine_panoptic not registered: {e}")
++
++    def _register_cityscapes_mtl(root):
++        # Merges per-image instance dicts (bbox/mask/annotations) with the
++        # sem_seg_file_name from the semantic-seg loader so a single dataset
++        # yields both instance annotations AND semantic segmentation targets.
++        for split in ("train", "val"):
++            name = f"cityscapes_fine_mtl_{split}"
++            image_dir = os.path.join(root, f"cityscapes/leftImg8bit/{split}")
++            gt_dir = os.path.join(root, f"cityscapes/gtFine/{split}")
++            meta = _get_builtin_metadata("cityscapes")
++
++            def _load(image_dir=image_dir, gt_dir=gt_dir):
++                inst = load_cityscapes_instances(
++                    image_dir, gt_dir, from_json=True, to_polygons=True
++                )
++                sem = load_cityscapes_semantic(image_dir, gt_dir)
++                sem_by_file = {r["file_name"]: r["sem_seg_file_name"] for r in sem}
++                for d in inst:
++                    if d["file_name"] in sem_by_file:
++                        d["sem_seg_file_name"] = sem_by_file[d["file_name"]]
++                return inst
++
++            DatasetCatalog.register(name, _load)
++            MetadataCatalog.get(name).set(
++                image_dir=image_dir,
++                gt_dir=gt_dir,
++                evaluator_type="cityscapes_instance",
++                ignore_label=255,
++                **meta,
++            )
++
++    try:
++        _register_cityscapes_mtl(_root)
++    except Exception as e:
++        print(f"[builtin] cityscapes_fine_mtl not registered: {e}")
++
++    # MTL-CTTA extension: COCO-format bbox dataset for standard COCO bbox AP
++    # evaluation (matches AMROD's reporting convention). JSON must be
++    # generated once via detectron2.data.datasets.coco.convert_to_coco_json.
++    bbox_json = os.path.join(_root, "annotations/cityscapes_bbox_val.json")
++    if os.path.exists(bbox_json):
++        try:
++            register_coco_instances(
++                "cityscapes_bbox_val",
++                {},
++                bbox_json,
++                os.path.join(_root, "cityscapes/leftImg8bit/val"),
++            )
++        except Exception as e:
++            print(f"[builtin] cityscapes_bbox_val not registered: {e}")
++
++    # MTL-CTTA extension: ACDC semseg-only and MTL variants. The base
++    # register_ACDC() above already registers det-only variants
++    # ("acdc_fog", "acdc_night", "acdc_rain", "acdc_snow"). Here we add:
++    #   acdc_{weather}_semseg -> sem_seg only    (for CoTTA_SemSeg eval)
++    #   acdc_{weather}_mtl    -> det + sem_seg   (for CTCMT_MTL eval)
++    def _register_acdc_semseg_and_mtl(root):
++        from .ACDC import load_ACDC_json, CLASS_NAMES as _ACDC_CLASS_NAMES
++        acdc_root = os.path.join(root, "ACDC")
++        if not os.path.isdir(acdc_root):
++            return
++        weathers = ("fog", "night", "rain", "snow")
++        cityscapes_meta = {
++            "stuff_classes": [
++                "road", "sidewalk", "building", "wall", "fence", "pole",
++                "traffic light", "traffic sign", "vegetation", "terrain",
++                "sky", "person", "rider", "car", "truck", "bus",
++                "train", "motorcycle", "bicycle",
++            ],
++        }
++        thing_classes = list(_ACDC_CLASS_NAMES)
++
++        image_root_base = os.path.join(acdc_root, "rgb_anon")
++        gt_root = os.path.join(acdc_root, "gt")
++
++        def _sem_seg_path_from_image(image_path):
++            # rgb_anon/fog/train/scene/name_rgb_anon.png -> gt/fog/train/scene/name_gt_labelTrainIds.png
++            rel = os.path.relpath(image_path, image_root_base)
++            rel = rel.replace("_rgb_anon.png", "_gt_labelTrainIds.png")
++            return os.path.join(gt_root, rel)
++
++        for w in weathers:
++            # ---- SemSeg-only variant.
++            gt_dir = os.path.join(gt_root, w, "train")
++            img_dir = os.path.join(image_root_base, w, "train")
++            semseg_name = f"acdc_{w}_semseg"
++
++            def _load_semseg(img_dir=img_dir, gt_dir=gt_dir):
++                out = []
++                for scene in sorted(os.listdir(gt_dir)):
++                    scene_dir = os.path.join(gt_dir, scene)
++                    if not os.path.isdir(scene_dir):
++                        continue
++                    for fn in sorted(os.listdir(scene_dir)):
++                        if not fn.endswith("_gt_labelTrainIds.png"):
++                            continue
++                        stem = fn.replace("_gt_labelTrainIds.png", "")
++                        img_path = os.path.join(img_dir, scene, f"{stem}_rgb_anon.png")
++                        if not os.path.isfile(img_path):
++                            continue
++                        out.append({
++                            "file_name": img_path,
++                            "sem_seg_file_name": os.path.join(scene_dir, fn),
++                        })
++                return out
++
++            DatasetCatalog.register(semseg_name, _load_semseg)
++            MetadataCatalog.get(semseg_name).set(
++                evaluator_type="sem_seg",
++                ignore_label=255,
++                image_root=img_dir,
++                sem_seg_root=gt_dir,
++                **cityscapes_meta,
++            )
++
++            # ---- MTL variant: det annotations + sem_seg_file_name.
++            det_json = os.path.join(
++                acdc_root, "gt_detection", w,
++                f"instancesonly_{w}_train_gt_detection.json",
++            )
++            if not os.path.isfile(det_json):
++                continue
++            mtl_name = f"acdc_{w}_mtl"
++
++            def _load_mtl(det_json=det_json, mtl_name=mtl_name):
++                # Pass mtl_name so load_ACDC_json sets
++                # thing_dataset_id_to_contiguous_id on the MTL metadata (needed
++                # by COCOEvaluator to map contiguous model IDs back to JSON IDs).
++                dicts = load_ACDC_json(det_json, image_root_base, dataset_name=mtl_name)
++                out = []
++                for d in dicts:
++                    sp = _sem_seg_path_from_image(d["file_name"])
++                    if os.path.isfile(sp):
++                        d["sem_seg_file_name"] = sp
++                        out.append(d)
++                return out
++
++            DatasetCatalog.register(mtl_name, _load_mtl)
++            # Precompute the id mapping from cityscapes labels so COCOEvaluator
++            # can rely on metadata even before _load_mtl is called.
++            from .ACDC import dataset_id_to_contiguous_id as _acdc_id_map
++            MetadataCatalog.get(mtl_name).set(
++                thing_classes=thing_classes,
++                thing_dataset_id_to_contiguous_id=dict(_acdc_id_map),
++                json_file=det_json,
++                image_root=image_root_base,
++                sem_seg_root=gt_root,
++                evaluator_type="coco_sem_seg",
++                ignore_label=255,
++                **cityscapes_meta,
++            )
++
++    try:
++        _register_acdc_semseg_and_mtl(_root)
++    except Exception as e:
++        print(f"[builtin] acdc_*_semseg/_mtl not registered: {e}")
+\ No newline at end of file
+diff --git a/detectron2/detectron2/modeling/meta_arch/__init__.py b/detectron2/detectron2/modeling/meta_arch/__init__.py
+index 4e28580..bbd56ff 100644
+--- a/detectron2/detectron2/modeling/meta_arch/__init__.py
++++ b/detectron2/detectron2/modeling/meta_arch/__init__.py
+@@ -12,5 +12,13 @@ from .retinanet import RetinaNet
+ from .fcos import FCOS
+ from .semantic_seg import SEM_SEG_HEADS_REGISTRY, SemanticSegmentor, build_sem_seg_head
+ from .amrod import AMROD
++from .cotta_semseg import CoTTA_SemSeg
++from .ctaod_yoo import CTAOD_Yoo
++from .mtclsr import MTCLSR
++from .ctcmt_mtl import CTCMT_MTL
++from .ctcmt_seg import CTCMT_Seg
++from .dat_pfn import DATPFN
++from .obao_semseg import OBAO_SemSeg
++from .tent_semseg import TENT_SemSeg
+ 
+ __all__ = list(globals().keys())
+diff --git a/detectron2/detectron2/modeling/meta_arch/amrod.py b/detectron2/detectron2/modeling/meta_arch/amrod.py
+index a39edf2..96fca1a 100644
+--- a/detectron2/detectron2/modeling/meta_arch/amrod.py
++++ b/detectron2/detectron2/modeling/meta_arch/amrod.py
+@@ -55,6 +55,8 @@ class AMROD(nn.Module):
+         self.threshold_init = cfg.SOLVER.THRESHOLD_INIT
+         self.mt = cfg.SOLVER.MT
+         self.rst_m = cfg.SOLVER.RST_M
++        # Backbone/FPN params are general-purpose; protect them more than head params.
++        self.backbone_rst_factor = float(getattr(cfg.SOLVER, "CTCMT_BACKBONE_RST_FACTOR", 1.0))
+         self.loss_weight = cfg.SOLVER.LOSS_WEIGHT
+         self.thresholds_max = cfg.SOLVER.THRESHOLD_MAX
+         self.thresholds_mini = cfg.SOLVER.THRESHOLD_MINI
+@@ -91,6 +93,24 @@ class AMROD(nn.Module):
+         self.score_thresh = cfg.SOLVER.SCORE_THRESH
+         self.slope_list = []
+         self.stop_count = 0
++
++        # ---- TT-BBR (Test-Time Bounding Box Refinement) -- added 2026-07-28
++        # ViTPrompt-inspired second-pass box regression on teacher boxes.
++        # See _tt_bbr() for the mechanism.
++        self.ttbbr_enabled = getattr(cfg.SOLVER, "TTBBR_ENABLED", False)
++        self.ttbbr_iou_thresh = getattr(cfg.SOLVER, "TTBBR_IOU_THRESH", 0.7)
++        self.ttbbr_drop = getattr(cfg.SOLVER, "TTBBR_DROP_INCONSISTENT", False)
++        # Diagnostic counter: # boxes refined vs # refinements rejected by IoU.
++        self._ttbbr_stats = {"refined": 0, "rejected": 0, "frames": 0}
++
++        # ---- XAI-guided pseudo-label filter (Option 1) -- added 2026-07-28
++        # Drops teacher boxes whose evidence is spatially diffuse.
++        # See _xai_filter() for the three technique variants.
++        self.xai_enabled = getattr(cfg.SOLVER, "XAI_FILTER_ENABLED", False)
++        self.xai_method = str(getattr(cfg.SOLVER, "XAI_METHOD", "eigencam")).lower()
++        self.xai_threshold = float(getattr(cfg.SOLVER, "XAI_THRESHOLD", 0.30))
++        self.xai_mode = str(getattr(cfg.SOLVER, "XAI_MODE", "drop")).lower()
++        self._xai_stats = {"kept": 0, "dropped": 0, "frames": 0}
+         if datasetName == "ACDC":
+             self.totalIter = 400
+         else:
+@@ -153,6 +173,251 @@ class AMROD(nn.Module):
+                             if mean>0 else threshold for threshold, mean in zip(self.thresholds, logits_means)]
+         new_thresholds = [max(min(threshold, self.thresholds_max), self.thresholds_mini) for threshold in new_thresholds]
+         return new_thresholds
++
++    # =====================================================================
++    # TT-BBR (Test-Time Bounding Box Refinement) -- added 2026-07-28.
++    # Motivated by ViTPrompt (Qin et al., CVPR 2026): all prior CTTA-OD
++    # methods refine only classification confidence, leaving bounding
++    # boxes unchanged. Yet corruption degrades localization independently.
++    # ViTPrompt closed this gap for open-vocab detection; we adapt the
++    # mechanism to closed-set FR-CNN.
++    #
++    # Mechanism:
++    #   1. Reuse teacher FPN features already computed for initial prediction.
++    #   2. Re-pool at teacher's own boxes (feats live in resized-input frame).
++    #   3. Run box_head + box_predictor -> per-class delta.
++    #   4. Decode to refined boxes.
++    #   5. IoU(B_init, B_refined) >= tau -> accept refinement.
++    #      Below threshold: keep original box (safe), or drop entirely.
++    #   6. Update t_results_raw in place; downstream (dyn thresh, student
++    #      loss) sees refined boxes.
++    # Cost: one extra RoI-align + box_head + box_predictor call per frame.
++    # No weight updates.
++    # =====================================================================
++    @torch.no_grad()
++    def _tt_bbr(self, t_features, t_results_raw):
++        if not self.ttbbr_enabled:
++            return t_results_raw
++        inst = t_results_raw[0]
++        if len(inst) == 0:
++            return t_results_raw
++
++        # box_pooler expects boxes as list[Boxes] and features as list[Tensor]
++        # in the same order as roi_heads.box_in_features.
++        roi_heads = self.model_teacher.roi_heads
++        feats = [t_features[f] for f in roi_heads.box_in_features]
++        boxes_init = inst.pred_boxes  # Boxes in resized-input frame
++        pooled = roi_heads.box_pooler(feats, [boxes_init])
++        box_feats = roi_heads.box_head(pooled)
++        # box_predictor returns (cls_scores, bbox_deltas).
++        # bbox_deltas shape: (N, C*4) with class-specific regression, or (N, 4)
++        # when reg_class_agnostic=True.
++        _, bbox_deltas = roi_heads.box_predictor(box_feats)
++
++        N = boxes_init.tensor.size(0)
++        num_classes = self.num_classes
++        pred_classes = inst.pred_classes.long()
++
++        if bbox_deltas.size(1) == 4:
++            deltas = bbox_deltas
++        else:
++            # (N, num_classes, 4). Some head layouts have an extra background
++            # column (shape (N, (num_classes+1)*4)); handle both.
++            deltas = bbox_deltas.view(N, -1, 4)
++            n_class_cols = deltas.size(1)
++            safe_labels = pred_classes.clamp(max=n_class_cols - 1)
++            idx = safe_labels.view(N, 1, 1).expand(N, 1, 4)
++            deltas = deltas.gather(1, idx).squeeze(1)  # (N, 4)
++
++        # Decode via the box_predictor's box2box_transform. Clip to image bounds.
++        refined_tensor = roi_heads.box_predictor.box2box_transform.apply_deltas(
++            deltas, boxes_init.tensor
++        )
++        # Clip to the RESIZED-input image bounds (image_size = (H, W)).
++        H, W = inst.image_size
++        refined_tensor[:, 0].clamp_(min=0, max=W)
++        refined_tensor[:, 2].clamp_(min=0, max=W)
++        refined_tensor[:, 1].clamp_(min=0, max=H)
++        refined_tensor[:, 3].clamp_(min=0, max=H)
++
++        # Row-wise IoU (self-consistency filter).
++        ious = self._box_pairwise_iou(boxes_init.tensor, refined_tensor)
++        consistent = ious >= self.ttbbr_iou_thresh
++
++        # Update stats + apply.
++        self._ttbbr_stats["frames"] += 1
++        self._ttbbr_stats["refined"] += int(consistent.sum().item())
++        self._ttbbr_stats["rejected"] += int((~consistent).sum().item())
++
++        if self.ttbbr_drop:
++            keep = consistent
++            new_inst = Instances(inst.image_size)
++            new_inst.pred_boxes = Boxes(refined_tensor[keep])
++            new_inst.pred_classes = inst.pred_classes[keep]
++            new_inst.scores = inst.scores[keep]
++            # Copy any other fields if present.
++            for k in inst.get_fields():
++                if k not in ("pred_boxes", "pred_classes", "scores"):
++                    new_inst.set(k, inst.get(k)[keep])
++            return [new_inst]
++
++        # Non-drop mode: replace boxes where consistent, keep original elsewhere.
++        new_tensor = boxes_init.tensor.clone()
++        new_tensor[consistent] = refined_tensor[consistent]
++        inst.pred_boxes = Boxes(new_tensor)
++        return t_results_raw
++
++    @staticmethod
++    def _box_pairwise_iou(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
++        """Row-wise IoU between two aligned (N,4) xyxy tensors."""
++        if a.numel() == 0:
++            return a.new_zeros((0,))
++        inter_x1 = torch.max(a[:, 0], b[:, 0])
++        inter_y1 = torch.max(a[:, 1], b[:, 1])
++        inter_x2 = torch.min(a[:, 2], b[:, 2])
++        inter_y2 = torch.min(a[:, 3], b[:, 3])
++        inter = ((inter_x2 - inter_x1).clamp_(min=0) *
++                 (inter_y2 - inter_y1).clamp_(min=0))
++        area_a = ((a[:, 2] - a[:, 0]).clamp_(min=0) *
++                  (a[:, 3] - a[:, 1]).clamp_(min=0))
++        area_b = ((b[:, 2] - b[:, 0]).clamp_(min=0) *
++                  (b[:, 3] - b[:, 1]).clamp_(min=0))
++        union = area_a + area_b - inter
++        return inter / union.clamp(min=1e-6)
++
++    # =====================================================================
++    # XAI-guided pseudo-label filter (Option 1) -- added 2026-07-28.
++    # Drops teacher boxes whose evidence is spatially DIFFUSE. Rationale:
++    # under corruption, hallucinated / low-quality detections show smeared
++    # feature evidence, while true positives are concentrated on the object.
++    #
++    # Three technique variants selected via cfg.SOLVER.XAI_METHOD:
++    #   "featnorm" : L2 norm of pooled features per spatial location (cheapest;
++    #                 no gradient, no SVD). Class-agnostic.
++    #   "eigencam" : 1st principal component of the RoI feature tensor
++    #                 (Muhammad & Yeasin, 2020). No gradient, one small SVD per
++    #                 box. Class-agnostic; sharper than featnorm.
++    #   "gradcam"  : gradient of the predicted-class logit x activation, ReLU'd
++    #                 (Selvaraju ICCV 2017). One extra backward through
++    #                 box_head + box_predictor per frame. Class-specific.
++    #
++    # All three produce a spatial map (N, H*W); we score each box by
++    #   concentration = 1 - H(p) / log(H*W),   p = map / sum(map)
++    # in [0,1]. Boxes with concentration < XAI_THRESHOLD are:
++    #   - "drop"     : removed from the pseudo-label set.
++    #   - "reweight" : score multiplied by concentration (soft filter).
++    #
++    # Applied AFTER TT-BBR (if enabled) so it filters the refined-box set.
++    # Returns (t_results_raw, keep_mask); keep_mask is None if drop mode did
++    # not remove any boxes (or if mode == "reweight"), else a 1-D bool tensor
++    # over the ORIGINAL t_results_raw[0] indexing so the caller can splice
++    # outputs[0]["instances"] similarly.
++    # =====================================================================
++    @torch.no_grad()
++    def _xai_filter(self, t_features, t_results_raw):
++        if not self.xai_enabled:
++            return t_results_raw, None
++        inst = t_results_raw[0]
++        N = len(inst)
++        if N == 0:
++            return t_results_raw, None
++
++        roi_heads = self.model_teacher.roi_heads
++        feats = [t_features[f] for f in roi_heads.box_in_features]
++        pooled = roi_heads.box_pooler(feats, [inst.pred_boxes])  # (N, C, H, W)
++        _, C, H, W = pooled.shape
++        HW = H * W
++        method = self.xai_method
++
++        if method == "featnorm":
++            spatial_map = pooled.norm(dim=1).reshape(N, HW)
++        elif method == "eigencam":
++            # Batched svd_lowrank on (N, HW, C): 1st left-singular vector is
++            # the spatial signature of the top principal component.
++            flat = pooled.reshape(N, C, HW).transpose(1, 2)  # (N, HW, C)
++            try:
++                u, s, v = torch.svd_lowrank(flat, q=1)  # u: (N, HW, 1)
++                spatial_map = u.squeeze(-1).abs()
++            except Exception:
++                spatial_map = pooled.norm(dim=1).reshape(N, HW)
++        elif method == "gradcam":
++            # Requires autograd. pooled has no grad_fn (teacher inference ran
++            # under no_grad), so we clone + require_grad and rerun the head.
++            with torch.enable_grad():
++                pooled_g = pooled.detach().clone().requires_grad_(True)
++                box_feats = roi_heads.box_head(pooled_g)
++                cls_scores, _ = roi_heads.box_predictor(box_feats)
++                # (N, num_classes + 1) in FR-CNN; select predicted-class logit.
++                pred_cls = inst.pred_classes.long().clamp(
++                    max=cls_scores.size(1) - 1
++                ).view(N, 1)
++                target = cls_scores.gather(1, pred_cls).sum()
++                grad = torch.autograd.grad(target, pooled_g,
++                                            retain_graph=False)[0]
++            weights = grad.mean(dim=(2, 3), keepdim=True)      # (N, C, 1, 1)
++            cam = (weights * pooled_g).sum(dim=1).clamp(min=0)  # (N, H, W)
++            spatial_map = cam.reshape(N, HW)
++        else:
++            # Unknown method: no-op.
++            return t_results_raw, None
++
++        # Normalized entropy -> concentration in [0, 1].
++        eps = 1e-8
++        spatial_map = spatial_map.detach()
++        total = spatial_map.sum(dim=1, keepdim=True) + eps
++        p = spatial_map / total
++        entropy = -(p * (p + eps).log()).sum(dim=1)
++        max_ent = math.log(HW)
++        concentration = 1.0 - entropy / max_ent
++        # Guard against degenerate (all-zero activation) boxes.
++        concentration = torch.nan_to_num(concentration, nan=0.0)
++        concentration = concentration.clamp(min=0.0, max=1.0)
++
++        self._xai_stats["frames"] += 1
++
++        # Periodic diagnostic: log concentration percentiles + drop rate so we
++        # can calibrate XAI_THRESHOLD without a separate probe run.
++        if getattr(self, "iter", 0) % 50 == 0 and N > 0:
++            with torch.no_grad():
++                c_sorted, _ = concentration.sort()
++                q = [0.10, 0.25, 0.50, 0.75, 0.90]
++                idx = [max(0, min(N - 1, int(round(qi * (N - 1))))) for qi in q]
++                pct = [c_sorted[i].item() for i in idx]
++                print(f"[XAI] iter={getattr(self, 'iter', 0)} method={method} "
++                      f"N={N} thr={self.xai_threshold:.2f} "
++                      f"conc percentiles p10/25/50/75/90="
++                      f"{pct[0]:.3f}/{pct[1]:.3f}/{pct[2]:.3f}/{pct[3]:.3f}/{pct[4]:.3f} "
++                      f"kept={(concentration >= self.xai_threshold).sum().item()}/{N}")
++
++        if self.xai_mode == "drop":
++            keep = concentration >= self.xai_threshold
++            self._xai_stats["kept"] += int(keep.sum().item())
++            self._xai_stats["dropped"] += int((~keep).sum().item())
++            if keep.all():
++                return t_results_raw, None
++            new_inst = Instances(inst.image_size)
++            new_inst.pred_boxes = Boxes(inst.pred_boxes.tensor[keep])
++            new_inst.pred_classes = inst.pred_classes[keep]
++            new_inst.scores = inst.scores[keep]
++            for k in inst.get_fields():
++                if k not in ("pred_boxes", "pred_classes", "scores"):
++                    new_inst.set(k, inst.get(k)[keep])
++            return [new_inst], keep
++
++        if self.xai_mode == "reweight":
++            self._xai_stats["kept"] += N
++            # Rank-preserving soft filter: multiplicative on scores.
++            new_inst = Instances(inst.image_size)
++            new_inst.pred_boxes = inst.pred_boxes
++            new_inst.pred_classes = inst.pred_classes
++            new_inst.scores = inst.scores * concentration.to(inst.scores.dtype)
++            for k in inst.get_fields():
++                if k not in ("pred_boxes", "pred_classes", "scores"):
++                    new_inst.set(k, inst.get(k))
++            return [new_inst], None
++
++        # Unknown mode: no-op.
++        return t_results_raw, None
+     
+     def forward(self, x: List[Dict[str, torch.Tensor]]):
+         for _ in range(self.steps):
+@@ -163,7 +428,58 @@ class AMROD(nn.Module):
+     def forward_and_adapt(self, batched_inputs):
+         self.iter += 1
+         t_features, t_proposals, t_results_raw, outputs = self.model_teacher.inference(batched_inputs, mode= "ctaod")
+-        
++
++        # ---- TT-BBR: refine teacher boxes via a second RoI-regression pass.
++        # No-op when SOLVER.TTBBR_ENABLED = False. Updates t_results_raw
++        # in place (and returns it) so downstream code sees refined boxes.
++        # Also update `outputs` (postprocessed, used for CocoMetric eval)
++        # so the reported mAP reflects the refined boxes.
++        if self.ttbbr_enabled:
++            t_results_raw = self._tt_bbr(t_features, t_results_raw)
++            # Rescale refined boxes back to the ORIGINAL image frame for eval.
++            # `outputs[i].pred_instances` boxes are in original coords; recompute
++            # from the (now refined) t_results_raw boxes using the inverse of
++            # the resize ratio stored on `outputs`.
++            if len(outputs) > 0 and len(t_results_raw[0]) > 0:
++                orig_h = outputs[0]["instances"].image_size[0]
++                orig_w = outputs[0]["instances"].image_size[1]
++                resized_h, resized_w = t_results_raw[0].image_size
++                sx = float(orig_w) / float(resized_w)
++                sy = float(orig_h) / float(resized_h)
++                scale = t_results_raw[0].pred_boxes.tensor.new_tensor(
++                    [sx, sy, sx, sy]
++                )
++                new_boxes = t_results_raw[0].pred_boxes.tensor * scale
++                if self.ttbbr_drop:
++                    # Rebuild outputs[0]["instances"] with only the surviving
++                    # subset since drop mode shrinks the set.
++                    new_inst = Instances((orig_h, orig_w))
++                    new_inst.pred_boxes = Boxes(new_boxes)
++                    new_inst.pred_classes = t_results_raw[0].pred_classes
++                    new_inst.scores = t_results_raw[0].scores
++                    outputs[0]["instances"] = new_inst
++                else:
++                    outputs[0]["instances"].pred_boxes = Boxes(new_boxes)
++
++        # ---- XAI-guided pseudo-label filter (Option 1).
++        # No-op when SOLVER.XAI_FILTER_ENABLED = False. Applied AFTER TT-BBR
++        # so it filters the refined-box set. If drop mode removes boxes, mirror
++        # the same mask onto outputs[0]["instances"] for eval consistency.
++        if self.xai_enabled:
++            t_results_raw, xai_keep = self._xai_filter(t_features, t_results_raw)
++            if xai_keep is not None and len(outputs) > 0:
++                out_inst = outputs[0]["instances"]
++                if len(out_inst) == xai_keep.numel():
++                    new_out = Instances(out_inst.image_size)
++                    new_out.pred_boxes = Boxes(
++                        out_inst.pred_boxes.tensor[xai_keep]
++                    )
++                    new_out.pred_classes = out_inst.pred_classes[xai_keep]
++                    new_out.scores = out_inst.scores[xai_keep]
++                    for k in out_inst.get_fields():
++                        if k not in ("pred_boxes", "pred_classes", "scores"):
++                            new_out.set(k, out_inst.get(k)[xai_keep])
++                    outputs[0]["instances"] = new_out
+ 
+         valid_map = t_results_raw[0].scores > 0.1
+         valid_score = t_results_raw[0].scores[valid_map]
+@@ -228,7 +544,7 @@ class AMROD(nn.Module):
+             fisher_dict = {}
+             for nm, m  in self.model.named_modules():  ## previously used model, but now using self.model
+                 for npp, p in m.named_parameters():
+-                    if npp in ['weight', 'bias'] and p.requires_grad:
++                    if npp in ['weight', 'bias'] and p.requires_grad and p.grad is not None:
+                         fisher_dict[f"{nm}.{npp}"] = p.grad.data.clone().pow(2)
+         
+         self.optimizer.step()
+@@ -243,8 +559,16 @@ class AMROD(nn.Module):
+         for nm, m  in self.model.named_modules():
+             for npp, p in m.named_parameters():
+                 if npp in ['weight', 'bias'] and p.requires_grad:
++                    if f"{nm}.{npp}" not in fisher_dict:
++                        continue
+                     data = fisher_dict[f"{nm}.{npp}"]
+                     mask = find_weight_quantile(data, self.rst_m)
++                    # V2: scale restore probability for shared backbone/FPN params.
++                    if self.backbone_rst_factor < 1.0:
++                        key = f"{nm}.{npp}"
++                        _shared = ("backbone.", "fpn.", "proposal_generator.anchor_generator.")
++                        if any(key.startswith(pfx) for pfx in _shared):
++                            mask = mask * self.backbone_rst_factor
+                     with torch.no_grad(): 
+                         p.data = self.model_state_anchor[f"{nm}.{npp}"] * mask + p * (1.-mask)               
+             
+diff --git a/detectron2/detectron2/modeling/meta_arch/semantic_seg.py b/detectron2/detectron2/modeling/meta_arch/semantic_seg.py
+index fefbecf..4adc89b 100644
+--- a/detectron2/detectron2/modeling/meta_arch/semantic_seg.py
++++ b/detectron2/detectron2/modeling/meta_arch/semantic_seg.py
+@@ -73,6 +73,22 @@ class SemanticSegmentor(nn.Module):
+     def device(self):
+         return self.pixel_mean.device
+ 
++    def preprocess_image(self, batched_inputs, strong_aug: bool = False):
++        """Normalize, pad and batch the input images.
++
++        Mirrors GeneralizedRCNN's signature so CTCMT_MTL can drive a
++        SemanticSegmentor student through the same interface, including the
++        weak/strong mean-teacher asymmetry.
++        """
++        key = "image_strong" if strong_aug else "image"
++        images = [x[key].to(self.device) for x in batched_inputs]
++        images = [(x - self.pixel_mean) / self.pixel_std for x in images]
++        return ImageList.from_tensors(
++            images,
++            self.backbone.size_divisibility,
++            padding_constraints=self.backbone.padding_constraints,
++        )
++
+     def forward(self, batched_inputs):
+         """
+         Args:
+diff --git a/detectron2/tools/train_net.py b/detectron2/tools/train_net.py
+index 8a6f297..d098717 100644
+--- a/detectron2/tools/train_net.py
++++ b/detectron2/tools/train_net.py
+@@ -50,7 +50,7 @@ def build_evaluator(cfg, dataset_name, output_folder=None):
+         output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
+     evaluator_list = []
+     evaluator_type = MetadataCatalog.get(dataset_name).evaluator_type
+-    if evaluator_type in ["sem_seg", "coco_panoptic_seg"]:
++    if evaluator_type in ["sem_seg", "coco_panoptic_seg", "coco_sem_seg"]:
+         evaluator_list.append(
+             SemSegEvaluator(
+                 dataset_name,
+@@ -58,7 +58,7 @@ def build_evaluator(cfg, dataset_name, output_folder=None):
+                 output_dir=output_folder,
+             )
+         )
+-    if evaluator_type in ["coco", "coco_panoptic_seg"]:
++    if evaluator_type in ["coco", "coco_panoptic_seg", "coco_sem_seg"]:
+         evaluator_list.append(COCOEvaluator(dataset_name, output_dir=output_folder))
+     if evaluator_type == "coco_panoptic_seg":
+         evaluator_list.append(COCOPanopticEvaluator(dataset_name, output_folder))
+@@ -126,9 +126,16 @@ def main(args):
+ 
+     if args.eval_only:
+         model = Trainer.build_model(cfg)
+-        DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
+-            cfg.MODEL.WEIGHTS, resume=args.resume
+-        )
++        # Meta-archs whose from_config loads MODEL.WEIGHTS into each sub-model
++        # (student/teacher/anchor). A second flat-key load here would fail to
++        # match the prefixed keys and empirically resets FrozenBN buffers on
++        # this fork, silently ruining eval.
++        _SELF_LOADING = {"AMROD", "CoTTA_SemSeg", "CTCMT_MTL", "CTCMT_Seg", "TENT_SemSeg",
++                         "CTAOD_Yoo", "OBAO_SemSeg", "DATPFN", "MTCLSR"}
++        if cfg.MODEL.META_ARCHITECTURE not in _SELF_LOADING:
++            DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
++                cfg.MODEL.WEIGHTS, resume=args.resume
++            )
+         res = Trainer.test(cfg, model)
+         if cfg.TEST.AUG.ENABLED:
+             res.update(Trainer.test_with_TTA(cfg, model))

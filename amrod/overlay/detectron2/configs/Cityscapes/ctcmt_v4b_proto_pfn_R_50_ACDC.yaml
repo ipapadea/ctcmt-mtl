@@ -1,0 +1,9 @@
+# V4 tuned: faster prototype update + stronger pull weight.
+_BASE_: "./ctcmt_mtl_panoptic_fpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_PROTO_ANCHOR: True
+  CTCMT_PROTO_EMA: 0.99
+  CTCMT_PROTO_WEIGHT: 0.2
+
+OUTPUT_DIR: "/workspace/output/ctcmt_v4b_proto_pfn_R50_C2ACDC"

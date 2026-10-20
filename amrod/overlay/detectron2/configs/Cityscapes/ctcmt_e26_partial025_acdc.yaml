@@ -1,0 +1,16 @@
+# O1 / E26 --- partial semantic gradient routing, lambda = 0.25. ACDC.
+#
+# The ACDC counterpart of e26. Here the sign of the transfer is the opposite of
+# Cityscapes-C: full MTL (E11, lambda=1) BEATS detection-only by +0.6 mAP0.5 and
+# +0.9 mIoU, and S6 (E24, lambda=0) costs 2.2 mIoU. So on this benchmark lambda
+# should want to be LARGE, and 0.25 is expected to sit between E24 and E11.
+# Running it is what turns "routing is benchmark-specific" from an inference
+# into a measured curve over lambda.
+#
+# ONE factor vs E24.
+_BASE_: "./ctcmt_e24_seghead_only_acdc.yaml"
+
+SOLVER:
+  CTCMT_AUX_TRUNK_LAMBDA: 0.25
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e26_partial025_acdc"

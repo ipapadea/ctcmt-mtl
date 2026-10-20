@@ -1,0 +1,32 @@
+# Source-only (no adaptation) evaluation of the Semantic FPN R50 segmentation
+# specialist on Cityscapes-C, mirroring source_only_pfn_cs_c.yaml.
+#
+# Needed to interpret ST-S. Its round-1 mIoU is 33.2 against E21's 28.3 and
+# E15's 30.2, so the three arms plainly start from different segmentation
+# quality and their absolute means are not comparable. Only a per-arm gain over
+# its own source is.
+#
+# Semantic-only dataset names: a SemanticSegmentor emits no detections, so the
+# `_mtl` variants would attach a COCOEvaluator with nothing to evaluate.
+#
+# NOTE: run_mixed_lt_local.sh ALWAYS passes DATASETS.TEST and defaults to the
+# `_mtl` x10 stream, so this list is only used if you invoke train_net.py
+# directly. Through the runner you must pass STREAM explicitly:
+#   STREAM='("fog_semseg","motion_blur_semseg","snow_semseg","brightness_semseg","defocus_blur_semseg")'
+_BASE_: "./semantic_R_50_FPN_singletask.yaml"
+
+MODEL:
+  META_ARCHITECTURE: "SemanticSegmentor"
+  WEIGHTS: "/workspace/output/semantic_R50_cityscapes/model_final.pth"
+
+INPUT:
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 2048
+
+DATASETS:
+  # Five long-term domains, in cycle order -- all the specialist table needs,
+  # and a frozen model does not drift, so one pass is enough.
+  TEST: ("fog_semseg", "motion_blur_semseg", "snow_semseg",
+         "brightness_semseg", "defocus_blur_semseg")
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/source_only_semfpn_cs_c"

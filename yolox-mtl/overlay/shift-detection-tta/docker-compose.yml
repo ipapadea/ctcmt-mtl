@@ -1,0 +1,35 @@
+# Compose v2 spec. Requires the `docker compose` plugin OR `docker-compose` >=1.28.
+# If you don't have compose installed, use docker/run.sh instead.
+#
+# Env vars (put them in a .env file next to this compose file, or export them):
+#   DATA_HOST  host path to your datasets root  (default: ./data)
+#   WORK_DIRS  host path for checkpoints/logs   (default: ./work_dirs)
+#   IMAGE      image tag                        (default: shift-detection-tta:latest)
+
+services:
+  shift-detection-tta:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: ${IMAGE:-shift-detection-tta:latest}
+    container_name: shift-detection-tta
+    stdin_open: true
+    tty: true
+    shm_size: "16g"
+    ipc: host
+    working_dir: /workspace/shift-detection-tta
+    environment:
+      - DATA_ROOT=/workspace/data
+      - PYTHONPATH=/workspace/shift-detection-tta
+    volumes:
+      - .:/workspace/shift-detection-tta
+      - ${DATA_HOST:-./data}:/workspace/data
+      - ${WORK_DIRS:-./work_dirs}:/workspace/shift-detection-tta/work_dirs
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: bash

@@ -1,0 +1,9 @@
+# V2: Task-aware stochastic restore.
+# Shared backbone/FPN params restored 10x less often than task-specific heads.
+_BASE_: "./ctcmt_mtl_panoptic_fpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_CROSS_TASK_FISHER: True
+  CTCMT_BACKBONE_RST_FACTOR: 0.1
+
+OUTPUT_DIR: "/workspace/output/ctcmt_v2_cross_fisher_pfn_R50_C2ACDC"

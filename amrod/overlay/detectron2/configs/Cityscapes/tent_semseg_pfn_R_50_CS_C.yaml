@@ -1,0 +1,7 @@
+# TENT baseline on Cityscapes-C, same Panoptic-FPN source checkpoint.
+_BASE_: "./tent_semseg_pfn_R_50_ACDC.yaml"
+
+DATASETS:
+  TEST: ("defocus_blur_semseg","glass_blur_semseg","motion_blur_semseg","zoom_blur_semseg","snow_semseg","frost_semseg","fog_semseg","brightness_semseg","contrast_semseg","elastic_transform_semseg","pixelate_semseg","jpeg_compression_semseg")
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/tent_pfnsrc_cs_c"

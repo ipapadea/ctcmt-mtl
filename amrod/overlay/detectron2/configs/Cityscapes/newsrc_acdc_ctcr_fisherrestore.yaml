@@ -1,0 +1,5 @@
+# Experimental: +CTCR with Fisher-guided restoration (same budget as random).
+_BASE_: "./newsrc_acdc_ctcr.yaml"
+
+SOLVER:
+  CTCMT_FISHER_RESTORE_ENABLED: True

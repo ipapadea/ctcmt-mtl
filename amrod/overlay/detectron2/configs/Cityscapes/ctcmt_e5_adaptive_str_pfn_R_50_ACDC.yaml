@@ -1,0 +1,10 @@
+# Adaptive STR — shared-trunk restore factor scales with measured trunk drift.
+_BASE_: "./ctcmt_v2_cross_fisher_pfn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_ADAPTIVE_STR: True
+  CTCMT_ADAPTIVE_STR_BASE: 0.1
+  CTCMT_ADAPTIVE_STR_BOOST: 0.4
+  CTCMT_ADAPTIVE_STR_PIVOT: 0.05
+
+OUTPUT_DIR: "/workspace/output/ctcmt_e5_adaptive_str"

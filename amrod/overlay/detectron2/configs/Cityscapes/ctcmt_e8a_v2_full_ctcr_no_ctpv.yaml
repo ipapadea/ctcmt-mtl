@@ -1,0 +1,11 @@
+# A — V2 + legacy full-box CT-CR + CTPV OFF.
+_BASE_: "./ctcmt_v2_cross_fisher_pfn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_CTPV_ENABLED: False
+  CTCMT_WEIGHT_CTCR: 0.3
+  CTCMT_CTCR_MODE: "full_box"
+  CTCMT_CTCR_MASK_THRESH: 0.3
+  CTCMT_CTCR_WEIGHT_FLOOR: 0.2
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/ctcr_A_v2_full_no_ctpv"

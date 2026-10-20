@@ -1,0 +1,25 @@
+# S1 / E16 --- detection-protected gradient projection.
+#
+# Hypothesis: the Cityscapes-C detection plateau is shared-trunk negative
+# transfer. E13a (full MTL, thr 0.8) reaches AP50 24.80; E15 (det-only,
+# thr 0.8) reaches 26.80. This arm keeps every segmentation / cross-task loss
+# but forbids their aggregate gradient from having a negative component along
+# the detection gradient on the shared backbone+FPN:
+#
+#     if <g_det, g_aux> < 0:
+#         g_aux <- g_aux - <g_aux, g_det>/||g_det||^2 * g_det
+#     g_shared = g_det + g_aux
+#
+# Detection is the protected task: g_det is never modified. Task-specific
+# heads (proposal_generator/roi_heads, sem_seg_head) receive their normal
+# gradients -- surgery touches shared parameters only.
+#
+# ONE factor vs E13a: CTCMT_CONFLICT_MODE. CTCMT_GRAD_DIAG is logging only.
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_CONFLICT_MODE: "protect_det"
+  CTCMT_GRAD_DIAG: True
+  CTCMT_GRAD_DIAG_EVERY: 50
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e16_protectedgrad"

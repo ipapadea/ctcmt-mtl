@@ -1,0 +1,8 @@
+# CT-CR partial ResNet routing: lambda=0.5
+_BASE_: "./newsrc_csc_ctcr_rblock.yaml"
+
+SOLVER:
+  CTCMT_CONFLICT_MODE: "resnet_route"
+  CTCMT_AUX_TRUNK_LAMBDA: 0.5
+  CTCMT_ADAPTIVE_ROUTING: False
+  CTCMT_GRAD_DIAG: False

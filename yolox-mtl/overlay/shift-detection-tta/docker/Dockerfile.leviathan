@@ -1,0 +1,65 @@
+# shift-detection-tta runtime image for the shared remote machine "leviathan"
+# (RTX 3090, NVIDIA driver 470 = CUDA 11.4).  Identical to docker/Dockerfile (CUDA 11.3.1,
+# PyTorch 1.11.0+cu113, mmengine@62f9504, mmcv 2.0.0rc4, mmdet 3.0.0rc5, mmcls, mmtrack) except:
+#   * MAX_JOBS=6 so that compiling the mmcv CUDA ops does not take every core of a shared machine
+#   * any CUDA forward-compat libs are removed so the container uses the host driver
+#
+# Build (from the repo root):  docker build -f docker/Dockerfile.leviathan -t shift-detection-tta:cu113 .
+# The repo source is NOT baked in; bind-mount it at /workspace/shift-detection-tta (see docker/run.sh).
+
+FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    FORCE_CUDA=1 \
+    MMCV_WITH_OPS=1 \
+    MAX_JOBS=6 \
+    TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6+PTX" \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+RUN rm -f /etc/apt/sources.list.d/cuda*.list /etc/apt/sources.list.d/nvidia*.list \
+ && apt-get update && apt-get install -y --no-install-recommends \
+        git wget curl ca-certificates build-essential ninja-build \
+        ffmpeg libsm6 libxext6 libgl1 libglib2.0-0 \
+        openssh-client bzip2 unzip \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV CONDA_DIR=/opt/conda \
+    PATH=/opt/conda/bin:$PATH
+RUN curl -fsSL https://repo.anaconda.com/miniconda/Miniconda3-py39_23.11.0-2-Linux-x86_64.sh -o /tmp/mc.sh \
+ && bash /tmp/mc.sh -b -p $CONDA_DIR \
+ && rm /tmp/mc.sh \
+ && conda clean -afy
+
+RUN pip install --upgrade pip setuptools wheel openmim \
+ && pip install \
+        torch==1.11.0+cu113 torchvision==0.12.0+cu113 \
+        --extra-index-url https://download.pytorch.org/whl/cu113
+
+RUN pip install --no-build-isolation \
+      "git+https://github.com/open-mmlab/mmengine.git@62f9504d701251db763f56658436fd23a586fe25" \
+ && mim install "mmcv==2.0.0rc4" \
+ && mim install "mmdet==3.0.0rc5" \
+ && pip install --no-build-isolation \
+      "git+https://github.com/open-mmlab/mmclassification.git@3ff80f5047fe3f3780a05d387f913dd02999611d" \
+      "git+https://github.com/open-mmlab/mmtracking.git@9e4cb98a3cdac749242cd8decb3a172058d4fd6e" \
+      "git+https://github.com/JonathonLuiten/TrackEval.git" \
+      "git+https://github.com/scalabel/scalabel.git"
+
+COPY requirements/ /tmp/requirements/
+COPY requirements.txt /tmp/requirements.txt
+RUN cd /tmp && pip install -r requirements.txt \
+ && rm -rf /tmp/requirements /tmp/requirements.txt
+
+RUN pip install "transformers==4.36.2" "cityscapesscripts==2.2.2" "yapf<0.40"
+
+# Use the host libcuda (driver 470) instead of any forward-compat copy shipped in the image.
+RUN rm -rf /usr/local/cuda*/compat
+
+WORKDIR /workspace/shift-detection-tta
+ENV PYTHONPATH=/workspace/shift-detection-tta:${PYTHONPATH}
+ENV DATA_ROOT=/workspace/data
+
+CMD ["bash"]

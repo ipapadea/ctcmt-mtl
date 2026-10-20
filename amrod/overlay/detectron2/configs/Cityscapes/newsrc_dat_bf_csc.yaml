@@ -1,0 +1,16 @@
+# DAT-BF (same-source Panoptic-FPN port) on Cityscapes-C CSC12, boundary-free.
+# NOT an official DAT reproduction. Semantic-only wrapper around the canonical
+# Panoptic-FPN source: no detection features, boxes or heads are instantiated.
+# Protocol values live in SOLVER.DAT_* (locked defaults); do not tune on target data.
+_BASE_: "./cotta_semseg_pfn_R_50_CS_C.yaml"
+
+MODEL:
+  META_ARCHITECTURE: "DATPFN"
+  WEIGHTS: "/workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth"
+  SEM_SEG_HEAD:
+    LOSS_WEIGHT: 0.5
+
+SOLVER:
+  IMS_PER_BATCH: 1
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/newsrc_dat_bf_csc"

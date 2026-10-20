@@ -1,0 +1,4 @@
+# e1_ctpv seed 123.
+_BASE_: "./ctcmt_e1_ctpv_pfn_R_50_ACDC.yaml"
+SEED: 123
+OUTPUT_DIR: "/workspace/output/ctcmt_e1_ctpv_seed123"

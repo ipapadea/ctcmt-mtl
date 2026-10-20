@@ -1,0 +1,33 @@
+# Source-only (no adaptation) evaluation of the Mask R-CNN R50-FPN detection
+# specialist on Cityscapes-C, mirroring source_only_pfn_cs_c.yaml.
+#
+# Needed to interpret ST-D: without it, ST-D's 27.24 mAP0.5 cannot be turned
+# into a gain, and its comparison against E15 (26.80 on the Panoptic-FPN MTL
+# checkpoint) conflates the adaptation method with the source detector's
+# starting quality. ST-D's round 1 is 20.1 versus E15's 17.1, so the two
+# sources demonstrably do not start from the same place.
+#
+# Detection-only dataset names: a Mask R-CNN emits no sem_seg, so the `_mtl`
+# variants would attach a SemSegEvaluator with nothing to evaluate.
+#
+# NOTE: run_mixed_lt_local.sh ALWAYS passes DATASETS.TEST and defaults to the
+# `_mtl` x10 stream, so this list is only used if you invoke train_net.py
+# directly. Through the runner you must pass STREAM explicitly:
+#   STREAM='("fog","motion_blur","snow","brightness","defocus_blur")'
+_BASE_: "./mask_rcnn_R_50_FPN_singletask.yaml"
+
+MODEL:
+  META_ARCHITECTURE: "GeneralizedRCNN"
+  WEIGHTS: "/workspace/output/mask_rcnn_R50_cityscapes/model_final.pth"
+  MASK_ON: True
+
+INPUT:
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 2048
+
+DATASETS:
+  # Five long-term domains, in cycle order -- all the specialist table needs,
+  # and a frozen model does not drift, so one pass is enough.
+  TEST: ("fog", "motion_blur", "snow", "brightness", "defocus_blur")
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/source_only_mrcnn_cs_c"

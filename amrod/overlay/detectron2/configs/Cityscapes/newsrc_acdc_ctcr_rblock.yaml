@@ -1,0 +1,18 @@
+# New-source CT-CR with ResNet-block / FPN-open gradient routing.
+#
+# Detection gradients:
+#   ResNet + FPN + detection head
+#
+# Auxiliary gradients (segmentation + CT-CR):
+#   FPN + segmentation head
+#   blocked from ResNet bottom-up
+
+_BASE_: "./newsrc_acdc_ctcr.yaml"
+
+SOLVER:
+  CTCMT_CONFLICT_MODE: "resnet_route"
+  CTCMT_AUX_TRUNK_LAMBDA: 0.0
+  CTCMT_ADAPTIVE_ROUTING: False
+  CTCMT_GRAD_DIAG: False
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/newsrc_acdc_ctcr_rblock"

@@ -1,0 +1,11 @@
+# V4: Cross-task prototype anchor.
+# Maintain EMA prototype pairs (det-view + seg-view) per class. Update only
+# when both views agree. Weak pull toward prototypes as anti-forgetting.
+_BASE_: "./ctcmt_mtl_panoptic_fpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_PROTO_ANCHOR: True
+  CTCMT_PROTO_EMA: 0.999
+  CTCMT_PROTO_WEIGHT: 0.05
+
+OUTPUT_DIR: "/workspace/output/ctcmt_v4_proto_anchor_pfn_R50_C2ACDC"

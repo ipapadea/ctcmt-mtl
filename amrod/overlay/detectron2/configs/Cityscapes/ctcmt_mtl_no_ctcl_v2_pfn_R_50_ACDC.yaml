@@ -1,0 +1,9 @@
+# Table 4 ablation: MTL with V2 but no CT-CL/CR.
+# Separates V2 contribution from CT-CL contribution.
+_BASE_: "./ctcmt_mtl_no_ctcl_pfn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_CROSS_TASK_FISHER: True
+  CTCMT_BACKBONE_RST_FACTOR: 0.1
+
+OUTPUT_DIR: "/workspace/output/ctcmt_mtl_no_ctcl_v2_pfn_R50_C2ACDC"

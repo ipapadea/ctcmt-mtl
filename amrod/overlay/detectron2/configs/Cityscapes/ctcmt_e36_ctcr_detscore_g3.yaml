@@ -1,0 +1,14 @@
+# E36 --- E35 with the detector-score weighting sharpened.
+#
+# gamma = 3.0 maps the 0.7-1.0 score range onto 0.34-1.0, a ~3x spread that
+# matches the measured 2x purity gap rather than gamma = 1.0's 1.43x. If E35
+# moves nothing and E36 does, the mechanism is real but needs sharpening; if
+# neither moves, detector-confidence weighting is dead.
+#
+# ONE factor vs E35.
+_BASE_: "./ctcmt_e35_ctcr_detscore.yaml"
+
+SOLVER:
+  CTCMT_CTCR_DET_SCORE_GAMMA: 3.0
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e36_ctcr_detscore_g3"

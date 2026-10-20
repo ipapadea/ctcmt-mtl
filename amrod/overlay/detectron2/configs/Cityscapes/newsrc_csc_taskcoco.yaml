@@ -1,0 +1,4 @@
+_BASE_: "./newsrc_csc_ctcr.yaml"
+
+SOLVER:
+  CTCMT_CONFLICT_MODE: "task_coco"

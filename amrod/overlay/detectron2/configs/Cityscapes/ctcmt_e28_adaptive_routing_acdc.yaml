@@ -1,0 +1,16 @@
+# O3 / E28 --- adaptive semantic-to-trunk routing. ACDC.
+#
+# The ACDC counterpart. This is the arm that could reconcile the two
+# benchmarks: if the gate opens on ACDC (reliable seg teacher, lambda=0.25) and
+# closes on Cityscapes-C (drifting teacher, lambda=0), one rule recovers the
+# right behaviour on both without being told which benchmark it is on.
+#
+# ONE factor vs E26-ACDC: the gate.
+_BASE_: "./ctcmt_e26_partial025_acdc.yaml"
+
+SOLVER:
+  CTCMT_ADAPTIVE_ROUTING: True
+  CTCMT_ADAPTIVE_ROUTING_BETA: 0.98
+  CTCMT_ADAPTIVE_ROUTING_EMA: 0.99
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e28_adaptive_routing_acdc"

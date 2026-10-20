@@ -1,0 +1,8 @@
+# CTCMT_Seg with stricter prototype confidence threshold.
+# Prototypes updated only for pixels predicted with >= 0.95 confidence.
+_BASE_: "./ctcmt_seg_semfpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_SEG_PROTO_CONF_THRESH: 0.95
+
+OUTPUT_DIR: "/workspace/output/ctcmt_seg_sf_high_conf_R50_C2ACDC"

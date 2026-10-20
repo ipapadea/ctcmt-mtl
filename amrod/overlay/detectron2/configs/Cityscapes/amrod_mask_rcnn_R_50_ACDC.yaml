@@ -1,0 +1,47 @@
+_BASE_: "../Cityscapes/mask_rcnn_R_50_FPN_singletask.yaml"
+MODEL:
+  # AMROD wraps a GeneralizedRCNN student + teacher pair. Backbone/head
+  # geometry must match the source-trained Mask R-CNN R-50 FPN.
+  META_ARCHITECTURE: "AMROD"
+  # Point WEIGHTS at the source-trained OD checkpoint (fill in after training).
+  WEIGHTS: "/workspace/output/mask_rcnn_R50_cityscapes/model_final.pth"
+  RESNETS:
+    NORM: "FrozenBN"
+
+INPUT:
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 2048
+
+DATASETS:
+  TRAIN: ("cityscapes_fine_instance_seg_train",)
+  # ACDC weather ordering matches Wei et al. AMROD (Cityscapes -> ACDC).
+  TEST: ("acdc_fog", "acdc_night", "acdc_rain", "acdc_snow")
+
+SOLVER:
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.001
+  WEIGHT_DECAY: 0.0001
+  STEPS: (50000,)
+  MAX_ITER: 70000
+  WARMUP_ITERS: 0
+
+  # AMROD hyperparams (Wei et al. ACDC settings, transferred verbatim).
+  CTAOD: True
+  MT: 0.9998
+  RST_M: 0.01
+  LOSS_WEIGHT: 1.0
+  THRESHOLD_INIT: 0.80
+  THRESHOLD_MAX: 0.90
+  THRESHOLD_MINI: 0.7
+  ALPHA_DT: 1.3
+  GAMMA_DT: 0.95
+  PROPOSALS: 1000
+  SCORE_EM: 0.5
+  SCORE_GAMMA: 0.7
+  SCORE_THRESH: 1.4
+
+  # TT-BBR / XAI extensions kept OFF for a clean AMROD baseline.
+  TTBBR_ENABLED: False
+  XAI_FILTER_ENABLED: False
+
+OUTPUT_DIR: "/workspace/output/amrod_mask_rcnn_R50_C2ACDC"

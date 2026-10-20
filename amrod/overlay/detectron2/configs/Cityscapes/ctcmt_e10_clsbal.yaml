@@ -1,0 +1,12 @@
+# E10-1 — class-balanced segmentation consistency.
+# Counters the minority-class collapse diagnosed on Cityscapes-C long-term
+# (mIoU -4.8 while pACC only -0.35; pole/sidewalk/fence/sign absorbed by their
+# dominant neighbours). Per-pixel weight = (teacher class marginal)^-beta.
+_BASE_: "./ctcmt_e9_strongaug.yaml"
+
+SOLVER:
+  CTCMT_CLASS_BALANCED_CE: True
+  CTCMT_CLASS_BALANCE_BETA: 0.5
+  CTCMT_CLASS_MARGINAL_EMA: 0.999
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e10_clsbal"

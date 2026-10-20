@@ -1,0 +1,32 @@
+# CTCMT_Seg: our method on Semantic FPN R-50 source.
+# Direct comparison against CoTTA on the same source.
+_BASE_: "../Cityscapes/semantic_R_50_FPN_singletask.yaml"
+
+MODEL:
+  META_ARCHITECTURE: "CTCMT_Seg"
+  WEIGHTS: "/workspace/output/semantic_R50_cityscapes/model_final.pth"
+
+INPUT:
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 2048
+
+DATASETS:
+  TEST: ("acdc_fog_semseg", "acdc_night_semseg", "acdc_rain_semseg", "acdc_snow_semseg")
+
+SOLVER:
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.0001
+  WEIGHT_DECAY: 0.0
+  STEPS: ()
+  MAX_ITER: 400
+  WARMUP_ITERS: 0
+
+  COTTA_EMA_DECAY: 0.999
+  COTTA_RESTORE_PROB: 0.01
+  CTCMT_BACKBONE_RST_FACTOR: 0.1
+  CTCMT_PROTO_ANCHOR: True
+  CTCMT_PROTO_EMA: 0.99
+  CTCMT_PROTO_WEIGHT: 0.2
+  CTCMT_SEG_PROTO_CONF_THRESH: 0.85
+
+OUTPUT_DIR: "/workspace/output/ctcmt_seg_semfpn_R50_C2ACDC"

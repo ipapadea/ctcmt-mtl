@@ -1,0 +1,15 @@
+experiment=paper26_mtclsr_acdc4_s0
+method=MTCLSR (Moraiti et al. port, Panoptic-FPN detection branch)
+protocol=acdc4
+seed=0
+gpu=1
+config=detectron2/configs/Cityscapes/mtclsr_pfn_R_50_ACDC.yaml
+predict=last_step
+git_sha=a58ba2fd47532e1e2839e8017a0203dc847a3c72
+git_dirty=0
+expected_evals=4
+start_time=2026-10-16T14:49:00+03:00
+end_time=2026-10-16T15:49:45+03:00
+exit_code=0
+eval_count=4
+status=COMPLETE

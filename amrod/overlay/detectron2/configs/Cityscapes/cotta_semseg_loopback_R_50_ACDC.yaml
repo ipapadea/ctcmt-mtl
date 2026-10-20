@@ -1,0 +1,7 @@
+# Loopback variant of cotta_semseg_R_50_ACDC.yaml — appends cityscapes val as
+# the 5th test domain to measure Forgetting = mIoU_Source - mIoU_Loopback
+# (Moraiti et al. EJAI 2026 convention).
+_BASE_: "./cotta_semseg_R_50_ACDC.yaml"
+DATASETS:
+  TEST: ("acdc_fog_semseg", "acdc_night_semseg", "acdc_rain_semseg", "acdc_snow_semseg", "cityscapes_fine_sem_seg_val")
+OUTPUT_DIR: "/workspace/output/cotta_semseg_loopback_R50_C2ACDC"

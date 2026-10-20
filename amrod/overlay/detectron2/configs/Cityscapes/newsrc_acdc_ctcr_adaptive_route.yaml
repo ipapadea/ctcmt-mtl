@@ -1,0 +1,15 @@
+# Binary adaptive ResNet-block routing: lambda flips between the lambda=1
+# (newsrc_acdc_ctcr.yaml) and lambda=0 (newsrc_acdc_ctcr_rblock.yaml) extremes
+# based on teacher-vs-anchor agreement EMA vs its running peak.
+# Diagnostic baseline only — not a new mechanism.
+
+_BASE_: "./newsrc_acdc_ctcr.yaml"
+
+SOLVER:
+  CTCMT_CONFLICT_MODE: "resnet_route"
+  CTCMT_AUX_TRUNK_LAMBDA: 1.0
+  CTCMT_ADAPTIVE_ROUTING: True
+  CTCMT_ADAPTIVE_ROUTING_BETA: 0.98
+  CTCMT_ADAPTIVE_ROUTING_EMA: 0.99
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/newsrc_acdc_ctcr_adaptive_route"

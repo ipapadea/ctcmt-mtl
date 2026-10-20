@@ -1,0 +1,15 @@
+# O2 / E27 --- S6 plus conservative semantic self-training. ACDC.
+#
+# Same single factor as the Cityscapes-C e27: entropy-weighted semantic CE on
+# top of S6's routing, with magnitude preservation already on from the E11
+# lineage. On ACDC the segmentation branch is genuinely useful, so this asks
+# whether down-weighting uncertain pseudo-labels helps even when the objective
+# is not collapsing.
+#
+# ONE factor vs E24.
+_BASE_: "./ctcmt_e24_seghead_only_acdc.yaml"
+
+SOLVER:
+  CTCMT_ENTROPY_WEIGHTED_CE: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e27_s6_entropy_acdc"

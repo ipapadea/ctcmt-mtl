@@ -1,0 +1,8 @@
+# CT-CMT det-only on Cityscapes-to-Cityscapes-C.
+# Same source as ctcmt_mtl (Panoptic FPN), det branch only — fair single-task baseline.
+_BASE_: "./ctcmt_det_only_pfn_R_50_ACDC.yaml"
+
+DATASETS:
+  TEST: ("defocus_blur","glass_blur","motion_blur","zoom_blur","snow","frost","fog","brightness","contrast","elastic_transform","pixelate","jpeg_compression")
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/ctcmt_det_cs_c"

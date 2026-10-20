@@ -1,0 +1,21 @@
+# D — V2 + soft semantic-weighted CT-CR with GLOBAL pixel normalization + CTPV OFF.
+#
+# Missing cell of the CT-CR 2x2 factorial:
+#
+#                | global pixel-norm | per-box norm
+#   uniform      |        A          |      A2
+#   soft w(i)    |      D (this)     |      C
+#
+# w(i) = alpha + (1-alpha) * P_T^seg(mapped_class | i), alpha = 0.2
+# Target map construction and overlap-overwrite order are identical to A, so
+# D vs A isolates soft semantic weighting and D vs C isolates normalization.
+_BASE_: "./ctcmt_v2_cross_fisher_pfn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_CTPV_ENABLED: False
+  CTCMT_WEIGHT_CTCR: 0.3
+  CTCMT_CTCR_MODE: "soft_seg_global"
+  CTCMT_CTCR_MASK_THRESH: 0.3
+  CTCMT_CTCR_WEIGHT_FLOOR: 0.2
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/ctcr_D_v2_softglobal_a02_no_ctpv"

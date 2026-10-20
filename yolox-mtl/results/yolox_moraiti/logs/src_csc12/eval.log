@@ -1,0 +1,2233 @@
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 11.3.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+10/17 18:14:52 - mmengine - INFO - 
+------------------------------------------------------------
+System environment:
+    sys.platform: linux
+    Python: 3.9.18 (main, Sep 11 2023, 13:41:44) [GCC 11.2.0]
+    CUDA available: True
+    numpy_random_seed: 1234
+    GPU 0: NVIDIA GeForce RTX 3090
+    CUDA_HOME: /usr/local/cuda
+    NVCC: Cuda compilation tools, release 11.3, V11.3.109
+    GCC: gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+    PyTorch: 1.11.0+cu113
+    PyTorch compiling details: PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) Math Kernel Library Version 2020.0.0 Product Build 20191122 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.5.2 (Git Hash a9302535553c73243c632ad3c4c80beec3d19a1e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.3
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86
+  - CuDNN 8.2
+  - Magma 2.5.2
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.3, CUDNN_VERSION=8.2.0, CXX_COMPILER=/opt/rh/devtoolset-7/root/usr/bin/c++, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_KINETO -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -DEDGE_PROFILER_USE_KINETO -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_VERSION=1.11.0, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=OFF, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+    TorchVision: 0.12.0+cu113
+    OpenCV: 5.0.0
+    MMEngine: 0.8.0
+
+Runtime environment:
+    cudnn_benchmark: False
+    mp_cfg: {'mp_start_method': 'fork', 'opencv_num_threads': 0}
+    dist_cfg: {'backend': 'nccl'}
+    seed: 1234
+    deterministic: True
+    Distributed launcher: none
+    Distributed training: False
+    GPU number: 1
+------------------------------------------------------------
+
+10/17 18:14:56 - mmengine - INFO - Config:
+img_scale = (
+    600.0,
+    1080.0,
+)
+model = dict(
+    data_preprocessor=dict(
+        type='mmtrack.TrackDataPreprocessor',
+        pad_size_divisor=32,
+        batch_augments=[
+            dict(
+                type='mmdet.BatchSyncRandomResize',
+                random_size_range=(
+                    576,
+                    1024,
+                ),
+                size_divisor=32,
+                interval=10),
+        ]),
+    detector=dict(
+        _scope_='mmdet',
+        type='YOLOX',
+        backbone=dict(
+            type='CSPDarknet', deepen_factor=1.33, widen_factor=1.25),
+        neck=dict(
+            type='YOLOXPAFPN',
+            in_channels=[
+                320,
+                640,
+                1280,
+            ],
+            out_channels=320,
+            num_csp_blocks=4),
+        bbox_head=dict(
+            type='YOLOXHead',
+            num_classes=8,
+            in_channels=320,
+            feat_channels=320),
+        train_cfg=dict(
+            assigner=dict(type='SimOTAAssigner', center_radius=2.5)),
+        test_cfg=dict(score_thr=0.01, nms=dict(type='nms', iou_threshold=0.7)),
+        init_cfg=dict(
+            type='Pretrained',
+            checkpoint=
+            'https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_x_8x8_300e_coco/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth'
+        )),
+    type='AdaptiveDetector',
+    adapter=None)
+default_scope = 'shift_tta'
+default_hooks = dict(
+    timer=dict(type='IterTimerHook'),
+    logger=dict(type='LoggerHook', interval=50),
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    checkpoint=dict(type='CheckpointHook', interval=1),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+    visualization=dict(type='mmtrack.TrackVisualizationHook', draw=False))
+env_cfg = dict(
+    cudnn_benchmark=False,
+    mp_cfg=dict(mp_start_method='fork', opencv_num_threads=0),
+    dist_cfg=dict(backend='nccl'))
+vis_backends = [
+    dict(type='LocalVisBackend'),
+]
+visualizer = dict(
+    type='mmtrack.TrackLocalVisualizer',
+    vis_backends=[
+        dict(type='LocalVisBackend'),
+    ],
+    name='visualizer')
+log_level = 'INFO'
+load_from = '/workspace/ckpt/yolox_x_8xb4-24e_cityscapes.pth'
+resume = False
+dataset_type = 'mmdet.datasets.CityscapesDataset'
+data_root = 'data/cityscapes_foggy/leftImg8bit/val/'
+attributes = dict(weather_coarse='all', timeofday_coarse='all')
+ratio = 0.75
+batch_size = 1
+train_pipeline = [
+    dict(
+        type='mmdet.Mosaic',
+        img_scale=(
+            600.0,
+            1080.0,
+        ),
+        pad_val=114.0,
+        bbox_clip_border=False),
+    dict(
+        type='mmdet.RandomAffine',
+        scaling_ratio_range=(
+            0.1,
+            2,
+        ),
+        border=(
+            -300.0,
+            -540.0,
+        ),
+        bbox_clip_border=False),
+    dict(
+        type='mmdet.MixUp',
+        img_scale=(
+            600.0,
+            1080.0,
+        ),
+        ratio_range=(
+            0.8,
+            1.6,
+        ),
+        pad_val=114.0,
+        bbox_clip_border=False),
+    dict(type='mmdet.YOLOXHSVRandomAug'),
+    dict(type='mmdet.RandomFlip', prob=0.5),
+    dict(
+        type='mmdet.Resize',
+        scale=(
+            600.0,
+            1080.0,
+        ),
+        keep_ratio=True,
+        clip_object_border=False),
+    dict(
+        type='mmdet.Pad',
+        size_divisor=32,
+        pad_val=dict(img=(
+            114.0,
+            114.0,
+            114.0,
+        ))),
+    dict(
+        type='mmdet.FilterAnnotations',
+        min_gt_bbox_wh=(
+            1,
+            1,
+        ),
+        keep_empty=False),
+    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+]
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(type='mmtrack.LoadTrackAnnotations'),
+    dict(type='mmdet.Resize', scale=(
+        600.0,
+        1080.0,
+    ), keep_ratio=True),
+    dict(
+        type='mmdet.Pad',
+        size_divisor=32,
+        pad_val=dict(img=(
+            114.0,
+            114.0,
+            114.0,
+        ))),
+    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+]
+train_dataset = dict(
+    type='mmdet.MultiImageMixDataset',
+    dataset=dict(
+        type='mmdet.datasets.CityscapesDataset',
+        ann_file='data/cityscapes/leftImg8bit/train/det_2d_cocoformat.json',
+        data_prefix=dict(img='data/cityscapes_foggy/leftImg8bit/val/'),
+        metainfo=dict(
+            classes=(
+                'person',
+                'rider',
+                'car',
+                'train',
+                'motorcycle',
+                'bicycle',
+                'truck',
+                'bus',
+            )),
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(type='mmtrack.LoadTrackAnnotations'),
+        ],
+        filter_cfg=dict(
+            attributes=dict(weather_coarse='all', timeofday_coarse='all'),
+            filter_empty_gt=False,
+            min_size=32)),
+    pipeline=[
+        dict(
+            type='mmdet.Mosaic',
+            img_scale=(
+                600.0,
+                1080.0,
+            ),
+            pad_val=114.0,
+            bbox_clip_border=False),
+        dict(
+            type='mmdet.RandomAffine',
+            scaling_ratio_range=(
+                0.1,
+                2,
+            ),
+            border=(
+                -300.0,
+                -540.0,
+            ),
+            bbox_clip_border=False),
+        dict(
+            type='mmdet.MixUp',
+            img_scale=(
+                600.0,
+                1080.0,
+            ),
+            ratio_range=(
+                0.8,
+                1.6,
+            ),
+            pad_val=114.0,
+            bbox_clip_border=False),
+        dict(type='mmdet.YOLOXHSVRandomAug'),
+        dict(type='mmdet.RandomFlip', prob=0.5),
+        dict(
+            type='mmdet.Resize',
+            scale=(
+                600.0,
+                1080.0,
+            ),
+            keep_ratio=True,
+            clip_object_border=False),
+        dict(
+            type='mmdet.Pad',
+            size_divisor=32,
+            pad_val=dict(img=(
+                114.0,
+                114.0,
+                114.0,
+            ))),
+        dict(
+            type='mmdet.FilterAnnotations',
+            min_gt_bbox_wh=(
+                1,
+                1,
+            ),
+            keep_empty=False),
+        dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+    ])
+train_dataloader = dict(
+    batch_size=1,
+    num_workers=4,
+    persistent_workers=True,
+    sampler=dict(type='DefaultSampler', shuffle=True),
+    dataset=dict(
+        type='mmdet.MultiImageMixDataset',
+        dataset=dict(
+            type='mmdet.datasets.CityscapesDataset',
+            ann_file='data/cityscapes/leftImg8bit/train/det_2d_cocoformat.json',
+            data_prefix=dict(img='data/cityscapes_foggy/leftImg8bit/val/'),
+            metainfo=dict(
+                classes=(
+                    'person',
+                    'rider',
+                    'car',
+                    'train',
+                    'motorcycle',
+                    'bicycle',
+                    'truck',
+                    'bus',
+                )),
+            pipeline=[
+                dict(type='LoadImageFromFile'),
+                dict(type='mmtrack.LoadTrackAnnotations'),
+            ],
+            filter_cfg=dict(
+                attributes=dict(weather_coarse='all', timeofday_coarse='all'),
+                filter_empty_gt=False,
+                min_size=32)),
+        pipeline=[
+            dict(
+                type='mmdet.Mosaic',
+                img_scale=(
+                    600.0,
+                    1080.0,
+                ),
+                pad_val=114.0,
+                bbox_clip_border=False),
+            dict(
+                type='mmdet.RandomAffine',
+                scaling_ratio_range=(
+                    0.1,
+                    2,
+                ),
+                border=(
+                    -300.0,
+                    -540.0,
+                ),
+                bbox_clip_border=False),
+            dict(
+                type='mmdet.MixUp',
+                img_scale=(
+                    600.0,
+                    1080.0,
+                ),
+                ratio_range=(
+                    0.8,
+                    1.6,
+                ),
+                pad_val=114.0,
+                bbox_clip_border=False),
+            dict(type='mmdet.YOLOXHSVRandomAug'),
+            dict(type='mmdet.RandomFlip', prob=0.5),
+            dict(
+                type='mmdet.Resize',
+                scale=(
+                    600.0,
+                    1080.0,
+                ),
+                keep_ratio=True,
+                clip_object_border=False),
+            dict(
+                type='mmdet.Pad',
+                size_divisor=32,
+                pad_val=dict(img=(
+                    114.0,
+                    114.0,
+                    114.0,
+                ))),
+            dict(
+                type='mmdet.FilterAnnotations',
+                min_gt_bbox_wh=(
+                    1,
+                    1,
+                ),
+                keep_empty=False),
+            dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+        ]))
+val_dataset = dict(
+    type='ConcatDataset',
+    datasets=[
+        dict(
+            type='mmdet.datasets.CityscapesDataset',
+            ann_file='data/cityscapes_foggy/leftImg8bit/val/fog_0.005.json',
+            data_prefix=dict(img='data/cityscapes_foggy/leftImg8bit/val/'),
+            test_mode=True,
+            filter_cfg=dict(
+                attributes=dict(weather_coarse='all', timeofday_coarse='all')),
+            pipeline=[
+                dict(type='LoadImageFromFile'),
+                dict(type='mmtrack.LoadTrackAnnotations'),
+                dict(
+                    type='mmdet.Resize',
+                    scale=(
+                        600.0,
+                        1080.0,
+                    ),
+                    keep_ratio=True),
+                dict(
+                    type='mmdet.Pad',
+                    size_divisor=32,
+                    pad_val=dict(img=(
+                        114.0,
+                        114.0,
+                        114.0,
+                    ))),
+                dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+            ],
+            metainfo=dict(
+                classes=(
+                    'person',
+                    'rider',
+                    'car',
+                    'train',
+                    'motorcycle',
+                    'bicycle',
+                    'truck',
+                    'bus',
+                ))),
+        dict(
+            type='mmdet.datasets.CityscapesDataset',
+            ann_file='data/cityscapes_foggy/leftImg8bit/val/fog_0.01.json',
+            data_prefix=dict(img='data/cityscapes_foggy/leftImg8bit/val/'),
+            test_mode=True,
+            filter_cfg=dict(
+                attributes=dict(weather_coarse='all', timeofday_coarse='all')),
+            pipeline=[
+                dict(type='LoadImageFromFile'),
+                dict(type='mmtrack.LoadTrackAnnotations'),
+                dict(
+                    type='mmdet.Resize',
+                    scale=(
+                        600.0,
+                        1080.0,
+                    ),
+                    keep_ratio=True),
+                dict(
+                    type='mmdet.Pad',
+                    size_divisor=32,
+                    pad_val=dict(img=(
+                        114.0,
+                        114.0,
+                        114.0,
+                    ))),
+                dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+            ],
+            metainfo=dict(
+                classes=(
+                    'person',
+                    'rider',
+                    'car',
+                    'train',
+                    'motorcycle',
+                    'bicycle',
+                    'truck',
+                    'bus',
+                ))),
+        dict(
+            type='mmdet.datasets.CityscapesDataset',
+            ann_file='data/cityscapes_foggy/leftImg8bit/val/fog_0.02.json',
+            data_prefix=dict(img='data/cityscapes_foggy/leftImg8bit/val/'),
+            test_mode=True,
+            filter_cfg=dict(
+                attributes=dict(weather_coarse='all', timeofday_coarse='all')),
+            pipeline=[
+                dict(type='LoadImageFromFile'),
+                dict(type='mmtrack.LoadTrackAnnotations'),
+                dict(
+                    type='mmdet.Resize',
+                    scale=(
+                        600.0,
+                        1080.0,
+                    ),
+                    keep_ratio=True),
+                dict(
+                    type='mmdet.Pad',
+                    size_divisor=32,
+                    pad_val=dict(img=(
+                        114.0,
+                        114.0,
+                        114.0,
+                    ))),
+                dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+            ],
+            metainfo=dict(
+                classes=(
+                    'person',
+                    'rider',
+                    'car',
+                    'train',
+                    'motorcycle',
+                    'bicycle',
+                    'truck',
+                    'bus',
+                ))),
+        dict(
+            type='mmdet.datasets.CityscapesDataset',
+            ann_file='data/cityscapes_foggy/leftImg8bit/val/clear.json',
+            data_prefix=dict(img='data/cityscapes_foggy/leftImg8bit/val/'),
+            test_mode=True,
+            filter_cfg=dict(
+                attributes=dict(weather_coarse='all', timeofday_coarse='all')),
+            pipeline=[
+                dict(type='LoadImageFromFile'),
+                dict(type='mmtrack.LoadTrackAnnotations'),
+                dict(
+                    type='mmdet.Resize',
+                    scale=(
+                        600.0,
+                        1080.0,
+                    ),
+                    keep_ratio=True),
+                dict(
+                    type='mmdet.Pad',
+                    size_divisor=32,
+                    pad_val=dict(img=(
+                        114.0,
+                        114.0,
+                        114.0,
+                    ))),
+                dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+            ],
+            metainfo=dict(
+                classes=(
+                    'person',
+                    'rider',
+                    'car',
+                    'train',
+                    'motorcycle',
+                    'bicycle',
+                    'truck',
+                    'bus',
+                ))),
+    ])
+val_dataloader = dict(
+    batch_size=1,
+    num_workers=4,
+    persistent_workers=True,
+    drop_last=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type='ConcatDataset',
+        datasets=[
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/defocus_blur/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/glass_blur/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/motion_blur/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/zoom_blur/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(img='/workspace/data/snow/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(img='/workspace/data/frost/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(img='/workspace/data/fog/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/brightness/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/contrast/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/elastic_transform/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/pixelate/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/jpeg_compression/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+        ]))
+test_dataloader = dict(
+    batch_size=1,
+    num_workers=4,
+    persistent_workers=True,
+    drop_last=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type='ConcatDataset',
+        datasets=[
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/defocus_blur/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/glass_blur/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/motion_blur/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/zoom_blur/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(img='/workspace/data/snow/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(img='/workspace/data/frost/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(img='/workspace/data/fog/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/brightness/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/contrast/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/elastic_transform/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/pixelate/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+            dict(
+                type='mmdet.datasets.CocoDataset',
+                ann_file=
+                '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+                data_prefix=dict(
+                    img='/workspace/data/jpeg_compression/leftImg8bit/val/'),
+                test_mode=True,
+                pipeline=[
+                    dict(type='LoadImageFromFile'),
+                    dict(type='mmtrack.LoadTrackAnnotations'),
+                    dict(
+                        type='mmdet.Resize',
+                        scale=(
+                            600.0,
+                            1080.0,
+                        ),
+                        keep_ratio=True),
+                    dict(
+                        type='mmdet.Pad',
+                        size_divisor=32,
+                        pad_val=dict(img=(
+                            114.0,
+                            114.0,
+                            114.0,
+                        ))),
+                    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+                ],
+                metainfo=dict(
+                    classes=(
+                        'person',
+                        'rider',
+                        'car',
+                        'train',
+                        'motorcycle',
+                        'bicycle',
+                        'truck',
+                        'bus',
+                    ))),
+        ]))
+lr = 6.25e-05
+optim_wrapper = dict(
+    type='OptimWrapper',
+    optimizer=dict(
+        type='SGD',
+        lr=6.25e-05,
+        momentum=0.9,
+        weight_decay=0.0005,
+        nesterov=True),
+    paramwise_cfg=dict(norm_decay_mult=0.0, bias_decay_mult=0.0))
+total_epochs = 12
+num_last_epochs = 2
+resume_from = None
+interval = 5
+train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=12, val_interval=1)
+val_cfg = dict(type='ValLoop')
+test_cfg = dict(type='TestLoop')
+param_scheduler = [
+    dict(
+        type='mmdet.QuadraticWarmupLR',
+        by_epoch=True,
+        begin=0,
+        end=1,
+        convert_to_iter_based=True),
+    dict(
+        type='mmdet.CosineAnnealingLR',
+        eta_min=3.125e-06,
+        begin=1,
+        T_max=10,
+        end=10,
+        by_epoch=True,
+        convert_to_iter_based=True),
+    dict(type='mmdet.ConstantLR', by_epoch=True, factor=1, begin=10, end=12),
+]
+custom_hooks = [
+    dict(type='mmtrack.YOLOXModeSwitchHook', num_last_epochs=2, priority=48),
+    dict(type='mmdet.SyncNormHook', priority=48),
+    dict(
+        type='mmdet.EMAHook',
+        ema_type='mmdet.ExpMomentumEMA',
+        momentum=0.0001,
+        update_buffers=True,
+        priority=49),
+]
+seed = 1234
+randomness = dict(seed=1234, deterministic=True)
+val_evaluator = [
+    dict(
+        type='CocoMetricDomains',
+        metric=[
+            'bbox',
+        ],
+        classwise=False,
+        domain_sizes=[
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+        ],
+        domain_names=[
+            'defocus_blur',
+            'glass_blur',
+            'motion_blur',
+            'zoom_blur',
+            'snow',
+            'frost',
+            'fog',
+            'brightness',
+            'contrast',
+            'elastic_transform',
+            'pixelate',
+            'jpeg_compression',
+        ]),
+]
+test_evaluator = [
+    dict(
+        type='CocoMetricDomains',
+        metric=[
+            'bbox',
+        ],
+        classwise=False,
+        domain_sizes=[
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+            500,
+        ],
+        domain_names=[
+            'defocus_blur',
+            'glass_blur',
+            'motion_blur',
+            'zoom_blur',
+            'snow',
+            'frost',
+            'fog',
+            'brightness',
+            'contrast',
+            'elastic_transform',
+            'pixelate',
+            'jpeg_compression',
+        ]),
+]
+classes = (
+    'person',
+    'rider',
+    'car',
+    'train',
+    'motorcycle',
+    'bicycle',
+    'truck',
+    'bus',
+)
+root = '/workspace/data/'
+corruptions = [
+    'defocus_blur',
+    'glass_blur',
+    'motion_blur',
+    'zoom_blur',
+    'snow',
+    'frost',
+    'fog',
+    'brightness',
+    'contrast',
+    'elastic_transform',
+    'pixelate',
+    'jpeg_compression',
+]
+launcher = 'none'
+work_dir = '/workspace/out'
+
+10/17 18:15:03 - mmengine - INFO - Distributed training is not used, all SyncBatchNorm (SyncBN) layers in the model will be automatically reverted to BatchNormXd layers if they are used.
+10/17 18:15:03 - mmengine - WARNING - "FileClient" will be deprecated in future. Please use io functions in https://mmengine.readthedocs.io/en/latest/api/fileio.html#file-io
+10/17 18:15:03 - mmengine - WARNING - "HardDiskBackend" is the alias of "LocalBackend" and the former will be deprecated in future.
+10/17 18:15:03 - mmengine - INFO - Hooks will be executed in the following order:
+before_run:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(49          ) EMAHook                            
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_load_checkpoint:
+(49          ) EMAHook                            
+ -------------------- 
+before_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(49          ) EMAHook                            
+(NORMAL      ) IterTimerHook                      
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_train_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(48          ) YOLOXModeSwitchHook                
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DistSamplerSeedHook                
+ -------------------- 
+before_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(49          ) EMAHook                            
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_train_epoch:
+(NORMAL      ) IterTimerHook                      
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_val_epoch:
+(48          ) SyncNormHook                       
+(49          ) EMAHook                            
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_val_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_val_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) TrackVisualizationHook             
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_val_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(49          ) EMAHook                            
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_save_checkpoint:
+(49          ) EMAHook                            
+ -------------------- 
+after_train:
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_test_epoch:
+(49          ) EMAHook                            
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_test_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_test_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) TrackVisualizationHook             
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(49          ) EMAHook                            
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_run:
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+10/17 18:15:06 - mmengine - INFO - load model from: https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_x_8x8_300e_coco/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth
+10/17 18:15:06 - mmengine - INFO - Loads checkpoint by http backend from path: https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_x_8x8_300e_coco/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth
+Downloading: "https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_x_8x8_300e_coco/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth" to /tmp/.cache/torch/hub/checkpoints/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth
+10/17 18:16:05 - mmengine - WARNING - The model and loaded state dict do not match exactly
+
+size mismatch for bbox_head.multi_level_conv_cls.0.weight: copying a param with shape torch.Size([80, 320, 1, 1]) from checkpoint, the shape in current model is torch.Size([8, 320, 1, 1]).
+size mismatch for bbox_head.multi_level_conv_cls.0.bias: copying a param with shape torch.Size([80]) from checkpoint, the shape in current model is torch.Size([8]).
+size mismatch for bbox_head.multi_level_conv_cls.1.weight: copying a param with shape torch.Size([80, 320, 1, 1]) from checkpoint, the shape in current model is torch.Size([8, 320, 1, 1]).
+size mismatch for bbox_head.multi_level_conv_cls.1.bias: copying a param with shape torch.Size([80]) from checkpoint, the shape in current model is torch.Size([8]).
+size mismatch for bbox_head.multi_level_conv_cls.2.weight: copying a param with shape torch.Size([80, 320, 1, 1]) from checkpoint, the shape in current model is torch.Size([8, 320, 1, 1]).
+size mismatch for bbox_head.multi_level_conv_cls.2.bias: copying a param with shape torch.Size([80]) from checkpoint, the shape in current model is torch.Size([8]).
+loading annotations into memory...
+Done (t=0.14s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+Loads checkpoint by local backend from path: /workspace/ckpt/yolox_x_8xb4-24e_cityscapes.pth
+10/17 18:16:11 - mmengine - INFO - Load checkpoint from /workspace/ckpt/yolox_x_8xb4-24e_cityscapes.pth
+/opt/conda/lib/python3.9/site-packages/torch/functional.py:568: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at  ../aten/src/ATen/native/TensorShape.cpp:2228.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+10/17 18:16:13 - mmengine - INFO - Epoch(test) [  50/6000]    eta: 0:03:58  time: 0.0358  data_time: 0.0019  memory: 963  
+10/17 18:16:15 - mmengine - INFO - Epoch(test) [ 100/6000]    eta: 0:03:44  time: 0.0358  data_time: 0.0018  memory: 963  
+10/17 18:16:17 - mmengine - INFO - Epoch(test) [ 150/6000]    eta: 0:03:38  time: 0.0360  data_time: 0.0019  memory: 963  
+10/17 18:16:18 - mmengine - INFO - Epoch(test) [ 200/6000]    eta: 0:03:34  time: 0.0361  data_time: 0.0020  memory: 963  
+10/17 18:16:20 - mmengine - INFO - Epoch(test) [ 250/6000]    eta: 0:03:31  time: 0.0361  data_time: 0.0017  memory: 963  
+10/17 18:16:22 - mmengine - INFO - Epoch(test) [ 300/6000]    eta: 0:03:28  time: 0.0355  data_time: 0.0016  memory: 963  
+10/17 18:16:24 - mmengine - INFO - Epoch(test) [ 350/6000]    eta: 0:03:26  time: 0.0362  data_time: 0.0019  memory: 963  
+10/17 18:16:26 - mmengine - INFO - Epoch(test) [ 400/6000]    eta: 0:03:24  time: 0.0364  data_time: 0.0020  memory: 963  
+10/17 18:16:27 - mmengine - INFO - Epoch(test) [ 450/6000]    eta: 0:03:22  time: 0.0361  data_time: 0.0017  memory: 963  
+10/17 18:16:29 - mmengine - INFO - Epoch(test) [ 500/6000]    eta: 0:03:20  time: 0.0363  data_time: 0.0016  memory: 963  
+10/17 18:16:31 - mmengine - INFO - Epoch(test) [ 550/6000]    eta: 0:03:18  time: 0.0363  data_time: 0.0020  memory: 963  
+10/17 18:16:33 - mmengine - INFO - Epoch(test) [ 600/6000]    eta: 0:03:16  time: 0.0361  data_time: 0.0019  memory: 963  
+10/17 18:16:35 - mmengine - INFO - Epoch(test) [ 650/6000]    eta: 0:03:14  time: 0.0362  data_time: 0.0019  memory: 963  
+10/17 18:16:37 - mmengine - INFO - Epoch(test) [ 700/6000]    eta: 0:03:13  time: 0.0364  data_time: 0.0019  memory: 963  
+10/17 18:16:38 - mmengine - INFO - Epoch(test) [ 750/6000]    eta: 0:03:11  time: 0.0363  data_time: 0.0018  memory: 963  
+10/17 18:16:40 - mmengine - INFO - Epoch(test) [ 800/6000]    eta: 0:03:09  time: 0.0358  data_time: 0.0017  memory: 963  
+10/17 18:16:42 - mmengine - INFO - Epoch(test) [ 850/6000]    eta: 0:03:07  time: 0.0365  data_time: 0.0018  memory: 963  
+10/17 18:16:44 - mmengine - INFO - Epoch(test) [ 900/6000]    eta: 0:03:05  time: 0.0366  data_time: 0.0021  memory: 963  
+10/17 18:16:46 - mmengine - INFO - Epoch(test) [ 950/6000]    eta: 0:03:03  time: 0.0360  data_time: 0.0017  memory: 963  
+10/17 18:16:47 - mmengine - INFO - Epoch(test) [1000/6000]    eta: 0:03:01  time: 0.0360  data_time: 0.0017  memory: 963  
+10/17 18:16:49 - mmengine - INFO - Epoch(test) [1050/6000]    eta: 0:02:59  time: 0.0363  data_time: 0.0020  memory: 963  
+10/17 18:16:51 - mmengine - INFO - Epoch(test) [1100/6000]    eta: 0:02:58  time: 0.0362  data_time: 0.0019  memory: 963  
+10/17 18:16:53 - mmengine - INFO - Epoch(test) [1150/6000]    eta: 0:02:57  time: 0.0364  data_time: 0.0020  memory: 963  
+10/17 18:16:55 - mmengine - INFO - Epoch(test) [1200/6000]    eta: 0:02:55  time: 0.0367  data_time: 0.0021  memory: 963  
+10/17 18:16:57 - mmengine - INFO - Epoch(test) [1250/6000]    eta: 0:02:53  time: 0.0364  data_time: 0.0018  memory: 963  
+10/17 18:16:59 - mmengine - INFO - Epoch(test) [1300/6000]    eta: 0:02:51  time: 0.0361  data_time: 0.0016  memory: 963  
+10/17 18:17:00 - mmengine - INFO - Epoch(test) [1350/6000]    eta: 0:02:49  time: 0.0362  data_time: 0.0018  memory: 963  
+10/17 18:17:02 - mmengine - INFO - Epoch(test) [1400/6000]    eta: 0:02:47  time: 0.0364  data_time: 0.0020  memory: 963  
+10/17 18:17:04 - mmengine - INFO - Epoch(test) [1450/6000]    eta: 0:02:45  time: 0.0365  data_time: 0.0019  memory: 963  
+10/17 18:17:06 - mmengine - INFO - Epoch(test) [1500/6000]    eta: 0:02:44  time: 0.0362  data_time: 0.0017  memory: 963  
+10/17 18:17:08 - mmengine - INFO - Epoch(test) [1550/6000]    eta: 0:02:42  time: 0.0367  data_time: 0.0021  memory: 963  
+10/17 18:17:09 - mmengine - INFO - Epoch(test) [1600/6000]    eta: 0:02:40  time: 0.0362  data_time: 0.0018  memory: 963  
+10/17 18:17:11 - mmengine - INFO - Epoch(test) [1650/6000]    eta: 0:02:38  time: 0.0366  data_time: 0.0021  memory: 963  
+10/17 18:17:13 - mmengine - INFO - Epoch(test) [1700/6000]    eta: 0:02:36  time: 0.0370  data_time: 0.0022  memory: 963  
+10/17 18:17:15 - mmengine - INFO - Epoch(test) [1750/6000]    eta: 0:02:34  time: 0.0363  data_time: 0.0019  memory: 963  
+10/17 18:17:17 - mmengine - INFO - Epoch(test) [1800/6000]    eta: 0:02:33  time: 0.0358  data_time: 0.0016  memory: 963  
+10/17 18:17:19 - mmengine - INFO - Epoch(test) [1850/6000]    eta: 0:02:31  time: 0.0363  data_time: 0.0018  memory: 963  
+10/17 18:17:20 - mmengine - INFO - Epoch(test) [1900/6000]    eta: 0:02:29  time: 0.0367  data_time: 0.0021  memory: 963  
+10/17 18:17:22 - mmengine - INFO - Epoch(test) [1950/6000]    eta: 0:02:27  time: 0.0365  data_time: 0.0020  memory: 963  
+10/17 18:17:24 - mmengine - INFO - Epoch(test) [2000/6000]    eta: 0:02:25  time: 0.0361  data_time: 0.0017  memory: 963  
+10/17 18:17:26 - mmengine - INFO - Epoch(test) [2050/6000]    eta: 0:02:23  time: 0.0366  data_time: 0.0021  memory: 963  
+10/17 18:17:28 - mmengine - INFO - Epoch(test) [2100/6000]    eta: 0:02:22  time: 0.0364  data_time: 0.0019  memory: 963  
+10/17 18:17:30 - mmengine - INFO - Epoch(test) [2150/6000]    eta: 0:02:20  time: 0.0370  data_time: 0.0020  memory: 963  
+10/17 18:17:31 - mmengine - INFO - Epoch(test) [2200/6000]    eta: 0:02:18  time: 0.0367  data_time: 0.0019  memory: 963  
+10/17 18:17:33 - mmengine - INFO - Epoch(test) [2250/6000]    eta: 0:02:16  time: 0.0365  data_time: 0.0019  memory: 963  
+10/17 18:17:35 - mmengine - INFO - Epoch(test) [2300/6000]    eta: 0:02:14  time: 0.0358  data_time: 0.0016  memory: 963  
+10/17 18:17:37 - mmengine - INFO - Epoch(test) [2350/6000]    eta: 0:02:13  time: 0.0365  data_time: 0.0019  memory: 963  
+10/17 18:17:39 - mmengine - INFO - Epoch(test) [2400/6000]    eta: 0:02:11  time: 0.0366  data_time: 0.0020  memory: 963  
+10/17 18:17:41 - mmengine - INFO - Epoch(test) [2450/6000]    eta: 0:02:09  time: 0.0362  data_time: 0.0018  memory: 963  
+10/17 18:17:42 - mmengine - INFO - Epoch(test) [2500/6000]    eta: 0:02:07  time: 0.0361  data_time: 0.0017  memory: 963  
+10/17 18:17:44 - mmengine - INFO - Epoch(test) [2550/6000]    eta: 0:02:05  time: 0.0364  data_time: 0.0019  memory: 963  
+10/17 18:17:46 - mmengine - INFO - Epoch(test) [2600/6000]    eta: 0:02:04  time: 0.0363  data_time: 0.0019  memory: 963  
+10/17 18:17:48 - mmengine - INFO - Epoch(test) [2650/6000]    eta: 0:02:02  time: 0.0366  data_time: 0.0021  memory: 963  
+10/17 18:17:50 - mmengine - INFO - Epoch(test) [2700/6000]    eta: 0:02:00  time: 0.0366  data_time: 0.0020  memory: 963  
+10/17 18:17:52 - mmengine - INFO - Epoch(test) [2750/6000]    eta: 0:01:58  time: 0.0364  data_time: 0.0017  memory: 963  
+10/17 18:17:53 - mmengine - INFO - Epoch(test) [2800/6000]    eta: 0:01:56  time: 0.0360  data_time: 0.0016  memory: 963  
+10/17 18:17:55 - mmengine - INFO - Epoch(test) [2850/6000]    eta: 0:01:55  time: 0.0364  data_time: 0.0018  memory: 963  
+10/17 18:17:57 - mmengine - INFO - Epoch(test) [2900/6000]    eta: 0:01:53  time: 0.0369  data_time: 0.0021  memory: 963  
+10/17 18:17:59 - mmengine - INFO - Epoch(test) [2950/6000]    eta: 0:01:51  time: 0.0363  data_time: 0.0018  memory: 963  
+10/17 18:18:01 - mmengine - INFO - Epoch(test) [3000/6000]    eta: 0:01:49  time: 0.0360  data_time: 0.0016  memory: 963  
+10/17 18:18:03 - mmengine - INFO - Epoch(test) [3050/6000]    eta: 0:01:47  time: 0.0365  data_time: 0.0020  memory: 963  
+10/17 18:18:04 - mmengine - INFO - Epoch(test) [3100/6000]    eta: 0:01:45  time: 0.0364  data_time: 0.0019  memory: 963  
+10/17 18:18:06 - mmengine - INFO - Epoch(test) [3150/6000]    eta: 0:01:44  time: 0.0365  data_time: 0.0020  memory: 963  
+10/17 18:18:08 - mmengine - INFO - Epoch(test) [3200/6000]    eta: 0:01:42  time: 0.0366  data_time: 0.0020  memory: 963  
+10/17 18:18:10 - mmengine - INFO - Epoch(test) [3250/6000]    eta: 0:01:40  time: 0.0365  data_time: 0.0018  memory: 963  
+10/17 18:18:12 - mmengine - INFO - Epoch(test) [3300/6000]    eta: 0:01:38  time: 0.0357  data_time: 0.0015  memory: 963  
+10/17 18:18:14 - mmengine - INFO - Epoch(test) [3350/6000]    eta: 0:01:36  time: 0.0370  data_time: 0.0019  memory: 963  
+10/17 18:18:15 - mmengine - INFO - Epoch(test) [3400/6000]    eta: 0:01:34  time: 0.0367  data_time: 0.0021  memory: 963  
+10/17 18:18:17 - mmengine - INFO - Epoch(test) [3450/6000]    eta: 0:01:33  time: 0.0362  data_time: 0.0018  memory: 963  
+10/17 18:18:19 - mmengine - INFO - Epoch(test) [3500/6000]    eta: 0:01:31  time: 0.0362  data_time: 0.0017  memory: 963  
+10/17 18:18:21 - mmengine - INFO - Epoch(test) [3550/6000]    eta: 0:01:29  time: 0.0366  data_time: 0.0021  memory: 963  
+10/17 18:18:23 - mmengine - INFO - Epoch(test) [3600/6000]    eta: 0:01:27  time: 0.0364  data_time: 0.0019  memory: 963  
+10/17 18:18:25 - mmengine - INFO - Epoch(test) [3650/6000]    eta: 0:01:25  time: 0.0365  data_time: 0.0020  memory: 963  
+10/17 18:18:26 - mmengine - INFO - Epoch(test) [3700/6000]    eta: 0:01:23  time: 0.0370  data_time: 0.0021  memory: 963  
+10/17 18:18:28 - mmengine - INFO - Epoch(test) [3750/6000]    eta: 0:01:22  time: 0.0363  data_time: 0.0018  memory: 963  
+10/17 18:18:30 - mmengine - INFO - Epoch(test) [3800/6000]    eta: 0:01:20  time: 0.0357  data_time: 0.0016  memory: 963  
+10/17 18:18:32 - mmengine - INFO - Epoch(test) [3850/6000]    eta: 0:01:18  time: 0.0368  data_time: 0.0019  memory: 963  
+10/17 18:18:34 - mmengine - INFO - Epoch(test) [3900/6000]    eta: 0:01:16  time: 0.0369  data_time: 0.0021  memory: 963  
+10/17 18:18:36 - mmengine - INFO - Epoch(test) [3950/6000]    eta: 0:01:14  time: 0.0365  data_time: 0.0019  memory: 963  
+10/17 18:18:37 - mmengine - INFO - Epoch(test) [4000/6000]    eta: 0:01:13  time: 0.0362  data_time: 0.0017  memory: 963  
+10/17 18:18:39 - mmengine - INFO - Epoch(test) [4050/6000]    eta: 0:01:11  time: 0.0365  data_time: 0.0020  memory: 963  
+10/17 18:18:41 - mmengine - INFO - Epoch(test) [4100/6000]    eta: 0:01:09  time: 0.0363  data_time: 0.0019  memory: 963  
+10/17 18:18:43 - mmengine - INFO - Epoch(test) [4150/6000]    eta: 0:01:07  time: 0.0365  data_time: 0.0019  memory: 963  
+10/17 18:18:45 - mmengine - INFO - Epoch(test) [4200/6000]    eta: 0:01:05  time: 0.0366  data_time: 0.0020  memory: 963  
+10/17 18:18:47 - mmengine - INFO - Epoch(test) [4250/6000]    eta: 0:01:03  time: 0.0363  data_time: 0.0018  memory: 963  
+10/17 18:18:48 - mmengine - INFO - Epoch(test) [4300/6000]    eta: 0:01:02  time: 0.0357  data_time: 0.0015  memory: 963  
+10/17 18:18:50 - mmengine - INFO - Epoch(test) [4350/6000]    eta: 0:01:00  time: 0.0363  data_time: 0.0018  memory: 963  
+10/17 18:18:52 - mmengine - INFO - Epoch(test) [4400/6000]    eta: 0:00:58  time: 0.0365  data_time: 0.0020  memory: 963  
+10/17 18:18:54 - mmengine - INFO - Epoch(test) [4450/6000]    eta: 0:00:56  time: 0.0368  data_time: 0.0017  memory: 963  
+10/17 18:18:56 - mmengine - INFO - Epoch(test) [4500/6000]    eta: 0:00:54  time: 0.0362  data_time: 0.0017  memory: 963  
+10/17 18:18:58 - mmengine - INFO - Epoch(test) [4550/6000]    eta: 0:00:52  time: 0.0367  data_time: 0.0021  memory: 963  
+10/17 18:18:59 - mmengine - INFO - Epoch(test) [4600/6000]    eta: 0:00:51  time: 0.0365  data_time: 0.0017  memory: 963  
+10/17 18:19:01 - mmengine - INFO - Epoch(test) [4650/6000]    eta: 0:00:49  time: 0.0366  data_time: 0.0021  memory: 963  
+10/17 18:19:03 - mmengine - INFO - Epoch(test) [4700/6000]    eta: 0:00:47  time: 0.0366  data_time: 0.0019  memory: 963  
+10/17 18:19:05 - mmengine - INFO - Epoch(test) [4750/6000]    eta: 0:00:45  time: 0.0365  data_time: 0.0018  memory: 963  
+10/17 18:19:07 - mmengine - INFO - Epoch(test) [4800/6000]    eta: 0:00:43  time: 0.0358  data_time: 0.0015  memory: 963  
+10/17 18:19:09 - mmengine - INFO - Epoch(test) [4850/6000]    eta: 0:00:42  time: 0.0365  data_time: 0.0018  memory: 963  
+10/17 18:19:10 - mmengine - INFO - Epoch(test) [4900/6000]    eta: 0:00:40  time: 0.0370  data_time: 0.0021  memory: 963  
+10/17 18:19:12 - mmengine - INFO - Epoch(test) [4950/6000]    eta: 0:00:38  time: 0.0364  data_time: 0.0018  memory: 963  
+10/17 18:19:14 - mmengine - INFO - Epoch(test) [5000/6000]    eta: 0:00:36  time: 0.0361  data_time: 0.0017  memory: 963  
+10/17 18:19:16 - mmengine - INFO - Epoch(test) [5050/6000]    eta: 0:00:34  time: 0.0365  data_time: 0.0020  memory: 963  
+10/17 18:19:18 - mmengine - INFO - Epoch(test) [5100/6000]    eta: 0:00:32  time: 0.0363  data_time: 0.0019  memory: 963  
+10/17 18:19:20 - mmengine - INFO - Epoch(test) [5150/6000]    eta: 0:00:31  time: 0.0367  data_time: 0.0020  memory: 963  
+10/17 18:19:21 - mmengine - INFO - Epoch(test) [5200/6000]    eta: 0:00:29  time: 0.0370  data_time: 0.0021  memory: 963  
+10/17 18:19:23 - mmengine - INFO - Epoch(test) [5250/6000]    eta: 0:00:27  time: 0.0364  data_time: 0.0018  memory: 963  
+10/17 18:19:25 - mmengine - INFO - Epoch(test) [5300/6000]    eta: 0:00:25  time: 0.0359  data_time: 0.0016  memory: 963  
+10/17 18:19:27 - mmengine - INFO - Epoch(test) [5350/6000]    eta: 0:00:23  time: 0.0365  data_time: 0.0019  memory: 963  
+10/17 18:19:29 - mmengine - INFO - Epoch(test) [5400/6000]    eta: 0:00:21  time: 0.0371  data_time: 0.0020  memory: 963  
+10/17 18:19:30 - mmengine - INFO - Epoch(test) [5450/6000]    eta: 0:00:20  time: 0.0363  data_time: 0.0018  memory: 963  
+10/17 18:19:32 - mmengine - INFO - Epoch(test) [5500/6000]    eta: 0:00:18  time: 0.0363  data_time: 0.0017  memory: 963  
+10/17 18:19:34 - mmengine - INFO - Epoch(test) [5550/6000]    eta: 0:00:16  time: 0.0365  data_time: 0.0018  memory: 963  
+10/17 18:19:36 - mmengine - INFO - Epoch(test) [5600/6000]    eta: 0:00:14  time: 0.0365  data_time: 0.0019  memory: 963  
+10/17 18:19:38 - mmengine - INFO - Epoch(test) [5650/6000]    eta: 0:00:12  time: 0.0364  data_time: 0.0018  memory: 963  
+10/17 18:19:40 - mmengine - INFO - Epoch(test) [5700/6000]    eta: 0:00:10  time: 0.0369  data_time: 0.0021  memory: 963  
+10/17 18:19:42 - mmengine - INFO - Epoch(test) [5750/6000]    eta: 0:00:09  time: 0.0367  data_time: 0.0017  memory: 963  
+10/17 18:19:43 - mmengine - INFO - Epoch(test) [5800/6000]    eta: 0:00:07  time: 0.0359  data_time: 0.0016  memory: 963  
+10/17 18:19:45 - mmengine - INFO - Epoch(test) [5850/6000]    eta: 0:00:05  time: 0.0363  data_time: 0.0018  memory: 963  
+10/17 18:19:47 - mmengine - INFO - Epoch(test) [5900/6000]    eta: 0:00:03  time: 0.0367  data_time: 0.0021  memory: 963  
+10/17 18:19:49 - mmengine - INFO - Epoch(test) [5950/6000]    eta: 0:00:01  time: 0.0363  data_time: 0.0018  memory: 963  
+10/17 18:19:51 - mmengine - INFO - Epoch(test) [6000/6000]    eta: 0:00:00  time: 0.0361  data_time: 0.0016  memory: 963  
+10/17 18:19:52 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.40s)
+creating index...
+index created!
+10/17 18:19:53 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.02s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=5.44s).
+Accumulating evaluation results...
+DONE (t=0.47s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.246
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.444
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.226
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.011
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.136
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.465
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.317
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.317
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.317
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.016
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.206
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.565
+10/17 18:19:59 - mmengine - INFO - bbox_mAP_copypaste: 0.246 0.444 0.226 0.011 0.136 0.465
+10/17 18:19:59 - mmengine - INFO - [DOMAIN 1/12] name=defocus_blur n=500 AP=0.2460 AP50=0.4440 AP75=0.2260
+10/17 18:19:59 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+10/17 18:20:00 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.03s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=7.10s).
+Accumulating evaluation results...
+DONE (t=0.59s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.208
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.397
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.193
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.013
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.125
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.390
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.290
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.290
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.290
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.021
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.201
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.498
+10/17 18:20:08 - mmengine - INFO - bbox_mAP_copypaste: 0.208 0.397 0.193 0.013 0.125 0.390
+10/17 18:20:08 - mmengine - INFO - [DOMAIN 2/12] name=glass_blur n=500 AP=0.2080 AP50=0.3970 AP75=0.1930
+10/17 18:20:08 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+10/17 18:20:08 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.41s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=5.98s).
+Accumulating evaluation results...
+DONE (t=0.49s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.219
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.397
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.212
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.007
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.118
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.427
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.289
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.289
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.289
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.010
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.180
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.527
+10/17 18:20:15 - mmengine - INFO - bbox_mAP_copypaste: 0.219 0.397 0.212 0.007 0.118 0.427
+10/17 18:20:15 - mmengine - INFO - [DOMAIN 3/12] name=motion_blur n=500 AP=0.2190 AP50=0.3970 AP75=0.2120
+10/17 18:20:15 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+10/17 18:20:16 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.02s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=5.89s).
+Accumulating evaluation results...
+DONE (t=0.45s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.063
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.149
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.047
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.007
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.050
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.113
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.123
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.123
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.123
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.019
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.100
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.198
+10/17 18:20:22 - mmengine - INFO - bbox_mAP_copypaste: 0.063 0.149 0.047 0.007 0.050 0.113
+10/17 18:20:22 - mmengine - INFO - [DOMAIN 4/12] name=zoom_blur n=500 AP=0.0630 AP50=0.1490 AP75=0.0470
+10/17 18:20:22 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+10/17 18:20:23 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.04s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=8.48s).
+Accumulating evaluation results...
+DONE (t=0.70s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.078
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.146
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.074
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.008
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.051
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.138
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.140
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.140
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.140
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.021
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.100
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.224
+10/17 18:20:33 - mmengine - INFO - bbox_mAP_copypaste: 0.078 0.146 0.074 0.008 0.051 0.138
+10/17 18:20:33 - mmengine - INFO - [DOMAIN 5/12] name=snow n=500 AP=0.0780 AP50=0.1460 AP75=0.0740
+10/17 18:20:33 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+10/17 18:20:34 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.04s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=9.76s).
+Accumulating evaluation results...
+DONE (t=0.81s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.264
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.458
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.264
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.033
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.207
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.435
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.351
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.352
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.352
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.064
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.293
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.526
+10/17 18:20:44 - mmengine - INFO - bbox_mAP_copypaste: 0.264 0.458 0.264 0.033 0.207 0.435
+10/17 18:20:44 - mmengine - INFO - [DOMAIN 6/12] name=frost n=500 AP=0.2640 AP50=0.4580 AP75=0.2640
+10/17 18:20:44 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.40s)
+creating index...
+index created!
+10/17 18:20:45 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.03s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=7.24s).
+Accumulating evaluation results...
+DONE (t=0.61s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.427
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.668
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.440
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.096
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.344
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.636
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.500
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.500
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.500
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.145
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.423
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.701
+10/17 18:20:53 - mmengine - INFO - bbox_mAP_copypaste: 0.427 0.668 0.440 0.096 0.344 0.636
+10/17 18:20:53 - mmengine - INFO - [DOMAIN 7/12] name=fog n=500 AP=0.4270 AP50=0.6680 AP75=0.4400
+10/17 18:20:53 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+10/17 18:20:54 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.03s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=7.27s).
+Accumulating evaluation results...
+DONE (t=0.60s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.389
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.616
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.402
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.087
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.303
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.599
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.467
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.467
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.467
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.137
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.394
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.665
+10/17 18:21:02 - mmengine - INFO - bbox_mAP_copypaste: 0.389 0.616 0.402 0.087 0.303 0.599
+10/17 18:21:02 - mmengine - INFO - [DOMAIN 8/12] name=brightness n=500 AP=0.3890 AP50=0.6160 AP75=0.4020
+10/17 18:21:02 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+10/17 18:21:03 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.41s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=5.07s).
+Accumulating evaluation results...
+DONE (t=0.42s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.310
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.494
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.322
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.046
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.245
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.495
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.377
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.377
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.377
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.077
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.325
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.557
+10/17 18:21:09 - mmengine - INFO - bbox_mAP_copypaste: 0.310 0.494 0.322 0.046 0.245 0.495
+10/17 18:21:09 - mmengine - INFO - [DOMAIN 9/12] name=contrast n=500 AP=0.3100 AP50=0.4940 AP75=0.3220
+10/17 18:21:09 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+10/17 18:21:10 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.03s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=8.48s).
+Accumulating evaluation results...
+DONE (t=0.67s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.388
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.634
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.398
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.087
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.298
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.602
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.460
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.460
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.460
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.128
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.383
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.660
+10/17 18:21:19 - mmengine - INFO - bbox_mAP_copypaste: 0.388 0.634 0.398 0.087 0.298 0.602
+10/17 18:21:19 - mmengine - INFO - [DOMAIN 10/12] name=elastic_transform n=500 AP=0.3880 AP50=0.6340 AP75=0.3980
+10/17 18:21:19 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+10/17 18:21:20 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.03s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=8.13s).
+Accumulating evaluation results...
+DONE (t=0.70s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.353
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.569
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.356
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.052
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.268
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.561
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.444
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.444
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.444
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.106
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.373
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.642
+10/17 18:21:29 - mmengine - INFO - bbox_mAP_copypaste: 0.353 0.569 0.356 0.052 0.268 0.561
+10/17 18:21:29 - mmengine - INFO - [DOMAIN 11/12] name=pixelate n=500 AP=0.3530 AP50=0.5690 AP75=0.3560
+10/17 18:21:29 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+10/17 18:21:30 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.48s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=14.08s).
+Accumulating evaluation results...
+DONE (t=1.37s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.187
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.339
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.184
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.030
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.140
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.316
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.306
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.307
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.307
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.059
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.250
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.452
+10/17 18:21:46 - mmengine - INFO - bbox_mAP_copypaste: 0.187 0.339 0.184 0.030 0.140 0.316
+10/17 18:21:46 - mmengine - INFO - [DOMAIN 12/12] name=jpeg_compression n=500 AP=0.1870 AP50=0.3390 AP75=0.1840
+10/17 18:21:46 - mmengine - INFO - [MEAN over 12 domains] AP=0.2610 AP50=0.4426
+10/17 18:21:47 - mmengine - INFO - Epoch(test) [6000/6000]    coco/bbox_mAP: 0.2610  coco/bbox_mAP_50: 0.4426  coco/bbox_mAP_75: 0.2598  data_time: 0.0020  time: 0.0365

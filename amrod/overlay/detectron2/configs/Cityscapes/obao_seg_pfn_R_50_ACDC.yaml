@@ -1,0 +1,24 @@
+# OBAO segmentation baseline on ACDC, same Panoptic-FPN source checkpoint.
+# This is a semantic-only wrapper around the same source model: no detection
+# features, boxes, or heads are used.
+_BASE_: "./cotta_semseg_pfn_R_50_ACDC.yaml"
+
+MODEL:
+  META_ARCHITECTURE: "OBAO_SemSeg"
+  WEIGHTS: "/workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth"
+  SEM_SEG_HEAD:
+    LOSS_WEIGHT: 0.5
+
+SOLVER:
+  IMS_PER_BATCH: 1
+  OBAO_LR: 0.0001
+  OBAO_EMA_DECAY: 0.999
+  OBAO_RESTORE_PROB: 0.01
+  OBAO_ANCHOR_CONFIDENCE: 0.69
+  OBAO_MARGIN: 0.02
+  OBAO_PCE_WEIGHT: 1.0
+  OBAO_TOPOLOGY_WEIGHT: 0.01
+  OBAO_AUG_SCALES: (0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0)
+  OBAO_AUG_FLIPS: (False, True)
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/obao_pfn_src"

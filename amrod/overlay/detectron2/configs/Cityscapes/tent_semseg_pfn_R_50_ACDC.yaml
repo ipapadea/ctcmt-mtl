@@ -1,0 +1,10 @@
+# TENT baseline evaluated on the SAME Panoptic-FPN MTL source checkpoint used
+# by CTCMT_MTL (same-source segmentation comparison).
+_BASE_: "./tent_semseg_R_50_ACDC.yaml"
+
+MODEL:
+  WEIGHTS: "/workspace/output/panoptic_fpn_R50_cityscapes/model_final.pth"
+  SEM_SEG_HEAD:
+    LOSS_WEIGHT: 0.5
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/tent_pfn_src"

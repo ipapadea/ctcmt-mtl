@@ -1,0 +1,19 @@
+# Single-task SEGMENTATION adapter on the PFN MTL source.
+# Fair-source reference for CTCMT_MTL: same start weights, same meta-arch code,
+# same continual ACDC loop, but only the seg branch (soft-CE + optional aug-avg)
+# is active. No det loss, no CT-CL, no CT-CR.
+_BASE_: "./ctcmt_mtl_panoptic_fpn_R_50_ACDC.yaml"
+MODEL:
+  META_ARCHITECTURE: "CTCMT_MTL"
+
+SOLVER:
+  CTCMT_DET_ONLY: False
+  CTCMT_SEG_ONLY: True
+  CTCMT_CTCL_ENABLED: False
+  CTCMT_WEIGHT_CTCR: 0.0
+  CTCMT_SEG_AUG_ENABLED: True
+  CTCMT_SEG_AUG_CONF_THRESH: 0.95
+  CTCMT_SEG_AUG_SCALES: (0.75, 1.0, 1.25)
+  CTCMT_SEG_AUG_FLIPS: (False, True)
+
+OUTPUT_DIR: "/workspace/output/ctcmt_seg_only_pfn_R50_C2ACDC"

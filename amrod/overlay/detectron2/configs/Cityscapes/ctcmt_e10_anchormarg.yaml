@@ -1,0 +1,9 @@
+# E10-2 — anchor class-marginal preservation.
+# Mode-covering KL(anchor || student) on the predicted class marginal, so the
+# student cannot abandon a class the frozen source still predicts.
+_BASE_: "./ctcmt_e9_strongaug.yaml"
+
+SOLVER:
+  CTCMT_ANCHOR_MARGINAL_WEIGHT: 0.1
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e10_anchormarg"

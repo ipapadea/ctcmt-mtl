@@ -1,0 +1,7 @@
+# CT-CMT-Det (Mask R-CNN source) on Foggy Cityscapes.
+_BASE_: "./ctcmt_det_mr_R_50_ACDC.yaml"
+
+DATASETS:
+  TEST: ("foggy_cityscapes_val",)
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/ctcmt_det_mr_foggy"

@@ -1,0 +1,10 @@
+# V2+V3 combined: backbone-protected restore + cross-task pseudo-label verification.
+_BASE_: "./ctcmt_mtl_panoptic_fpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_CROSS_TASK_FISHER: True
+  CTCMT_BACKBONE_RST_FACTOR: 0.1
+  CTCMT_CTPV_ENABLED: True
+  CTCMT_CTPV_THRESH: 0.25
+
+OUTPUT_DIR: "/workspace/output/ctcmt_v2v3_pfn_R50_C2ACDC"

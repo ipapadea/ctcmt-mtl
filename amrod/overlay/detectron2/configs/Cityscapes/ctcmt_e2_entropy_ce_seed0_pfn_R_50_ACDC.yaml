@@ -1,0 +1,4 @@
+# e2_entropy_ce seed 0.
+_BASE_: "./ctcmt_e2_entropy_ce_pfn_R_50_ACDC.yaml"
+SEED: 0
+OUTPUT_DIR: "/workspace/output/ctcmt_e2_entropy_ce_seed0"

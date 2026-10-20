@@ -1,0 +1,23 @@
+# E29 --- segmentation-only control on ACDC x10. The ACDC analogue of E21.
+#
+# This is the missing cell of the 2x2 task-activation factorial. On
+# Cityscapes-C all four cells exist (Source / E15 det-only / E21 seg-only /
+# E13a full), which is what allows the class-wise interaction term
+#
+#   I_c = M_c^Full - M_c^DET - M_c^SEG + M_c^Source
+#
+# to be computed at all. On ACDC only three cells existed (Source / E25
+# det-only / E11 full), so I_c was undefined and the cross-benchmark
+# sign-flip comparison could not be made.
+#
+# ONE factor vs E11: CTCMT_SEG_ONLY disables the detection losses in
+# forward(); the score-EMA gate is left as in E11. THRESHOLD_MAX stays 0.90
+# (the 0.80 ceiling was a Cityscapes-C-specific fix), so this shares the E11
+# lineage exactly like E24/E25 do.
+_BASE_: "./ctcmt_e11_bothsc_ctcrD.yaml"
+
+SOLVER:
+  CTCMT_SEG_ONLY: True
+  CTCMT_DET_ONLY: False
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e29_segonly_acdc"

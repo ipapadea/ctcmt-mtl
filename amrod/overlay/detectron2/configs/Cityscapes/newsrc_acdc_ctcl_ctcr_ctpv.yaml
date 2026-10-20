@@ -1,0 +1,5 @@
+_BASE_: "./newsrc_acdc_ctcl_ctcr.yaml"
+
+SOLVER:
+  CTCMT_CTPV_ENABLED: True
+  CTCMT_CTPV_THRESH: 0.3

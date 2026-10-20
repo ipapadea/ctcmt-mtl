@@ -1,0 +1,62 @@
+_BASE_: "../Cityscapes/panoptic_fpn_R_50.yaml"
+MODEL:
+  META_ARCHITECTURE: "CTCMT_MTL"
+  # Source-trained Panoptic FPN checkpoint (fill in after training).
+  WEIGHTS: "/workspace/output/panoptic_fpn_R50_cityscapes/model_final.pth"
+  # Adapt-time: mask head disabled inside CTCMT_MTL.from_config. Both source
+  # and adapt still expose sem_seg + instances outputs; panoptic combine is
+  # skipped so no pred_masks dependency.
+  MASK_ON: True
+
+INPUT:
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 2048
+
+DATASETS:
+  TRAIN: ("cityscapes_fine_mtl_train",)
+  # TODO: register acdc_*_mtl datasets (file_name + annotations + sem_seg_file_name)
+  # so both det+seg can be evaluated. Placeholder names below.
+  TEST: ("acdc_fog_mtl", "acdc_night_mtl", "acdc_rain_mtl", "acdc_snow_mtl")
+
+SOLVER:
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.001
+  WEIGHT_DECAY: 0.0001
+  STEPS: (50000,)
+  MAX_ITER: 70000
+  WARMUP_ITERS: 0
+
+  # Mean-teacher + stochastic restore (CoTTA convention).
+  MT: 0.9998
+  RST_M: 0.01
+
+  # Loss weights.
+  CTCMT_WEIGHT_DET: 1.0
+  CTCMT_WEIGHT_SEG: 1.0
+  CTCMT_WEIGHT_CTCL: 0.5
+  CTCMT_WEIGHT_CTCR: 0.3
+
+  # Dynamic-threshold pseudo-label filter (same as AMROD).
+  THRESHOLD_INIT: 0.80
+  THRESHOLD_MAX: 0.90
+  THRESHOLD_MINI: 0.7
+  ALPHA_DT: 1.3
+  GAMMA_DT: 0.95
+  SCORE_EM: 0.5
+  SCORE_GAMMA: 0.7
+  SCORE_THRESH: 1.4
+
+  # Cross-task contrastive (paper contribution).
+  CTCMT_CTCL_ENABLED: True
+  CTCMT_CTCL_SEG_VIEW: True
+  CTCMT_CTCL_TEMPERATURE: 0.07
+  CTCMT_CTCL_ROI_OUTPUT: (7, 7)
+  CTCMT_CTCL_PROJ_DIM: 128
+
+  # CoTTA-style aug-averaged seg pseudo-labels for hard images.
+  CTCMT_SEG_AUG_ENABLED: True
+  CTCMT_SEG_AUG_CONF_THRESH: 0.95
+  CTCMT_SEG_AUG_SCALES: (0.75, 1.0, 1.25)
+  CTCMT_SEG_AUG_FLIPS: (False, True)
+
+OUTPUT_DIR: "/workspace/output/ctcmt_mtl_panoptic_fpn_R50_C2ACDC"

@@ -1,0 +1,22 @@
+# E24 --- S6 (seg-head-only gradient routing) on ACDC x10.
+#
+# Transfers the Cityscapes-C result to the protocol where the headline table
+# lives. On CS-C, routing the segmentation gradient off the shared trunk
+# recovered detection to the det-only ceiling (26.74 vs 26.80, inside the +-0.5
+# same-seed noise) while segmentation adaptation stayed active.
+#
+# ACDC may behave differently and that is the point: there our full-MTL method
+# already beats AMROD by +4.78 AP50, so the seg->trunk pathway may be helping
+# rather than hurting. If E24 drops below E11, negative transfer is specific to
+# Cityscapes-C and the paper must say so.
+#
+# ONE factor vs the ACDC reference E11 (THRESHOLD_MAX stays 0.9 -- the 0.80
+# ceiling was a CS-C-specific fix and is NOT part of the ACDC recipe).
+_BASE_: "./ctcmt_e11_bothsc_ctcrD.yaml"
+
+SOLVER:
+  CTCMT_CONFLICT_MODE: "aux_head_only"
+  CTCMT_GRAD_DIAG: True
+  CTCMT_GRAD_DIAG_EVERY: 50
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e24_seghead_only_acdc"

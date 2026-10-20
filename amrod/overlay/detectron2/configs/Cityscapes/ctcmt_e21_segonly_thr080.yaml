@@ -1,0 +1,12 @@
+# E21 — SEG_ONLY control on exactly the E13a base.
+# Purpose: determine whether semantic self-adaptation is intrinsically
+# unstable on the Cityscapes-C long-term stream, or whether the failure
+# emerges only from joint DET+SEG interaction.
+
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_SEG_ONLY: True
+  CTCMT_DET_ONLY: False
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e21_segonly_thr080_cscLT_s0"

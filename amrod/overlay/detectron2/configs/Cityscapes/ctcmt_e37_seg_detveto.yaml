@@ -1,0 +1,29 @@
+# E37 --- inverted CTPV: the detector vetoes the segmentation soft-CE.
+#
+# CTPV let the SEGMENTATION teacher delete detection pseudo-boxes. The factorial
+# and the gradient diagnostics both say that is the wrong direction:
+#
+#   seg soft-CE is the WORST-aligned large gradient on the shared trunk
+#     cos(det, seg) = +0.046, negative on 29.8% of steps
+#     against ctcr +0.139 / 17.0% and ctcl +0.080 / 31.9%
+#   and it carries 0.65x detection's shared-trunk gradient norm.
+#
+# So point the verification the other way: inside a box whose detector score is
+# at least CTCMT_SEG_DET_VETO_SCORE, mute the segmentation soft-CE on the pixels
+# where the seg teacher disagrees with the box's mapped class. 0.9 is the score
+# at which measured box purity reaches 0.742.
+#
+# Unlike CT-CR, which ADDS a weight-0.3 term, this SUBTRACTS wrong supervision
+# from the weight-1.0 term. CTCMT_SEG_LOSS_SCALE_PRESERVE is already True in
+# this lineage, so the seg branch keeps its gradient magnitude and only the
+# direction changes -- the seg/det trunk share cannot drift as a side effect.
+#
+# ONE factor vs E13a.
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_SEG_DET_VETO: True
+  CTCMT_SEG_DET_VETO_SCORE: 0.9
+  CTCMT_SEG_DET_VETO_WEIGHT: 0.0
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e37_seg_detveto"

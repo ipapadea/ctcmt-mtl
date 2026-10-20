@@ -1,0 +1,11 @@
+# Ablation: CTCMT_MTL with intra-task contrastive only.
+# CT-CL enabled but seg view disabled -> object-level SupCon on det features
+# alone. CT-CR disabled. Isolates the "cross-task" portion of CT-CL.
+_BASE_: "./ctcmt_mtl_panoptic_fpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_CTCL_ENABLED: True
+  CTCMT_CTCL_SEG_VIEW: False
+  CTCMT_WEIGHT_CTCR: 0.0
+
+OUTPUT_DIR: "/workspace/output/ctcmt_mtl_intra_ctcl_pfn_R50_C2ACDC"

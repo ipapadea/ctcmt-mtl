@@ -1,0 +1,7 @@
+# CT-CMT MTL (full, v4b proto anchor) on Cityscapes-to-Cityscapes-C.
+_BASE_: "./ctcmt_v4b_proto_pfn_R_50_ACDC.yaml"
+
+DATASETS:
+  TEST: ("defocus_blur","glass_blur","motion_blur","zoom_blur","snow","frost","fog","brightness","contrast","elastic_transform","pixelate","jpeg_compression")
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/ctcmt_mtl_cs_c"

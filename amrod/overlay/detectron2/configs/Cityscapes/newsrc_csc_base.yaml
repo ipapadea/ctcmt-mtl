@@ -1,0 +1,10 @@
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+MODEL:
+  WEIGHTS: "/workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth"
+
+SOLVER:
+  CTCMT_CTCL_ENABLED: False
+  CTCMT_WEIGHT_CTCL: 0.0
+  CTCMT_WEIGHT_CTCR: 0.0
+  CTCMT_CTPV_ENABLED: False

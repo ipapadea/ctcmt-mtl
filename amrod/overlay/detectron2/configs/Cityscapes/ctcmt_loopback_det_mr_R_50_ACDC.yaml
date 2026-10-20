@@ -1,0 +1,6 @@
+# Loopback variant of ctcmt_det_mr_R_50_ACDC.yaml — appends cityscapes val as the 5th test domain
+# to measure Forgetting = mAP_Source - mAP_Loopback (Moraiti et al. EJAI 2026 convention).
+_BASE_: "./ctcmt_det_mr_R_50_ACDC.yaml"
+DATASETS:
+  TEST: ("acdc_fog", "acdc_night", "acdc_rain", "acdc_snow", "cityscapes_fine_instance_seg_val")
+OUTPUT_DIR: "/workspace/output/ctcmt_loopback_det_mr"

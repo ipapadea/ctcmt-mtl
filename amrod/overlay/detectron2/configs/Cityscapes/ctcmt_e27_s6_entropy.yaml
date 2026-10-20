@@ -1,0 +1,20 @@
+# O2 / E27 --- S6 plus conservative semantic self-training. Cityscapes-C.
+#
+# ST-S showed the segmentation objective drifts late in the stream even on a
+# dedicated Semantic FPN (peak 35.2 at R4, 33.6 by R10), so protecting the
+# trunk does not by itself stabilise segmentation. This keeps S6's routing
+# exactly and makes the self-distillation itself more conservative: each pixel
+# is weighted by (1 - normalised teacher entropy), down-weighting the uncertain
+# pseudo-labels that drive confirmation bias.
+#
+# CTCMT_SEG_LOSS_SCALE_PRESERVE is already True in the E13a lineage, so the
+# reweighting changes gradient DIRECTION only and cannot silently alter the
+# segmentation branch's share of the update.
+#
+# ONE factor vs E22.
+_BASE_: "./ctcmt_e22_seghead_only.yaml"
+
+SOLVER:
+  CTCMT_ENTROPY_WEIGHTED_CE: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e27_s6_entropy"

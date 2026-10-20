@@ -1,0 +1,19 @@
+# O1 / E26 --- partial semantic gradient routing, lambda = 0.25. Cityscapes-C.
+#
+# S6 (E22) routes 0% of the auxiliary gradient into the shared trunk and
+# recovers the detection-only ceiling (26.74 vs 26.80) but gives up 0.76 mIoU
+# against it. E13a routes 100% and loses 2.0 mAP0.5. This interpolates:
+#
+#     grad_shared = grad(L_det) + lambda * grad(L_aux)
+#
+# with the segmentation head still receiving its full gradient. lambda applies
+# to the same auxiliary group S6 zeroes (seg soft-CE + CT-CL + CT-CR), so
+# lambda=0 is exactly E22 and lambda=1 is exactly E13a.
+#
+# ONE factor vs E22.
+_BASE_: "./ctcmt_e22_seghead_only.yaml"
+
+SOLVER:
+  CTCMT_AUX_TRUNK_LAMBDA: 0.25
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e26_partial025"

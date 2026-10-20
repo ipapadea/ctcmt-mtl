@@ -1,0 +1,29 @@
+# E22 / S6 --- segmentation adapts its own head only; detection owns the trunk.
+#
+# The S1/S2/S3/S5 screening falsified per-step gradient conflict as the cause of
+# the detection loss: mean cos(g_det, g_aux) is POSITIVE (+0.18..+0.21) and
+# conflicts fire on under 10% of steps, so no arbitration rule recovered more
+# than +0.9 AP50 of the 2.0 gap. The factorial ablation says what does:
+#
+#                  det ON              det OFF
+#     seg ON   e13a 24.80 / 30.83   e21 15.10 / 28.21
+#     seg OFF  e15  26.80 / 35.51   src 13.17 / 27.21
+#
+# The seg loss has no main effect (+1.9 AP50 alone) but a -3.9 AP50 / -5.7 mIoU
+# interaction. And e15 shows a trunk driven by detection alone reaches mIoU 36.3
+# with a completely un-adapted seg head -- the seg loss's path THROUGH THE TRUNK
+# is the damage, not the seg head's own adaptation.
+#
+# So route it: ∇shared = ∇shared L_det only, while the seg head, CT-CL and CT-CR
+# keep their normal gradients on task-specific parameters. This is S3 with the
+# conflict test removed -- it fires on 100% of steps instead of 9%.
+#
+# ONE factor vs E13a: CTCMT_CONFLICT_MODE. CTCMT_GRAD_DIAG is logging only.
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_CONFLICT_MODE: "aux_head_only"
+  CTCMT_GRAD_DIAG: True
+  CTCMT_GRAD_DIAG_EVERY: 50
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e22_seghead_only"

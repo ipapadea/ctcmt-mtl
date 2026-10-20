@@ -1,0 +1,15 @@
+# AMROD official algorithm on SHIFT: same TTA meta-arch as ACDC baseline,
+# swapped to the 6-class SHIFT source model (Faster R-CNN, no mask head).
+_BASE_: "./amrod_mask_rcnn_R_50_ACDC.yaml"
+
+MODEL:
+  WEIGHTS: "/workspace/weights/shift_train_final.pth"
+  MASK_ON: False
+  ROI_HEADS:
+    NUM_CLASSES: 6
+
+DATASETS:
+  TRAIN: ("shift_train",)
+  TEST: ("shift_cloudy", "shift_overcast", "shift_rainy", "shift_foggy")
+
+OUTPUT_DIR: "/workspace/output/amrod_shift_CTTA"

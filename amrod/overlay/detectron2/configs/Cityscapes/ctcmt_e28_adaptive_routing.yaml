@@ -1,0 +1,27 @@
+# O3 / E28 --- adaptive semantic-to-trunk routing. Cityscapes-C.
+#
+# Makes lambda conditional on segmentation reliability instead of fixed:
+#
+#     teacher close to the frozen source anchor  -> lambda = 0.25
+#     teacher drifting away from it              -> lambda = 0   (i.e. S6)
+#
+# Reliability is the per-pixel argmax agreement between the seg teacher and the
+# frozen anchor, EMA-smoothed. The rule is self-calibrating -- it compares that
+# EMA against its own running maximum rather than an absolute threshold, which
+# would have had to be guessed since the scale is unmeasured. The anchor
+# forward is already paid for by the anchor-marginal term, so the added cost is
+# one argmax comparison per step.
+#
+# No new optimiser and no new module: this reuses S6's routing and only decides
+# when to open it. Both `lam` and the agreement EMA are logged every 50 steps,
+# so the run also measures the reliability scale for future tuning.
+#
+# ONE factor vs E26 (the fixed-lambda arm): the gate.
+_BASE_: "./ctcmt_e26_partial025.yaml"
+
+SOLVER:
+  CTCMT_ADAPTIVE_ROUTING: True
+  CTCMT_ADAPTIVE_ROUTING_BETA: 0.98
+  CTCMT_ADAPTIVE_ROUTING_EMA: 0.99
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e28_adaptive_routing"

@@ -1,0 +1,15 @@
+experiment=paper26_preupd_csc12_ctcmt_s42
+protocol=csc12
+variant=ctcmt
+seed=42
+gpu=1
+config=detectron2/configs/Cityscapes/newsrc_csc_ctcr_lambda1.yaml
+predict_before_update=True
+git_sha=a58ba2fd47532e1e2839e8017a0203dc847a3c72
+git_dirty=7
+expected_evals=12
+start_time=2026-10-16T12:09:51+03:00
+end_time=2026-10-16T13:29:33+03:00
+exit_code=0
+eval_count=12
+status=COMPLETE

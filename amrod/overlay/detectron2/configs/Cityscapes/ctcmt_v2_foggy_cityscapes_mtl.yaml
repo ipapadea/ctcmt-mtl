@@ -1,0 +1,8 @@
+# CTCMT_MTL+V2 evaluated on Foggy Cityscapes with both bbox AP and seg mIoU.
+# Uses foggy_cityscapes_val_mtl dataset (det annotations + Cityscapes sem GT).
+_BASE_: "./ctcmt_v2_cross_fisher_pfn_R_50_ACDC.yaml"
+
+DATASETS:
+  TEST: ("foggy_cityscapes_val_mtl",)
+
+OUTPUT_DIR: "/workspace/output/ctcmt_v2_foggy_mtl"

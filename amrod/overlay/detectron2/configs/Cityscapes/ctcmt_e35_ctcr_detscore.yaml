@@ -1,0 +1,23 @@
+# E35 --- CT-CR: weight each box by its detector score.
+#
+# CT-CR gives every pseudo-box equal weight. Measured box purity against
+# semantic GT (4259 boxes, 2026-09-21):
+#
+#   det score >= 0.9   purity 0.742   (94.7M px)
+#   det score    0.8   purity 0.537   ( 5.2M px)
+#   det score    0.7   purity 0.360   ( 1.5M px)
+#
+# A 0.7-score box supervises half as purely as a 0.9-score one, yet contributes
+# identically. Here the per-pixel CT-CR weight is multiplied by det_score.
+#
+# gamma = 1.0 is the natural strength and only spans 1.43x over the 0.7-1.0
+# score range, against a measured 2x purity spread; E36 sharpens it.
+#
+# ONE factor vs E13a.
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_CTCR_DET_SCORE_WEIGHT: True
+  CTCMT_CTCR_DET_SCORE_GAMMA: 1.0
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e35_ctcr_detscore"

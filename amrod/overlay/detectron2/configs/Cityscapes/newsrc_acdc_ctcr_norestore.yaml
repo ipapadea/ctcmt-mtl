@@ -1,0 +1,5 @@
+# Control: +CTCR with stochastic restoration OFF.
+_BASE_: "./newsrc_acdc_ctcr.yaml"
+
+SOLVER:
+  RST_M: 0.0

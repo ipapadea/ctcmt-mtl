@@ -1,0 +1,23 @@
+# S3 / E18 --- conflict-triggered hard decoupling.
+#
+# The discrete counterpart of E16's continuous projection: cooperate -> share,
+# conflict -> temporarily isolate.
+#
+#     a_t = cos(g_det, g_aux)
+#     a_t >= 0 : normal full MTL update
+#     a_t <  0 : shared backbone+FPN receives g_det only for that step
+#
+# The segmentation head still adapts from its own task-specific gradients on
+# conflicting steps; only the shared-parameter contribution of the non-detection
+# losses is dropped. Compared with E16 this tests whether the useful part of the
+# aux gradient is the orthogonal component (E16 keeps it, E18 discards it).
+#
+# ONE factor vs E13a: CTCMT_CONFLICT_MODE.
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_CONFLICT_MODE: "hard_decouple"
+  CTCMT_GRAD_DIAG: True
+  CTCMT_GRAD_DIAG_EVERY: 50
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e18_harddecouple"

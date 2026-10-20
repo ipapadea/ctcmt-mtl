@@ -1,0 +1,11 @@
+# E10-1s — class-balanced seg consistency, magnitude-preserving.
+# Control for the confound that reweighting raises seg/soft_ce ~1.8x (rarity
+# correlates with per-pixel error), which would silently increase segmentation's
+# share of the shared-trunk gradient. Gradient direction is reweighted; the
+# magnitude matches the unweighted mean.
+_BASE_: "./ctcmt_e10_clsbal.yaml"
+
+SOLVER:
+  CTCMT_SEG_LOSS_SCALE_PRESERVE: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e10_clsbal_scaled"

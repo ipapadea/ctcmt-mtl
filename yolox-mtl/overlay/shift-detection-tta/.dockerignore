@@ -1,0 +1,30 @@
+# Keep the docker build context small.
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.egg-info
+**/.pytest_cache
+**/.mypy_cache
+**/.ipynb_checkpoints
+
+# Local artifacts
+work_dirs/
+results/
+data/
+*.pth
+*.pt
+*.onnx
+*.tar
+*.tar.gz
+*.zip
+
+# Editor / VCS
+.git
+.gitignore
+.vscode
+.idea
+
+# Docs / images
+docs/
+resources/
+*.md

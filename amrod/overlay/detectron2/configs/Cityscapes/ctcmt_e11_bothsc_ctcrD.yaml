@@ -1,0 +1,14 @@
+# E11 — E10 (strong aug + class-balance + anchor marginal, magnitude-preserving)
+# with CT-CR variant D instead of A.
+#
+# The CT-CR square (A/A2/B/C/D) was decided on a base that no longer exists: no
+# strong augmentation and no class balancing. D beat A by +0.81 mIoU there. This
+# re-tests that single factor on the current base before we commit seeds to a
+# CT-CR mode.
+_BASE_: "./ctcmt_e10_both_scaled.yaml"
+
+SOLVER:
+  CTCMT_CTCR_MODE: "soft_seg_global"
+  CTCMT_CTCR_WEIGHT_FLOOR: 0.2
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e11_bothsc_ctcrD"

@@ -1,0 +1,10 @@
+# V1: Per-task decoupled adaptation gates.
+# Det and seg branches fire independently based on their own task confidence.
+_BASE_: "./ctcmt_mtl_panoptic_fpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_PER_TASK_GATE: True
+  CTCMT_PER_TASK_GATE_DET_THRESH: 0.8
+  CTCMT_PER_TASK_GATE_SEG_THRESH: 0.85
+
+OUTPUT_DIR: "/workspace/output/ctcmt_v1_per_task_gate_pfn_R50_C2ACDC"

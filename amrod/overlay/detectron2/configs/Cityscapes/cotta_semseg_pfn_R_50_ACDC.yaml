@@ -1,0 +1,13 @@
+# CoTTA baseline evaluated on the SAME Panoptic-FPN MTL source checkpoint used
+# by CTCMT_MTL, so the segmentation CTTA comparison is same-source.
+#
+# Verified loadable: the PFN checkpoint contains all 304 SemanticSegmentor keys
+# with identical shapes; only the det heads are unused by this meta-arch.
+_BASE_: "./cotta_semseg_R_50_ACDC.yaml"
+
+MODEL:
+  WEIGHTS: "/workspace/output/panoptic_fpn_R50_cityscapes/model_final.pth"
+  SEM_SEG_HEAD:
+    LOSS_WEIGHT: 0.5
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/cotta_pfn_src"

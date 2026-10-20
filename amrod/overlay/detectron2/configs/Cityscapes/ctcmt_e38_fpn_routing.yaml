@@ -1,0 +1,27 @@
+# E38 --- route the auxiliary gradient off the FPN only, not the whole trunk.
+#
+# S6 (E22) routes the auxiliary gradient off EVERY backbone parameter. It
+# recovers the detection ceiling on Cityscapes-C (26.76 vs 26.93 at n=3) but
+# costs 1.10 mIoU there and 2.2-3.5 mIoU on ACDC, which is why it is currently
+# reported as a diagnostic rather than as the method.
+#
+# The per-block gradient diagnostics (2026-09-21) say that is more routing than
+# the conflict warrants. Mean cos(g_det, g_aux) by block, with the fraction of
+# steps on which it is negative:
+#
+#   fpn    0.023   27.7% negative   <- the conflict
+#   res3   0.230   14.9%
+#   res4   0.190   10.6%
+#   res5   0.135   14.9%
+#
+# The ResNet stages are well aligned; only the FPN is contested. Routing just
+# the FPN should keep most of S6's detection recovery while letting segmentation
+# keep updating the stages where the two tasks agree.
+#
+# ONE factor vs E22/S6: CTCMT_ROUTE_SCOPE.
+_BASE_: "./ctcmt_e22_seghead_only.yaml"
+
+SOLVER:
+  CTCMT_ROUTE_SCOPE: "fpn"
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e38_fpn_routing"

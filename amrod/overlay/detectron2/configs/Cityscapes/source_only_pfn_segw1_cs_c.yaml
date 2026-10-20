@@ -1,0 +1,6 @@
+_BASE_: "./source_only_pfn_cs_c.yaml"
+
+MODEL:
+  WEIGHTS: "/workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth"
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/source_only_pfn_segw1_cs_c"

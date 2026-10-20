@@ -1,0 +1,13 @@
+# E13a — lower the dynamic-threshold ceiling, 0.90 -> 0.80.
+#
+# Diagnosis: on Cityscapes-C long-term our pseudo-label count saturates at
+# ~5.3/image from round 3 and AP50 stops improving at round 5, while AMROD's
+# mean threshold keeps falling (0.867 -> 0.816) and its step rate keeps rising
+# (0.72 -> 0.96). Our per-class thresholds show several classes pinned at the
+# 0.9 ceiling. Lowering the ceiling admits more pseudo-labels late in the stream.
+_BASE_: "./ctcmt_e11_bothsc_ctcrD.yaml"
+
+SOLVER:
+  THRESHOLD_MAX: 0.80
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e13a_thrmax080"

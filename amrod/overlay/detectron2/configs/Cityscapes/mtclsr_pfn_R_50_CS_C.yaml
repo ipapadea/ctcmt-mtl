@@ -1,0 +1,9 @@
+# MT + CL + SR (Moraiti et al. port) on the Cityscapes-C 12-corruption stream
+# (same source checkpoint). Long-term streams are given through DATASETS.TEST.
+_BASE_: "./mtclsr_pfn_R_50_ACDC.yaml"
+
+DATASETS:
+  TRAIN: ("cityscapes_fine_instance_seg_train",)
+  TEST: ("defocus_blur","glass_blur","motion_blur","zoom_blur","snow","frost","fog","brightness","contrast","elastic_transform","pixelate","jpeg_compression")
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/mtclsr_pfnsrc_cs_c"

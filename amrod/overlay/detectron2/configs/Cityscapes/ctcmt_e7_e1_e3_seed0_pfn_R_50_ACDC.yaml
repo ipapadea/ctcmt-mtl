@@ -1,0 +1,4 @@
+# e7_e1_e3 seed 0.
+_BASE_: "./ctcmt_e7_e1_e3_pfn_R_50_ACDC.yaml"
+SEED: 0
+OUTPUT_DIR: "/workspace/output/ctcmt_e7_e1_e3_seed0"

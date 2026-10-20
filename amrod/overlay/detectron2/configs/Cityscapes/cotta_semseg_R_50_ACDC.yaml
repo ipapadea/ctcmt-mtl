@@ -1,0 +1,36 @@
+_BASE_: "../Cityscapes/semantic_R_50_FPN_singletask.yaml"
+MODEL:
+  META_ARCHITECTURE: "CoTTA_SemSeg"
+  # Source-trained Semantic FPN checkpoint (fill in after training).
+  WEIGHTS: "/workspace/output/semantic_R50_cityscapes/model_final.pth"
+
+INPUT:
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 2048
+
+DATASETS:
+  TRAIN: ("cityscapes_fine_sem_seg_train",)
+  # NOTE: acdc_fog_* MTL variants with sem_seg_file_name still to be
+  # registered (see builtin.py TODO). For now the CoTTA adapter runs but
+  # SemSeg eval on ACDC needs these variants.
+  TEST: ("acdc_fog_semseg", "acdc_night_semseg", "acdc_rain_semseg", "acdc_snow_semseg")
+
+SOLVER:
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.0001
+  WEIGHT_DECAY: 0.0
+  MOMENTUM: 0.9
+  STEPS: ()
+  MAX_ITER: 400
+  WARMUP_ITERS: 0
+
+  COTTA_EMA_DECAY: 0.999
+  COTTA_RESTORE_PROB: 0.01
+  # 0.95 triggers aug-avg on essentially every ACDC image (mean max-softmax
+  # sits below that under weather shift); combined with 0.999 EMA the teacher
+  # stays stable while student consistency loss actually gets a signal.
+  COTTA_CONF_THRESH: 0.95
+  COTTA_AUG_SCALES: (0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0)
+  COTTA_AUG_FLIPS: (False, True)
+
+OUTPUT_DIR: "/workspace/output/cotta_semseg_R50_C2ACDC"

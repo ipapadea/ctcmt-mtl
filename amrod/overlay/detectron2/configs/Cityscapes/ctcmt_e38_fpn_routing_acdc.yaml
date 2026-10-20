@@ -1,0 +1,16 @@
+# E38 on ACDC --- FPN-only routing, against E24 (S6 on ACDC).
+#
+# This is where FPN-scoping matters most. On ACDC the segmentation loss has a
+# POSITIVE conditional effect (d_SEG|DET = +0.6 mAP0.5 / +0.9 mIoU), so S6's
+# blanket routing gives away 2.2-3.5 mIoU for a detection gain that ACDC does
+# not need. If FPN-only routing keeps the detection behaviour while returning
+# most of that mIoU, one setting works on both benchmarks and the
+# benchmark-specific routing caveat goes away.
+#
+# ONE factor vs E24.
+_BASE_: "./ctcmt_e24_seghead_only_acdc.yaml"
+
+SOLVER:
+  CTCMT_ROUTE_SCOPE: "fpn"
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e38_fpn_routing_acdc"

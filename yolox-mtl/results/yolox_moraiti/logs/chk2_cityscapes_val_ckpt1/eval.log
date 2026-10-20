@@ -1,0 +1,866 @@
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 11.3.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+10/17 18:05:08 - mmengine - INFO - 
+------------------------------------------------------------
+System environment:
+    sys.platform: linux
+    Python: 3.9.18 (main, Sep 11 2023, 13:41:44) [GCC 11.2.0]
+    CUDA available: True
+    numpy_random_seed: 1234
+    GPU 0: NVIDIA GeForce RTX 3090
+    CUDA_HOME: /usr/local/cuda
+    NVCC: Cuda compilation tools, release 11.3, V11.3.109
+    GCC: gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+    PyTorch: 1.11.0+cu113
+    PyTorch compiling details: PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) Math Kernel Library Version 2020.0.0 Product Build 20191122 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.5.2 (Git Hash a9302535553c73243c632ad3c4c80beec3d19a1e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.3
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86
+  - CuDNN 8.2
+  - Magma 2.5.2
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.3, CUDNN_VERSION=8.2.0, CXX_COMPILER=/opt/rh/devtoolset-7/root/usr/bin/c++, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_KINETO -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -DEDGE_PROFILER_USE_KINETO -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_VERSION=1.11.0, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=OFF, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+    TorchVision: 0.12.0+cu113
+    OpenCV: 5.0.0
+    MMEngine: 0.8.0
+
+Runtime environment:
+    cudnn_benchmark: False
+    mp_cfg: {'mp_start_method': 'fork', 'opencv_num_threads': 0}
+    dist_cfg: {'backend': 'nccl'}
+    seed: 1234
+    deterministic: True
+    Distributed launcher: none
+    Distributed training: False
+    GPU number: 1
+------------------------------------------------------------
+
+10/17 18:05:10 - mmengine - INFO - Config:
+img_scale = (
+    600.0,
+    1080.0,
+)
+model = dict(
+    data_preprocessor=dict(
+        type='mmtrack.TrackDataPreprocessor',
+        pad_size_divisor=32,
+        batch_augments=[
+            dict(
+                type='mmdet.BatchSyncRandomResize',
+                random_size_range=(
+                    576,
+                    1024,
+                ),
+                size_divisor=32,
+                interval=10),
+        ]),
+    detector=dict(
+        _scope_='mmdet',
+        type='YOLOX',
+        backbone=dict(
+            type='CSPDarknet', deepen_factor=1.33, widen_factor=1.25),
+        neck=dict(
+            type='YOLOXPAFPN',
+            in_channels=[
+                320,
+                640,
+                1280,
+            ],
+            out_channels=320,
+            num_csp_blocks=4),
+        bbox_head=dict(
+            type='YOLOXHead',
+            num_classes=8,
+            in_channels=320,
+            feat_channels=320),
+        train_cfg=dict(
+            assigner=dict(type='SimOTAAssigner', center_radius=2.5)),
+        test_cfg=dict(score_thr=0.01, nms=dict(type='nms', iou_threshold=0.7)),
+        init_cfg=dict(
+            type='Pretrained',
+            checkpoint=
+            'https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_x_8x8_300e_coco/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth'
+        )),
+    type='AdaptiveDetector',
+    adapter=None)
+default_scope = 'shift_tta'
+default_hooks = dict(
+    timer=dict(type='IterTimerHook'),
+    logger=dict(type='LoggerHook', interval=50),
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    checkpoint=dict(type='CheckpointHook', interval=1),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+    visualization=dict(type='mmtrack.TrackVisualizationHook', draw=False))
+env_cfg = dict(
+    cudnn_benchmark=False,
+    mp_cfg=dict(mp_start_method='fork', opencv_num_threads=0),
+    dist_cfg=dict(backend='nccl'))
+vis_backends = [
+    dict(type='LocalVisBackend'),
+]
+visualizer = dict(
+    type='mmtrack.TrackLocalVisualizer',
+    vis_backends=[
+        dict(type='LocalVisBackend'),
+    ],
+    name='visualizer')
+log_level = 'INFO'
+load_from = '/workspace/ckpt/yolox_x_8xb4-24e_cityscapes_1.pth'
+resume = False
+dataset_type = 'mmdet.datasets.CityscapesDataset'
+data_root = 'data/cityscapes_foggy/leftImg8bit/val/'
+attributes = dict(weather_coarse='all', timeofday_coarse='all')
+ratio = 0.75
+batch_size = 1
+train_pipeline = [
+    dict(
+        type='mmdet.Mosaic',
+        img_scale=(
+            600.0,
+            1080.0,
+        ),
+        pad_val=114.0,
+        bbox_clip_border=False),
+    dict(
+        type='mmdet.RandomAffine',
+        scaling_ratio_range=(
+            0.1,
+            2,
+        ),
+        border=(
+            -300.0,
+            -540.0,
+        ),
+        bbox_clip_border=False),
+    dict(
+        type='mmdet.MixUp',
+        img_scale=(
+            600.0,
+            1080.0,
+        ),
+        ratio_range=(
+            0.8,
+            1.6,
+        ),
+        pad_val=114.0,
+        bbox_clip_border=False),
+    dict(type='mmdet.YOLOXHSVRandomAug'),
+    dict(type='mmdet.RandomFlip', prob=0.5),
+    dict(
+        type='mmdet.Resize',
+        scale=(
+            600.0,
+            1080.0,
+        ),
+        keep_ratio=True,
+        clip_object_border=False),
+    dict(
+        type='mmdet.Pad',
+        size_divisor=32,
+        pad_val=dict(img=(
+            114.0,
+            114.0,
+            114.0,
+        ))),
+    dict(
+        type='mmdet.FilterAnnotations',
+        min_gt_bbox_wh=(
+            1,
+            1,
+        ),
+        keep_empty=False),
+    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+]
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(type='mmtrack.LoadTrackAnnotations'),
+    dict(type='mmdet.Resize', scale=(
+        600.0,
+        1080.0,
+    ), keep_ratio=True),
+    dict(
+        type='mmdet.Pad',
+        size_divisor=32,
+        pad_val=dict(img=(
+            114.0,
+            114.0,
+            114.0,
+        ))),
+    dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+]
+train_dataset = dict(
+    type='mmdet.MultiImageMixDataset',
+    dataset=dict(
+        type='mmdet.datasets.CityscapesDataset',
+        ann_file='data/cityscapes/leftImg8bit/train/det_2d_cocoformat.json',
+        data_prefix=dict(img='data/cityscapes_foggy/leftImg8bit/val/'),
+        metainfo=dict(
+            classes=(
+                'person',
+                'rider',
+                'car',
+                'train',
+                'motorcycle',
+                'bicycle',
+                'truck',
+                'bus',
+            )),
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(type='mmtrack.LoadTrackAnnotations'),
+        ],
+        filter_cfg=dict(
+            attributes=dict(weather_coarse='all', timeofday_coarse='all'),
+            filter_empty_gt=False,
+            min_size=32)),
+    pipeline=[
+        dict(
+            type='mmdet.Mosaic',
+            img_scale=(
+                600.0,
+                1080.0,
+            ),
+            pad_val=114.0,
+            bbox_clip_border=False),
+        dict(
+            type='mmdet.RandomAffine',
+            scaling_ratio_range=(
+                0.1,
+                2,
+            ),
+            border=(
+                -300.0,
+                -540.0,
+            ),
+            bbox_clip_border=False),
+        dict(
+            type='mmdet.MixUp',
+            img_scale=(
+                600.0,
+                1080.0,
+            ),
+            ratio_range=(
+                0.8,
+                1.6,
+            ),
+            pad_val=114.0,
+            bbox_clip_border=False),
+        dict(type='mmdet.YOLOXHSVRandomAug'),
+        dict(type='mmdet.RandomFlip', prob=0.5),
+        dict(
+            type='mmdet.Resize',
+            scale=(
+                600.0,
+                1080.0,
+            ),
+            keep_ratio=True,
+            clip_object_border=False),
+        dict(
+            type='mmdet.Pad',
+            size_divisor=32,
+            pad_val=dict(img=(
+                114.0,
+                114.0,
+                114.0,
+            ))),
+        dict(
+            type='mmdet.FilterAnnotations',
+            min_gt_bbox_wh=(
+                1,
+                1,
+            ),
+            keep_empty=False),
+        dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+    ])
+train_dataloader = dict(
+    batch_size=1,
+    num_workers=4,
+    persistent_workers=True,
+    sampler=dict(type='DefaultSampler', shuffle=True),
+    dataset=dict(
+        type='mmdet.MultiImageMixDataset',
+        dataset=dict(
+            type='mmdet.datasets.CityscapesDataset',
+            ann_file='data/cityscapes/leftImg8bit/train/det_2d_cocoformat.json',
+            data_prefix=dict(img='data/cityscapes_foggy/leftImg8bit/val/'),
+            metainfo=dict(
+                classes=(
+                    'person',
+                    'rider',
+                    'car',
+                    'train',
+                    'motorcycle',
+                    'bicycle',
+                    'truck',
+                    'bus',
+                )),
+            pipeline=[
+                dict(type='LoadImageFromFile'),
+                dict(type='mmtrack.LoadTrackAnnotations'),
+            ],
+            filter_cfg=dict(
+                attributes=dict(weather_coarse='all', timeofday_coarse='all'),
+                filter_empty_gt=False,
+                min_size=32)),
+        pipeline=[
+            dict(
+                type='mmdet.Mosaic',
+                img_scale=(
+                    600.0,
+                    1080.0,
+                ),
+                pad_val=114.0,
+                bbox_clip_border=False),
+            dict(
+                type='mmdet.RandomAffine',
+                scaling_ratio_range=(
+                    0.1,
+                    2,
+                ),
+                border=(
+                    -300.0,
+                    -540.0,
+                ),
+                bbox_clip_border=False),
+            dict(
+                type='mmdet.MixUp',
+                img_scale=(
+                    600.0,
+                    1080.0,
+                ),
+                ratio_range=(
+                    0.8,
+                    1.6,
+                ),
+                pad_val=114.0,
+                bbox_clip_border=False),
+            dict(type='mmdet.YOLOXHSVRandomAug'),
+            dict(type='mmdet.RandomFlip', prob=0.5),
+            dict(
+                type='mmdet.Resize',
+                scale=(
+                    600.0,
+                    1080.0,
+                ),
+                keep_ratio=True,
+                clip_object_border=False),
+            dict(
+                type='mmdet.Pad',
+                size_divisor=32,
+                pad_val=dict(img=(
+                    114.0,
+                    114.0,
+                    114.0,
+                ))),
+            dict(
+                type='mmdet.FilterAnnotations',
+                min_gt_bbox_wh=(
+                    1,
+                    1,
+                ),
+                keep_empty=False),
+            dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+        ]))
+val_dataset = dict(
+    type='ConcatDataset',
+    datasets=[
+        dict(
+            type='mmdet.datasets.CityscapesDataset',
+            ann_file='data/cityscapes_foggy/leftImg8bit/val/fog_0.005.json',
+            data_prefix=dict(img='data/cityscapes_foggy/leftImg8bit/val/'),
+            test_mode=True,
+            filter_cfg=dict(
+                attributes=dict(weather_coarse='all', timeofday_coarse='all')),
+            pipeline=[
+                dict(type='LoadImageFromFile'),
+                dict(type='mmtrack.LoadTrackAnnotations'),
+                dict(
+                    type='mmdet.Resize',
+                    scale=(
+                        600.0,
+                        1080.0,
+                    ),
+                    keep_ratio=True),
+                dict(
+                    type='mmdet.Pad',
+                    size_divisor=32,
+                    pad_val=dict(img=(
+                        114.0,
+                        114.0,
+                        114.0,
+                    ))),
+                dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+            ],
+            metainfo=dict(
+                classes=(
+                    'person',
+                    'rider',
+                    'car',
+                    'train',
+                    'motorcycle',
+                    'bicycle',
+                    'truck',
+                    'bus',
+                ))),
+        dict(
+            type='mmdet.datasets.CityscapesDataset',
+            ann_file='data/cityscapes_foggy/leftImg8bit/val/fog_0.01.json',
+            data_prefix=dict(img='data/cityscapes_foggy/leftImg8bit/val/'),
+            test_mode=True,
+            filter_cfg=dict(
+                attributes=dict(weather_coarse='all', timeofday_coarse='all')),
+            pipeline=[
+                dict(type='LoadImageFromFile'),
+                dict(type='mmtrack.LoadTrackAnnotations'),
+                dict(
+                    type='mmdet.Resize',
+                    scale=(
+                        600.0,
+                        1080.0,
+                    ),
+                    keep_ratio=True),
+                dict(
+                    type='mmdet.Pad',
+                    size_divisor=32,
+                    pad_val=dict(img=(
+                        114.0,
+                        114.0,
+                        114.0,
+                    ))),
+                dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+            ],
+            metainfo=dict(
+                classes=(
+                    'person',
+                    'rider',
+                    'car',
+                    'train',
+                    'motorcycle',
+                    'bicycle',
+                    'truck',
+                    'bus',
+                ))),
+        dict(
+            type='mmdet.datasets.CityscapesDataset',
+            ann_file='data/cityscapes_foggy/leftImg8bit/val/fog_0.02.json',
+            data_prefix=dict(img='data/cityscapes_foggy/leftImg8bit/val/'),
+            test_mode=True,
+            filter_cfg=dict(
+                attributes=dict(weather_coarse='all', timeofday_coarse='all')),
+            pipeline=[
+                dict(type='LoadImageFromFile'),
+                dict(type='mmtrack.LoadTrackAnnotations'),
+                dict(
+                    type='mmdet.Resize',
+                    scale=(
+                        600.0,
+                        1080.0,
+                    ),
+                    keep_ratio=True),
+                dict(
+                    type='mmdet.Pad',
+                    size_divisor=32,
+                    pad_val=dict(img=(
+                        114.0,
+                        114.0,
+                        114.0,
+                    ))),
+                dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+            ],
+            metainfo=dict(
+                classes=(
+                    'person',
+                    'rider',
+                    'car',
+                    'train',
+                    'motorcycle',
+                    'bicycle',
+                    'truck',
+                    'bus',
+                ))),
+        dict(
+            type='mmdet.datasets.CityscapesDataset',
+            ann_file='data/cityscapes_foggy/leftImg8bit/val/clear.json',
+            data_prefix=dict(img='data/cityscapes_foggy/leftImg8bit/val/'),
+            test_mode=True,
+            filter_cfg=dict(
+                attributes=dict(weather_coarse='all', timeofday_coarse='all')),
+            pipeline=[
+                dict(type='LoadImageFromFile'),
+                dict(type='mmtrack.LoadTrackAnnotations'),
+                dict(
+                    type='mmdet.Resize',
+                    scale=(
+                        600.0,
+                        1080.0,
+                    ),
+                    keep_ratio=True),
+                dict(
+                    type='mmdet.Pad',
+                    size_divisor=32,
+                    pad_val=dict(img=(
+                        114.0,
+                        114.0,
+                        114.0,
+                    ))),
+                dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+            ],
+            metainfo=dict(
+                classes=(
+                    'person',
+                    'rider',
+                    'car',
+                    'train',
+                    'motorcycle',
+                    'bicycle',
+                    'truck',
+                    'bus',
+                ))),
+    ])
+val_dataloader = dict(
+    batch_size=1,
+    num_workers=4,
+    persistent_workers=True,
+    drop_last=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type='mmdet.datasets.CocoDataset',
+        ann_file=
+        '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+        data_prefix=dict(img='/workspace/data/cityscapes/leftImg8bit/val/'),
+        test_mode=True,
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(type='mmtrack.LoadTrackAnnotations'),
+            dict(
+                type='mmdet.Resize', scale=(
+                    600.0,
+                    1080.0,
+                ), keep_ratio=True),
+            dict(
+                type='mmdet.Pad',
+                size_divisor=32,
+                pad_val=dict(img=(
+                    114.0,
+                    114.0,
+                    114.0,
+                ))),
+            dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+        ],
+        metainfo=dict(
+            classes=(
+                'person',
+                'rider',
+                'car',
+                'train',
+                'motorcycle',
+                'bicycle',
+                'truck',
+                'bus',
+            ))))
+test_dataloader = dict(
+    batch_size=1,
+    num_workers=4,
+    persistent_workers=True,
+    drop_last=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type='mmdet.datasets.CocoDataset',
+        ann_file=
+        '/workspace/data/cityscapes/instancesonly_filtered_gtFine_val_yoloxorder.json',
+        data_prefix=dict(img='/workspace/data/cityscapes/leftImg8bit/val/'),
+        test_mode=True,
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(type='mmtrack.LoadTrackAnnotations'),
+            dict(
+                type='mmdet.Resize', scale=(
+                    600.0,
+                    1080.0,
+                ), keep_ratio=True),
+            dict(
+                type='mmdet.Pad',
+                size_divisor=32,
+                pad_val=dict(img=(
+                    114.0,
+                    114.0,
+                    114.0,
+                ))),
+            dict(type='mmtrack.PackTrackInputs', pack_single_img=True),
+        ],
+        metainfo=dict(
+            classes=(
+                'person',
+                'rider',
+                'car',
+                'train',
+                'motorcycle',
+                'bicycle',
+                'truck',
+                'bus',
+            ))))
+lr = 6.25e-05
+optim_wrapper = dict(
+    type='OptimWrapper',
+    optimizer=dict(
+        type='SGD',
+        lr=6.25e-05,
+        momentum=0.9,
+        weight_decay=0.0005,
+        nesterov=True),
+    paramwise_cfg=dict(norm_decay_mult=0.0, bias_decay_mult=0.0))
+total_epochs = 12
+num_last_epochs = 2
+resume_from = None
+interval = 5
+train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=12, val_interval=1)
+val_cfg = dict(type='ValLoop')
+test_cfg = dict(type='TestLoop')
+param_scheduler = [
+    dict(
+        type='mmdet.QuadraticWarmupLR',
+        by_epoch=True,
+        begin=0,
+        end=1,
+        convert_to_iter_based=True),
+    dict(
+        type='mmdet.CosineAnnealingLR',
+        eta_min=3.125e-06,
+        begin=1,
+        T_max=10,
+        end=10,
+        by_epoch=True,
+        convert_to_iter_based=True),
+    dict(type='mmdet.ConstantLR', by_epoch=True, factor=1, begin=10, end=12),
+]
+custom_hooks = [
+    dict(type='mmtrack.YOLOXModeSwitchHook', num_last_epochs=2, priority=48),
+    dict(type='mmdet.SyncNormHook', priority=48),
+    dict(
+        type='mmdet.EMAHook',
+        ema_type='mmdet.ExpMomentumEMA',
+        momentum=0.0001,
+        update_buffers=True,
+        priority=49),
+]
+seed = 1234
+randomness = dict(seed=1234, deterministic=True)
+val_evaluator = [
+    dict(
+        type='CocoMetricDomains',
+        metric=[
+            'bbox',
+        ],
+        classwise=True,
+        domain_sizes=[
+            500,
+        ],
+        domain_names=[
+            'cityscapes_clear_val',
+        ]),
+]
+test_evaluator = [
+    dict(
+        type='CocoMetricDomains',
+        metric=[
+            'bbox',
+        ],
+        classwise=True,
+        domain_sizes=[
+            500,
+        ],
+        domain_names=[
+            'cityscapes_clear_val',
+        ]),
+]
+classes = (
+    'person',
+    'rider',
+    'car',
+    'train',
+    'motorcycle',
+    'bicycle',
+    'truck',
+    'bus',
+)
+root = '/workspace/data/'
+launcher = 'none'
+work_dir = '/workspace/out'
+
+10/17 18:05:16 - mmengine - INFO - Distributed training is not used, all SyncBatchNorm (SyncBN) layers in the model will be automatically reverted to BatchNormXd layers if they are used.
+10/17 18:05:16 - mmengine - WARNING - "FileClient" will be deprecated in future. Please use io functions in https://mmengine.readthedocs.io/en/latest/api/fileio.html#file-io
+10/17 18:05:16 - mmengine - WARNING - "HardDiskBackend" is the alias of "LocalBackend" and the former will be deprecated in future.
+10/17 18:05:16 - mmengine - INFO - Hooks will be executed in the following order:
+before_run:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(49          ) EMAHook                            
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_load_checkpoint:
+(49          ) EMAHook                            
+ -------------------- 
+before_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(49          ) EMAHook                            
+(NORMAL      ) IterTimerHook                      
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_train_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(48          ) YOLOXModeSwitchHook                
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DistSamplerSeedHook                
+ -------------------- 
+before_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(49          ) EMAHook                            
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_train_epoch:
+(NORMAL      ) IterTimerHook                      
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_val_epoch:
+(48          ) SyncNormHook                       
+(49          ) EMAHook                            
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_val_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_val_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) TrackVisualizationHook             
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_val_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(49          ) EMAHook                            
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_save_checkpoint:
+(49          ) EMAHook                            
+ -------------------- 
+after_train:
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_test_epoch:
+(49          ) EMAHook                            
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_test_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_test_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) TrackVisualizationHook             
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(49          ) EMAHook                            
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_run:
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+10/17 18:05:17 - mmengine - INFO - load model from: https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_x_8x8_300e_coco/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth
+10/17 18:05:17 - mmengine - INFO - Loads checkpoint by http backend from path: https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_x_8x8_300e_coco/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth
+Downloading: "https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_x_8x8_300e_coco/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth" to /tmp/.cache/torch/hub/checkpoints/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth
+10/17 18:06:26 - mmengine - WARNING - The model and loaded state dict do not match exactly
+
+size mismatch for bbox_head.multi_level_conv_cls.0.weight: copying a param with shape torch.Size([80, 320, 1, 1]) from checkpoint, the shape in current model is torch.Size([8, 320, 1, 1]).
+size mismatch for bbox_head.multi_level_conv_cls.0.bias: copying a param with shape torch.Size([80]) from checkpoint, the shape in current model is torch.Size([8]).
+size mismatch for bbox_head.multi_level_conv_cls.1.weight: copying a param with shape torch.Size([80, 320, 1, 1]) from checkpoint, the shape in current model is torch.Size([8, 320, 1, 1]).
+size mismatch for bbox_head.multi_level_conv_cls.1.bias: copying a param with shape torch.Size([80]) from checkpoint, the shape in current model is torch.Size([8]).
+size mismatch for bbox_head.multi_level_conv_cls.2.weight: copying a param with shape torch.Size([80, 320, 1, 1]) from checkpoint, the shape in current model is torch.Size([8, 320, 1, 1]).
+size mismatch for bbox_head.multi_level_conv_cls.2.bias: copying a param with shape torch.Size([80]) from checkpoint, the shape in current model is torch.Size([8]).
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+Loads checkpoint by local backend from path: /workspace/ckpt/yolox_x_8xb4-24e_cityscapes_1.pth
+10/17 18:06:29 - mmengine - INFO - Load checkpoint from /workspace/ckpt/yolox_x_8xb4-24e_cityscapes_1.pth
+/opt/conda/lib/python3.9/site-packages/torch/functional.py:568: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at  ../aten/src/ATen/native/TensorShape.cpp:2228.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+10/17 18:06:31 - mmengine - INFO - Epoch(test) [ 50/500]    eta: 0:00:18  time: 0.0358  data_time: 0.0019  memory: 963  
+10/17 18:06:33 - mmengine - INFO - Epoch(test) [100/500]    eta: 0:00:15  time: 0.0357  data_time: 0.0018  memory: 963  
+10/17 18:06:34 - mmengine - INFO - Epoch(test) [150/500]    eta: 0:00:13  time: 0.0360  data_time: 0.0020  memory: 963  
+10/17 18:06:36 - mmengine - INFO - Epoch(test) [200/500]    eta: 0:00:11  time: 0.0362  data_time: 0.0019  memory: 963  
+10/17 18:06:38 - mmengine - INFO - Epoch(test) [250/500]    eta: 0:00:09  time: 0.0361  data_time: 0.0017  memory: 963  
+10/17 18:06:40 - mmengine - INFO - Epoch(test) [300/500]    eta: 0:00:07  time: 0.0363  data_time: 0.0016  memory: 963  
+10/17 18:06:42 - mmengine - INFO - Epoch(test) [350/500]    eta: 0:00:05  time: 0.0361  data_time: 0.0018  memory: 963  
+10/17 18:06:43 - mmengine - INFO - Epoch(test) [400/500]    eta: 0:00:03  time: 0.0362  data_time: 0.0019  memory: 963  
+10/17 18:06:45 - mmengine - INFO - Epoch(test) [450/500]    eta: 0:00:01  time: 0.0364  data_time: 0.0019  memory: 963  
+10/17 18:06:47 - mmengine - INFO - Epoch(test) [500/500]    eta: 0:00:00  time: 0.0357  data_time: 0.0016  memory: 963  
+10/17 18:06:47 - mmengine - INFO - Converting ground truth to coco format...
+loading annotations into memory...
+Done (t=0.03s)
+creating index...
+index created!
+10/17 18:06:48 - mmengine - INFO - Evaluating bbox...
+Loading and preparing results...
+DONE (t=0.19s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=7.84s).
+Accumulating evaluation results...
+DONE (t=0.65s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.426
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.656
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.437
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.100
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.342
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.634
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.496
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.496
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.496
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.150
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.453
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.685
+10/17 18:06:57 - mmengine - INFO - 
++----------+-------+------------+-------+----------+-------+
+| category | AP    | category   | AP    | category | AP    |
++----------+-------+------------+-------+----------+-------+
+| person   | 0.429 | rider      | 0.412 | car      | 0.58  |
+| train    | 0.277 | motorcycle | 0.293 | bicycle  | 0.374 |
+| truck    | 0.396 | bus        | 0.643 | None     | None  |
++----------+-------+------------+-------+----------+-------+
+10/17 18:06:57 - mmengine - INFO - bbox_mAP_copypaste: 0.426 0.656 0.437 0.100 0.342 0.634
+10/17 18:06:57 - mmengine - INFO - [DOMAIN 1/1] name=cityscapes_clear_val n=500 AP=0.4260 AP50=0.6560 AP75=0.4370
+10/17 18:06:57 - mmengine - INFO - [MEAN over 1 domains] AP=0.4260 AP50=0.6560
+10/17 18:06:57 - mmengine - INFO - Epoch(test) [500/500]    coco/bbox_mAP: 0.4260  coco/bbox_mAP_50: 0.6560  coco/bbox_mAP_75: 0.4370  data_time: 0.0022  time: 0.0365

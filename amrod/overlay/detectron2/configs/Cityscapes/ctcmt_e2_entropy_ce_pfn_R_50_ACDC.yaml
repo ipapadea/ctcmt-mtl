@@ -1,0 +1,7 @@
+# Entropy-weighted soft-CE — down-weight uncertain teacher-seg pixels.
+_BASE_: "./ctcmt_v2_cross_fisher_pfn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_ENTROPY_WEIGHTED_CE: True
+
+OUTPUT_DIR: "/workspace/output/ctcmt_e2_entropy_ce"

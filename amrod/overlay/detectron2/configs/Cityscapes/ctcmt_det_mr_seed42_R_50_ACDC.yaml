@@ -1,0 +1,4 @@
+# CTCMT_Det on Mask R-CNN source. Seed 42.
+_BASE_: "./ctcmt_det_mr_R_50_ACDC.yaml"
+SEED: 42
+OUTPUT_DIR: "/workspace/output/ctcmt_det_mr_seed42"

@@ -1,0 +1,139 @@
+"""Build results/yolox_mtl_final/{summary.md,per_domain.csv,logs/} from the raw run directories.
+
+    python make_summary.py --remote RAW_REMOTE --local RAW_LOCAL --out results/yolox_mtl_final
+
+RAW_REMOTE: directory with final/, dev/, dev2/ (every run dir has eval.log and meta.txt)
+RAW_LOCAL:  directory with src_acdc4/, src_csc12/ (source-only) and dev/ (first dev sweep)
+Metrics are read from the lines printed by CocoMetricDomains / IoUMetricDomains:
+    [DOMAIN i/n] name=... AP=... AP50=...      [SEGDOMAIN i/n] name=... mIoU=...
+"""
+import argparse
+import csv
+import gzip
+import re
+import shutil
+from pathlib import Path
+
+DOM = re.compile(r'\[DOMAIN (\d+)/(\d+)\] name=(\S+) n=(\d+) AP=(\S+) AP50=(\S+)')
+SEG = re.compile(r'\[SEGDOMAIN (\d+)/(\d+)\] name=(\S+) n=(\d+) mIoU=(\S+)')
+LAST = re.compile(r'\[CTCMT-YOLOX\] iter=(\d+) .*?gnorm=(\S+) (?:clipped=(\d+) skipped=(\d+) )?')
+
+
+def parse(run: Path):
+    txt = (run / 'eval.log').read_text(errors='ignore')
+    det = {int(m[1]): (m[3], float(m[5]), float(m[6])) for m in DOM.finditer(txt)}
+    seg = {int(m[1]): float(m[5]) for m in SEG.finditer(txt)}
+    n = max(det) if det else 0
+    steps = [m for m in LAST.finditer(txt)]
+    info = dict(nan_logged='gnorm=nan' in txt, last_iter=int(steps[-1][1]) if steps else None,
+                clipped=steps[-1][3] if steps and steps[-1][3] else None,
+                skipped=steps[-1][4] if steps and steps[-1][4] else None)
+    if not n or len(det) != n or len(seg) != n:
+        return None, info
+    names = [det[i][0] for i in range(1, n + 1)]
+    return dict(names=names, ap=[det[i][1] for i in range(1, n + 1)],
+                ap50=[det[i][2] for i in range(1, n + 1)], miou=[seg[i] for i in range(1, n + 1)]), info
+
+
+def m(x):
+    return 100.0 * sum(x) / len(x)
+
+
+def rounds(r):
+    names = r['names']
+    k = next((k for k in range(1, len(names)) if names[:k] * (len(names) // k) == names), None)
+    if not k or k == len(names):
+        return None
+    return [(m(r['ap50'][i:i + k]), m(r['miou'][i:i + k])) for i in range(0, len(names), k)]
+
+
+def row(run: Path):
+    r, info = parse(run)
+    if r is None:
+        why = 'diverged (NaN)' if info['nan_logged'] else 'no metrics'
+        return f'| `{run.name}` | {why} | | | |', None
+    return (f'| `{run.name}` | {len(r["names"])} | {m(r["ap50"]):.2f} | {m(r["ap"]):.2f} | {m(r["miou"]):.2f} |'), r
+
+
+def table(runs, title, csvw=None, group=''):
+    out = [f'### {title}', '', '| run | domains | AP50 | mAP | mIoU |', '|---|---|---|---|---|']
+    curves = []
+    for run in runs:
+        line, r = row(run)
+        out.append(line)
+        if r:
+            rd = rounds(r)
+            if rd:
+                curves.append((run.name, rd))
+            if csvw:
+                for i, nme in enumerate(r['names']):
+                    csvw.writerow([group, run.name, i + 1, nme, f'{100 * r["ap"][i]:.3f}',
+                                   f'{100 * r["ap50"][i]:.3f}', f'{100 * r["miou"][i]:.3f}'])
+    if curves:
+        out += ['', 'Per round (mean over the domains of one pass), AP50 / mIoU:', '']
+        for name, rd in curves:
+            out.append(f'- `{name}`: ' + ', '.join(f'{a:.1f}/{b:.1f}' for a, b in rd))
+    return '\n'.join(out) + '\n'
+
+
+def copy_logs(runs, dst: Path):
+    for run in runs:
+        d = dst / run.name
+        d.mkdir(parents=True, exist_ok=True)
+        with open(run / 'eval.log', 'rb') as a, gzip.open(d / 'eval.log.gz', 'wb') as b:
+            shutil.copyfileobj(a, b)
+        if (run / 'meta.txt').exists():
+            shutil.copy(run / 'meta.txt', d / 'meta.txt')
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--remote', required=True)
+    ap.add_argument('--local', required=True)
+    ap.add_argument('--out', required=True)
+    a = ap.parse_args()
+    rem, loc, out = Path(a.remote), Path(a.local), Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    pick = lambda base, pat: sorted(p for p in base.glob(pat) if (p / 'eval.log').exists())  # noqa: E731
+
+    src = [loc / 'src_acdc4', loc / 'src_csc12']
+    final_clip = pick(rem / 'final', '*clip1000*')
+    final_noclip = [p for p in pick(rem / 'final', '*') if 'clip' not in p.name]
+    dev_local = pick(loc / 'dev', '*')
+    dev_rem = pick(rem / 'dev', '*')
+    dev2 = pick(rem / 'dev2', '*')
+
+    # Source rows for the long-term streams: the per-domain scores of the short-term runs, re-ordered
+    sr = {p.name: parse(p)[0] for p in src}
+    src_dom = {}
+    for r in sr.values():
+        for i, n in enumerate(r['names']):
+            src_dom[n] = (r['ap50'][i], r['miou'][i])
+    csc5 = ['fog', 'motion_blur', 'snow', 'brightness', 'defocus_blur']
+    lt = {'cscLT source (derived)': (m([src_dom[c][0] for c in csc5]), m([src_dom[c][1] for c in csc5]))}
+
+    with open(out / 'per_domain.csv', 'w', newline='') as f:
+        w = csv.writer(f)
+        w.writerow(['group', 'run', 'domain_idx', 'domain', 'AP', 'AP50', 'mIoU'])
+        parts = ['# YOLOX-MTL: Source vs Base vs CTCMT (generated by make_summary.py)', '',
+                 'All numbers are mean over the domains of the stream (AMROD protocol). Seed 0 only.', '',
+                 table(src, 'Source (no adaptation)', w, 'source'),
+                 f'Source on CSC-LT = its CSC12 scores of fog, motion_blur, snow, brightness, defocus_blur: '
+                 f'AP50 {lt["cscLT source (derived)"][0]:.2f}, mIoU {lt["cscLT source (derived)"][1]:.2f}. '
+                 'Source on ACDC-LT = Source on ACDC4 (same four domains).', '',
+                 table(final_clip, 'Final runs: lr 3e-5, gradient-norm clip 1000', w, 'final_clip1000'),
+                 table(final_noclip, 'First batch: lr 3e-5, no gradient clipping', w, 'final_noclip'),
+                 table(dev_local, 'Dev stream (ACDC val, 406 frames), first lr sweep, no clipping', w, 'dev_local'),
+                 table(dev_rem, 'Dev stream, lr = 0 check and 5x repeats, no clipping', w, 'dev_remote'),
+                 table(dev2, 'Dev stream x10 (4060 frames): lr x gradient clip', w, 'dev2')]
+    (out / 'summary.md').write_text('\n'.join(parts))
+    logs = out / 'logs'
+    for grp, runs in [('source', src), ('final_clip1000', final_clip), ('final_noclip', final_noclip),
+                      ('dev_local', dev_local), ('dev_remote', dev_rem), ('dev2', dev2)]:
+        copy_logs(runs, logs / grp)
+    for f in (rem.glob('*.out')):
+        shutil.copy(f, logs / f.name)
+
+
+if __name__ == '__main__':
+    main()

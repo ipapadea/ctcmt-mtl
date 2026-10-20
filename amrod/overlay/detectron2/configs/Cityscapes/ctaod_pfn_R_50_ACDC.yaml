@@ -1,0 +1,46 @@
+# CTAOD (Yoo et al., CVPR'24) --- same-source detection-only CTTA baseline.
+#
+# Architecture, input pipeline and evaluation are IDENTICAL to the AMROD
+# baseline (amrod_mask_rcnn_R_50_ACDC.yaml); only the test-time adaptation
+# algorithm differs.  MODEL.WEIGHTS is set by the newsrc_* child configs.
+_BASE_: "../Cityscapes/mask_rcnn_R_50_FPN_singletask.yaml"
+MODEL:
+  META_ARCHITECTURE: "CTAOD_Yoo"
+  WEIGHTS: "/workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth"
+  RESNETS:
+    NORM: "FrozenBN"
+
+INPUT:
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 2048
+
+DATASETS:
+  TRAIN: ("cityscapes_fine_instance_seg_train",)
+  TEST: ("acdc_fog", "acdc_night", "acdc_rain", "acdc_snow")
+
+SOLVER:
+  # Official CTAOD optimizer: SGD, lr = BASE_LR * max(batch//4, 1).
+  # With batch size 1 the effective lr is BASE_LR = 1e-3 (official value).
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.001
+  MOMENTUM: 0.9
+  NESTEROV: False
+  WEIGHT_DECAY: 0.0001
+  CLIP_GRADIENTS:
+    ENABLED: True
+    CLIP_VALUE: 1.0
+
+TEST:
+  CTAOD_YOO:
+    SOURCE_STATS_PATH: "/workspace/output/ctaod_stats/newsrc_ctaod_source_stats.pt"
+    GLOBAL_ALIGN: "KL"
+    FOREGROUND_ALIGN: "KL"
+    ALPHA_GLOBAL: 1.0
+    ALPHA_FOREGROUND: 1.0
+    TH_BG: 0.5
+    EMA_GAMMA: 128
+    FREQ_WEIGHT: True
+    ADAPTER_RATIO: 32
+    SKIP_REDUNDANT: ""
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/ctaod_pfn_R50_C2ACDC"

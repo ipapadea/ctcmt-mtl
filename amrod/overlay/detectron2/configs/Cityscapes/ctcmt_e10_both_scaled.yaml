@@ -1,0 +1,7 @@
+# E10-3s — both countermeasures, magnitude-preserving.
+_BASE_: "./ctcmt_e10_both.yaml"
+
+SOLVER:
+  CTCMT_SEG_LOSS_SCALE_PRESERVE: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e10_both_scaled"

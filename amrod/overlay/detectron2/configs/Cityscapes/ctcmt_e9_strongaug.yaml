@@ -1,0 +1,12 @@
+# E9-1 — A + weak/strong mean-teacher asymmetry.
+#
+# Single-factor change from the current best ACDC variant (A): the student is
+# trained on DatasetMapper's "image_strong" view (photometric + RandomErasing,
+# geometry-preserving) while teacher and anchor keep the weak view. This is the
+# asymmetry AMROD uses and CTCMT_MTL was missing.
+_BASE_: "./ctcmt_e8a_v2_full_ctcr_no_ctpv.yaml"
+
+SOLVER:
+  CTCMT_STRONG_AUG_STUDENT: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e9_strongaug"

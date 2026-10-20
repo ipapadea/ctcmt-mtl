@@ -1,0 +1,23 @@
+# S2 / E17 --- symmetric gradient consensus (CAGrad, Liu et al. NeurIPS 2021).
+#
+# Literature-grounded symmetric control for E16. Both tasks are treated
+# identically: the update maximises the worst-case per-task improvement inside
+# a ball around the average gradient,
+#
+#     d = g0 + (alpha*||g0|| / ||g_w||) * g_w ,   g0 = (g_det + g_aux)/2
+#
+# with g_w the convex combination that minimises <g_w, g0> + alpha*||g0||*||g_w||.
+# Applied to shared backbone+FPN parameters only; heads keep their own
+# gradients. The result is scaled by the number of tasks so the step magnitude
+# matches the joint (summed) E13a baseline and alpha is not confounded with LR.
+#
+# ONE factor vs E13a: CTCMT_CONFLICT_MODE (alpha 0.5 = CAGrad's default).
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_CONFLICT_MODE: "cagrad"
+  CTCMT_CAGRAD_ALPHA: 0.5
+  CTCMT_GRAD_DIAG: True
+  CTCMT_GRAD_DIAG_EVERY: 50
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e17_cagrad"

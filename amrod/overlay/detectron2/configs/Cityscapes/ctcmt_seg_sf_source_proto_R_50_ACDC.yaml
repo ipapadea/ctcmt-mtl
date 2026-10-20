@@ -1,0 +1,11 @@
+# Source-prototype anchor (V4 original intent for single-task seg).
+# Prototypes built from frozen anchor model on first image, then kept fixed.
+# Every adaptation step pulls student features toward source-domain class centers.
+_BASE_: "./ctcmt_seg_semfpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_SEG_SOURCE_PROTO: True
+  CTCMT_PROTO_WEIGHT: 0.2
+  CTCMT_SEG_PROTO_CONF_THRESH: 0.85
+
+OUTPUT_DIR: "/workspace/output/ctcmt_seg_sf_source_proto_R50_C2ACDC"

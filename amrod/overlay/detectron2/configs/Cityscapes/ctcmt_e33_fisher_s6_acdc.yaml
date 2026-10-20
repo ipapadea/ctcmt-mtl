@@ -1,0 +1,19 @@
+# E33 --- DIAGNOSTIC ONLY. Not a paper row.
+#
+# The ACDC counterpart of E31: S6 on ACDC (E24) + AMROD's Randomized
+# Restoration. ONE factor from E24.
+#
+# This is the arm with the most to gain. On ACDC routing costs 2.16 mIoU
+# (E24 37.64 vs E11 39.80) and buys nothing on detection (43.46 vs 43.98), so
+# S6 is currently a pure loss there. If restoration recovers the segmentation
+# S6 gives away, the routing + restoration pair becomes benchmark-agnostic
+# instead of Cityscapes-C-specific -- which is the standing objection to
+# shipping S6 at all.
+#
+# The restoration rule is AMROD's and must never be reported as ours.
+_BASE_: "./ctcmt_e24_seghead_only_acdc.yaml"
+
+SOLVER:
+  CTCMT_FISHER_RESTORE: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e33_fisher_s6_acdc"

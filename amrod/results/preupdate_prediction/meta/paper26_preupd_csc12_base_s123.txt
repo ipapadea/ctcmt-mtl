@@ -1,0 +1,15 @@
+experiment=paper26_preupd_csc12_base_s123
+protocol=csc12
+variant=base
+seed=123
+gpu=0
+config=detectron2/configs/Cityscapes/newsrc_csc_base.yaml
+predict_before_update=True
+git_sha=a58ba2fd47532e1e2839e8017a0203dc847a3c72
+git_dirty=7
+expected_evals=12
+start_time=2026-10-16T12:55:37+03:00
+end_time=2026-10-16T14:15:02+03:00
+exit_code=0
+eval_count=12
+status=COMPLETE

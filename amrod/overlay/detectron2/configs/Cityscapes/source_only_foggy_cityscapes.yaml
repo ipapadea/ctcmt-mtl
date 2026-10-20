@@ -1,0 +1,7 @@
+# Source-only eval on Foggy Cityscapes (Cityscapes→FoggyCityscapes, det only).
+_BASE_: "../Cityscapes/mask_rcnn_R_50_FPN_singletask.yaml"
+MODEL:
+  WEIGHTS: "/workspace/output/mask_rcnn_R50_cityscapes/model_final.pth"
+DATASETS:
+  TEST: ("foggy_cityscapes_val",)
+OUTPUT_DIR: "/workspace/output/source_only_foggy_cs"

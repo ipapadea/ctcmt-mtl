@@ -1,0 +1,5 @@
+_BASE_: "./newsrc_csc_ctcr.yaml"
+
+SOLVER:
+  CTCMT_CONFLICT_MODE: "resnet_route"
+  CTCMT_AUX_TRUNK_LAMBDA: 0.0

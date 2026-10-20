@@ -1,0 +1,6 @@
+[batch] stage=dev2 gpu=1 repo=<repo> out=<out> ckpt_md5=a0112af8b39ad763d59043f4d264a9ea
+[batch] 2026-10-19T00:49:32+03:00 start dev10_lr3e-5_clip300 (frames=4060)
+[batch] 2026-10-19T01:46:12+03:00 end   dev10_lr3e-5_clip300: [MEAN over 40 domains] AP=0.3131 AP50=0.4781 [SEGMEAN over 40 domains] mIoU=0.4690 
+[batch] 2026-10-19T01:46:12+03:00 start dev10_lr1e-5_clip300 (frames=4060)
+[batch] 2026-10-19T02:43:05+03:00 end   dev10_lr1e-5_clip300: [MEAN over 40 domains] AP=0.2948 AP50=0.4508 [SEGMEAN over 40 domains] mIoU=0.4471 
+[batch] 2026-10-19T02:43:05+03:00 queue gpu1 done

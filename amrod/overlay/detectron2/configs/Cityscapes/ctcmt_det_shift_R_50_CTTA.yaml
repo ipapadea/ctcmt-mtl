@@ -1,0 +1,17 @@
+# CTCMT_Det on SHIFT — same TTA method as ctcmt_det_mr_R_50_ACDC.yaml but
+# adapted for the 6-class SHIFT source model and the SHIFT CTTA condition sequence
+# (cloudy -> overcast -> rainy -> foggy, matching AMROD Table 4).
+_BASE_: "./ctcmt_det_mr_R_50_ACDC.yaml"
+
+MODEL:
+  WEIGHTS: "/workspace/weights/shift_train_final.pth"
+  # SHIFT has 6 detection classes; source model has no mask head.
+  MASK_ON: False
+  ROI_HEADS:
+    NUM_CLASSES: 6
+
+DATASETS:
+  TRAIN: ("shift_train",)
+  TEST: ("shift_cloudy", "shift_overcast", "shift_rainy", "shift_foggy")
+
+OUTPUT_DIR: "/workspace/output/ctcmt_det_shift_CTTA"

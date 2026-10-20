@@ -1,0 +1,11 @@
+# Experimental: +CTCR with simple Fisher cross-task (DET vs AUX) routing on
+# shared ResNet res3-5 (lagged, per-tensor-normalised EMA Fisher).
+_BASE_: "./newsrc_acdc_ctcr.yaml"
+
+SOLVER:
+  CTCMT_FISHER_XTASK_ENABLED: True
+  CTCMT_FISHER_XTASK_BETA: 0.99
+  CTCMT_FISHER_XTASK_WARMUP: 50
+  CTCMT_FISHER_XTASK_LAMBDA: 0.5
+  CTCMT_FISHER_XTASK_SCOPE: "resnet"
+  CTCMT_FISHER_XTASK_GRANULARITY: "param"

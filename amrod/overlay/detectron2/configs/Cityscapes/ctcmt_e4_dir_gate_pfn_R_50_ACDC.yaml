@@ -1,0 +1,8 @@
+# Directional score-EM gate — skip only on stability, boost CT-CL on shift-onset.
+_BASE_: "./ctcmt_v2_cross_fisher_pfn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_DIRECTIONAL_GATE: True
+  CTCMT_DIR_GATE_STABLE_BAND: 0.4
+
+OUTPUT_DIR: "/workspace/output/ctcmt_e4_dir_gate"

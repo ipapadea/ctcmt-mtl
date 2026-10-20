@@ -1,0 +1,14 @@
+# Source-training image: amrod:latest plus the one dependency the main
+# Dockerfile's pip block omitted (requirements.txt does pin it).
+#
+# Cityscapes SOURCE training calls load_cityscapes_instances(to_polygons=True),
+# which imports shapely; inference/adaptation never does, which is why
+# amrod:latest has run every CTTA experiment without it. Kept as a derived image
+# so amrod:latest stays byte-identical for those runs.
+#
+#   docker build -f Dockerfile.train -t amrod-train:latest .
+FROM amrod:latest
+
+USER root
+RUN pip install --no-cache-dir Shapely==2.0.5
+USER ${USER_UID:-1000}:${USER_GID:-1000}

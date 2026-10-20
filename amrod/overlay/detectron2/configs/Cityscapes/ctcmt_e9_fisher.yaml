@@ -1,0 +1,11 @@
+# E9-2 — A + gradient-magnitude (empirical Fisher) stochastic restoration.
+#
+# Single-factor change from A: instead of restoring a uniformly random subset of
+# weights to source, restore the least important ones (lowest squared gradient),
+# as AMROD does. Restoration is applied only on steps that took a gradient step.
+_BASE_: "./ctcmt_e8a_v2_full_ctcr_no_ctpv.yaml"
+
+SOLVER:
+  CTCMT_FISHER_RESTORE: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e9_fisher"

@@ -1,0 +1,12 @@
+# AMROD baseline evaluated on the SAME Panoptic-FPN MTL source checkpoint used
+# by CTCMT_MTL, so the CTTA algorithms are compared under identical source
+# weights rather than across source checkpoints.
+#
+# Verified loadable: the PFN checkpoint contains all 307 GeneralizedRCNN keys
+# with identical shapes; only sem_seg_head.* is unused by this meta-arch.
+_BASE_: "./amrod_mask_rcnn_R_50_ACDC.yaml"
+
+MODEL:
+  WEIGHTS: "/workspace/output/panoptic_fpn_R50_cityscapes/model_final.pth"
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/amrod_pfn_src"

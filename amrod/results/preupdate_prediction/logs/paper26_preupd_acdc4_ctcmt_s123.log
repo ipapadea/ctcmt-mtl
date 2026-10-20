@@ -1,0 +1,2409 @@
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.1.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[builtin] foggy_cityscapes_val not registered (files not found under /datasets)
+Command Line Args: Namespace(config_file='detectron2/configs/Cityscapes/newsrc_acdc_ctcr_lambda1.yaml', resume=False, eval_only=True, num_gpus=1, num_machines=1, machine_rank=0, dist_url='tcp://127.0.0.1:50152', opts=['OUTPUT_DIR', '/workspace/output/ctta_acdc/paper26_preupd_acdc4_ctcmt_s123', 'SEED', '123', 'DATASETS.TEST', '("acdc_fog_mtl","acdc_night_mtl","acdc_rain_mtl","acdc_snow_mtl")', 'SOLVER.CTCMT_PREDICT_BEFORE_UPDATE', 'True'])
+[10/16 07:34:32 detectron2]: Rank of current process: 0. World size: 1
+[10/16 07:34:32 detectron2]: Environment info:
+-------------------------------  -----------------------------------------------------------------
+sys.platform                     linux
+Python                           3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 11.4.0]
+numpy                            1.24.3
+detectron2                       0.6 @/workspace/amrod/detectron2/detectron2
+Compiler                         GCC 11.4
+CUDA compiler                    CUDA 12.1
+detectron2 arch flags            8.9
+DETECTRON2_ENV_MODULE            <not set>
+PyTorch                          2.1.2+cu121 @/usr/local/lib/python3.11/dist-packages/torch
+PyTorch debug build              False
+torch._C._GLIBCXX_USE_CXX11_ABI  False
+GPU available                    Yes
+GPU 0                            NVIDIA GeForce RTX 3090 (arch=8.6)
+Driver version                   580.178.04
+CUDA_HOME                        /usr/local/cuda
+TORCH_CUDA_ARCH_LIST             8.9
+Pillow                           10.4.0
+torchvision                      0.16.2+cu121 @/usr/local/lib/python3.11/dist-packages/torchvision
+torchvision arch flags           5.0, 6.0, 7.0, 7.5, 8.0, 8.6, 9.0
+fvcore                           0.1.5.post20221221
+iopath                           0.1.9
+cv2                              4.8.1
+-------------------------------  -----------------------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v3.1.1 (Git Hash 64f6bcbcbab628e96f33a62c3e975f8535a7bde4)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX512
+  - CUDA Runtime 12.1
+  - NVCC architecture flags: -gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.9.2
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=12.1, CUDNN_VERSION=8.9.2, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=old-style-cast -Wno-invalid-partial-specialization -Wno-unused-private-field -Wno-aligned-allocation-unavailable -Wno-missing-braces -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.1.2, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+[10/16 07:34:32 detectron2]: Command line arguments: Namespace(config_file='detectron2/configs/Cityscapes/newsrc_acdc_ctcr_lambda1.yaml', resume=False, eval_only=True, num_gpus=1, num_machines=1, machine_rank=0, dist_url='tcp://127.0.0.1:50152', opts=['OUTPUT_DIR', '/workspace/output/ctta_acdc/paper26_preupd_acdc4_ctcmt_s123', 'SEED', '123', 'DATASETS.TEST', '("acdc_fog_mtl","acdc_night_mtl","acdc_rain_mtl","acdc_snow_mtl")', 'SOLVER.CTCMT_PREDICT_BEFORE_UPDATE', 'True'])
+[10/16 07:34:32 detectron2]: Contents of args.config_file=detectron2/configs/Cityscapes/newsrc_acdc_ctcr_lambda1.yaml:
+_BASE_: "./newsrc_acdc_ctcr.yaml"
+SOLVER:
+  CTCMT_CONFLICT_MODE: "resnet_route"
+  CTCMT_AUX_TRUNK_LAMBDA: 1.0
+  CTCMT_ADAPTIVE_ROUTING: False
+
+[10/16 07:34:32 detectron2]: Running with full config:
+CUDNN_BENCHMARK: false
+DATALOADER:
+  ASPECT_RATIO_GROUPING: true
+  FILTER_EMPTY_ANNOTATIONS: false
+  NUM_WORKERS: 4
+  REPEAT_THRESHOLD: 0.0
+  SAMPLER_TRAIN: TrainingSampler
+DATASETS:
+  PRECOMPUTED_PROPOSAL_TOPK_TEST: 1000
+  PRECOMPUTED_PROPOSAL_TOPK_TRAIN: 2000
+  PROPOSAL_FILES_TEST: []
+  PROPOSAL_FILES_TRAIN: []
+  TEST:
+  - acdc_fog_mtl
+  - acdc_night_mtl
+  - acdc_rain_mtl
+  - acdc_snow_mtl
+  TRAIN:
+  - cityscapes_fine_mtl_train
+GLOBAL:
+  HACK: 1.0
+INPUT:
+  CROP:
+    ENABLED: false
+    SIZE:
+    - 0.9
+    - 0.9
+    TYPE: relative_range
+  FORMAT: BGR
+  MASK_FORMAT: polygon
+  MAX_SIZE_TEST: 2048
+  MAX_SIZE_TRAIN: 2048
+  MIN_SIZE_TEST: 1024
+  MIN_SIZE_TRAIN:
+  - 800
+  - 832
+  - 864
+  - 896
+  - 928
+  - 960
+  - 992
+  - 1024
+  MIN_SIZE_TRAIN_SAMPLING: choice
+  RANDOM_FLIP: horizontal
+MODEL:
+  ANCHOR_GENERATOR:
+    ANGLES:
+    - - -90
+      - 0
+      - 90
+    ASPECT_RATIOS:
+    - - 0.5
+      - 1.0
+      - 2.0
+    NAME: DefaultAnchorGenerator
+    OFFSET: 0.0
+    SIZES:
+    - - 32
+    - - 64
+    - - 128
+    - - 256
+    - - 512
+  BACKBONE:
+    FREEZE_AT: 2
+    NAME: build_resnet_fpn_backbone
+  CTCMT_STUDENT_META_ARCH: PanopticFPN
+  DEVICE: cuda
+  FPN:
+    FUSE_TYPE: sum
+    IN_FEATURES:
+    - res2
+    - res3
+    - res4
+    - res5
+    NORM: ''
+    OUT_CHANNELS: 256
+  KEYPOINT_ON: false
+  LOAD_PROPOSALS: false
+  MASK_ON: true
+  META_ARCHITECTURE: CTCMT_MTL
+  PANOPTIC_FPN:
+    COMBINE:
+      ENABLED: true
+      INSTANCES_CONFIDENCE_THRESH: 0.5
+      OVERLAP_THRESH: 0.5
+      STUFF_AREA_LIMIT: 4096
+    INSTANCE_LOSS_WEIGHT: 1.0
+  PIXEL_MEAN:
+  - 103.53
+  - 116.28
+  - 123.675
+  PIXEL_STD:
+  - 1.0
+  - 1.0
+  - 1.0
+  PROPOSAL_GENERATOR:
+    MIN_SIZE: 0
+    NAME: RPN
+  RESNETS:
+    DEFORM_MODULATED: false
+    DEFORM_NUM_GROUPS: 1
+    DEFORM_ON_PER_STAGE:
+    - false
+    - false
+    - false
+    - false
+    DEPTH: 50
+    NORM: FrozenBN
+    NUM_GROUPS: 1
+    OUT_FEATURES:
+    - res2
+    - res3
+    - res4
+    - res5
+    RES2_OUT_CHANNELS: 256
+    RES5_DILATION: 1
+    STEM_OUT_CHANNELS: 64
+    STRIDE_IN_1X1: true
+    WIDTH_PER_GROUP: 64
+  RETINANET:
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_WEIGHTS: &id002
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    FOCAL_LOSS_ALPHA: 0.25
+    FOCAL_LOSS_GAMMA: 2.0
+    IN_FEATURES:
+    - p3
+    - p4
+    - p5
+    - p6
+    - p7
+    IOU_LABELS:
+    - 0
+    - -1
+    - 1
+    IOU_THRESHOLDS:
+    - 0.4
+    - 0.5
+    NMS_THRESH_TEST: 0.5
+    NORM: ''
+    NUM_CLASSES: 80
+    NUM_CONVS: 4
+    PRIOR_PROB: 0.01
+    SCORE_THRESH_TEST: 0.05
+    SMOOTH_L1_LOSS_BETA: 0.1
+    TOPK_CANDIDATES_TEST: 1000
+  ROI_BOX_CASCADE_HEAD:
+    BBOX_REG_WEIGHTS:
+    - &id001
+      - 10.0
+      - 10.0
+      - 5.0
+      - 5.0
+    - - 20.0
+      - 20.0
+      - 10.0
+      - 10.0
+    - - 30.0
+      - 30.0
+      - 15.0
+      - 15.0
+    IOUS:
+    - 0.5
+    - 0.6
+    - 0.7
+  ROI_BOX_HEAD:
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_LOSS_WEIGHT: 1.0
+    BBOX_REG_WEIGHTS: *id001
+    CLS_AGNOSTIC_BBOX_REG: false
+    CONV_DIM: 256
+    FC_DIM: 1024
+    FED_LOSS_FREQ_WEIGHT_POWER: 0.5
+    FED_LOSS_NUM_CLASSES: 50
+    NAME: FastRCNNConvFCHead
+    NORM: ''
+    NUM_CONV: 0
+    NUM_FC: 2
+    POOLER_RESOLUTION: 7
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+    SMOOTH_L1_BETA: 0.0
+    TRAIN_ON_PRED_BOXES: false
+    USE_FED_LOSS: false
+    USE_SIGMOID_CE: false
+  ROI_HEADS:
+    BATCH_SIZE_PER_IMAGE: 512
+    IN_FEATURES:
+    - p2
+    - p3
+    - p4
+    - p5
+    IOU_LABELS:
+    - 0
+    - 1
+    IOU_THRESHOLDS:
+    - 0.5
+    NAME: StandardROIHeads
+    NMS_THRESH_TEST: 0.5
+    NUM_CLASSES: 8
+    POSITIVE_FRACTION: 0.25
+    PROPOSAL_APPEND_GT: true
+    SCORE_THRESH_TEST: 0.05
+  ROI_KEYPOINT_HEAD:
+    CONV_DIMS:
+    - 512
+    - 512
+    - 512
+    - 512
+    - 512
+    - 512
+    - 512
+    - 512
+    LOSS_WEIGHT: 1.0
+    MIN_KEYPOINTS_PER_IMAGE: 1
+    NAME: KRCNNConvDeconvUpsampleHead
+    NORMALIZE_LOSS_BY_VISIBLE_KEYPOINTS: true
+    NUM_KEYPOINTS: 17
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+  ROI_MASK_HEAD:
+    CLS_AGNOSTIC_MASK: false
+    CONV_DIM: 256
+    NAME: MaskRCNNConvUpsampleHead
+    NORM: ''
+    NUM_CONV: 4
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+  RPN:
+    BATCH_SIZE_PER_IMAGE: 256
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_LOSS_WEIGHT: 1.0
+    BBOX_REG_WEIGHTS: *id002
+    BOUNDARY_THRESH: -1
+    CONV_DIMS:
+    - -1
+    HEAD_NAME: StandardRPNHead
+    IN_FEATURES:
+    - p2
+    - p3
+    - p4
+    - p5
+    - p6
+    IOU_LABELS:
+    - 0
+    - -1
+    - 1
+    IOU_THRESHOLDS:
+    - 0.3
+    - 0.7
+    LOSS_WEIGHT: 1.0
+    NMS_THRESH: 0.7
+    POSITIVE_FRACTION: 0.5
+    POST_NMS_TOPK_TEST: 1000
+    POST_NMS_TOPK_TRAIN: 1000
+    PRE_NMS_TOPK_TEST: 1000
+    PRE_NMS_TOPK_TRAIN: 2000
+    SMOOTH_L1_BETA: 0.0
+  SEM_SEG_HEAD:
+    COMMON_STRIDE: 4
+    CONVS_DIM: 128
+    IGNORE_VALUE: 255
+    IN_FEATURES:
+    - p2
+    - p3
+    - p4
+    - p5
+    LOSS_WEIGHT: 0.5
+    NAME: SemSegFPNHead
+    NORM: GN
+    NUM_CLASSES: 19
+  WEIGHTS: /workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth
+OUTPUT_DIR: /workspace/output/ctta_acdc/paper26_preupd_acdc4_ctcmt_s123
+SEED: 123
+SOLVER:
+  ALPHA_DT: 1.3
+  AMP:
+    ENABLED: false
+  BASE_LR: 0.001
+  BASE_LR_END: 0.0
+  BIAS_LR_FACTOR: 1.0
+  CHECKPOINT_PERIOD: 4000
+  CLIP_GRADIENTS:
+    CLIP_TYPE: value
+    CLIP_VALUE: 1.0
+    ENABLED: false
+    NORM_TYPE: 2.0
+  COTTA_AUG_FLIPS: &id003
+  - false
+  - true
+  COTTA_AUG_SCALES: &id004
+  - 0.5
+  - 0.75
+  - 1.0
+  - 1.25
+  - 1.5
+  - 1.75
+  - 2.0
+  COTTA_CONF_THRESH: 0.72
+  COTTA_EMA_DECAY: 0.999
+  COTTA_RESTORE_PROB: 0.01
+  CTAOD: false
+  CTCMT_ADAPTIVE_ROUTING: false
+  CTCMT_ADAPTIVE_ROUTING_BETA: 0.98
+  CTCMT_ADAPTIVE_ROUTING_EMA: 0.99
+  CTCMT_ADAPTIVE_STR: false
+  CTCMT_ADAPTIVE_STR_BASE: 0.1
+  CTCMT_ADAPTIVE_STR_BOOST: 0.4
+  CTCMT_ADAPTIVE_STR_PIVOT: 0.05
+  CTCMT_ANCHOR_MARGINAL_WEIGHT: 0.1
+  CTCMT_AUG_TEACHER_ENTROPY_THRESH: 0.3
+  CTCMT_AUG_TRIGGER_TEACHER_ENTROPY: false
+  CTCMT_AUX_TRUNK_LAMBDA: 1.0
+  CTCMT_BACKBONE_RST_FACTOR: 0.1
+  CTCMT_CAGRAD_ALPHA: 0.5
+  CTCMT_CLASS_BALANCED_CE: true
+  CTCMT_CLASS_BALANCE_BETA: 0.5
+  CTCMT_CLASS_MARGINAL_EMA: 0.999
+  CTCMT_CONFLICT_MODE: resnet_route
+  CTCMT_CROSS_TASK_FISHER: true
+  CTCMT_CTCL_ENABLED: false
+  CTCMT_CTCL_PROJ_DIM: 128
+  CTCMT_CTCL_ROI_OUTPUT:
+  - 7
+  - 7
+  CTCMT_CTCL_SEG_VIEW: true
+  CTCMT_CTCL_TEMPERATURE: 0.07
+  CTCMT_CTCR_DET_SCORE_GAMMA: 1.0
+  CTCMT_CTCR_DET_SCORE_WEIGHT: false
+  CTCMT_CTCR_MASK_THRESH: 0.3
+  CTCMT_CTCR_MODE: soft_seg_global
+  CTCMT_CTCR_SCORE_ORDER: false
+  CTCMT_CTCR_WEIGHT_FLOOR: 0.2
+  CTCMT_CTPV_ENABLED: false
+  CTCMT_CTPV_THRESH: 0.3
+  CTCMT_DET_ONLY: false
+  CTCMT_DIRECTIONAL_GATE: false
+  CTCMT_DIR_GATE_BOOST: 2.0
+  CTCMT_DIR_GATE_STABLE_BAND: 0.4
+  CTCMT_ENTROPY_WEIGHTED_CE: false
+  CTCMT_FISHER_RESTORE: false
+  CTCMT_FISHER_RESTORE_ENABLED: false
+  CTCMT_FISHER_XTASK_BETA: 0.99
+  CTCMT_FISHER_XTASK_ENABLED: false
+  CTCMT_FISHER_XTASK_GRANULARITY: param
+  CTCMT_FISHER_XTASK_LAMBDA: 0.5
+  CTCMT_FISHER_XTASK_SCOPE: resnet
+  CTCMT_FISHER_XTASK_WARMUP: 50
+  CTCMT_FREEZE_SHARED_TRUNK: false
+  CTCMT_GRAD_DIAG: false
+  CTCMT_GRAD_DIAG_EVERY: 50
+  CTCMT_PER_TASK_GATE: false
+  CTCMT_PER_TASK_GATE_DET_THRESH: 0.8
+  CTCMT_PER_TASK_GATE_SEG_THRESH: 0.8
+  CTCMT_PREDICT_BEFORE_UPDATE: true
+  CTCMT_PROTO_ANCHOR: false
+  CTCMT_PROTO_EMA: 0.999
+  CTCMT_PROTO_WEIGHT: 0.01
+  CTCMT_ROUTE_SCOPE: shared
+  CTCMT_SEG_AUG_CONF_THRESH: 0.95
+  CTCMT_SEG_AUG_ENABLED: true
+  CTCMT_SEG_AUG_FLIPS:
+  - false
+  - true
+  CTCMT_SEG_AUG_SCALES:
+  - 0.75
+  - 1.0
+  - 1.25
+  CTCMT_SEG_DET_VETO: false
+  CTCMT_SEG_DET_VETO_SCORE: 0.9
+  CTCMT_SEG_DET_VETO_WEIGHT: 0.0
+  CTCMT_SEG_LOSS_SCALE_PRESERVE: true
+  CTCMT_SEG_ONLY: false
+  CTCMT_SEG_PROTO_CONF_THRESH: 0.9
+  CTCMT_SEG_SOURCE_PROTO: false
+  CTCMT_SKIP_SCORE_EM_GATE: false
+  CTCMT_STRONG_AUG_STUDENT: true
+  CTCMT_WEIGHT_CTCL: 0.0
+  CTCMT_WEIGHT_CTCR: 0.3
+  CTCMT_WEIGHT_DET: 1.0
+  CTCMT_WEIGHT_SEG: 1.0
+  DAT_ANCHOR_GATE: 0.69
+  DAT_AUDIT: true
+  DAT_AUG_FLIPS: *id003
+  DAT_AUG_SCALES: *id004
+  DAT_BETAS:
+  - 0.9
+  - 0.999
+  DAT_BUDGET_FRACTION: 0.1
+  DAT_DSP_THRESHOLD: 0.85
+  DAT_EMA_DECAY: 0.999
+  DAT_EPS: 1.0e-08
+  DAT_EXPECTED_ELEMENTS: 28425555
+  DAT_EXPECTED_SOURCE_MD5: 5f63c7578cb925552fd1b9d69980937a
+  DAT_EXPECTED_TENSORS: 92
+  DAT_K_FRACTION: 0.001
+  DAT_LR: 0.0003
+  DAT_OFFICIAL_REPO_SHA: b8936ad1048936825f286fb62d9ac19cc97c9e0e
+  DAT_SAVE_PREDICTIONS: true
+  DAT_SCORE_SCALES:
+  - 1.0
+  - 1.25
+  - 1.5
+  DAT_TRP_THRESHOLD: 0.99
+  DAT_WEIGHT_DECAY: 0.0
+  GAMMA: 0.1
+  GAMMA_DT: 0.95
+  IMS_PER_BATCH: 1
+  LOSS_WEIGHT: 1.0
+  LR_SCHEDULER_NAME: WarmupMultiStepLR
+  MAX_ITER: 70000
+  MOMENTUM: 0.9
+  MT: 0.9998
+  NESTEROV: false
+  NUM_DECAYS: 3
+  OBAO_ANCHOR_CONFIDENCE: 0.69
+  OBAO_AUG_FLIPS: *id003
+  OBAO_AUG_SCALES: *id004
+  OBAO_EMA_DECAY: 0.999
+  OBAO_LR: 0.0001
+  OBAO_MARGIN: 0.02
+  OBAO_PCE_WEIGHT: 1.0
+  OBAO_RESTORE_PROB: 0.01
+  OBAO_TOPOLOGY_WEIGHT: 0.01
+  PROPOSALS: 1000
+  REFERENCE_WORLD_SIZE: 0
+  RESCALE_INTERVAL: false
+  RST_M: 0.01
+  SCORE_EM: 0.5
+  SCORE_GAMMA: 0.7
+  SCORE_THRESH: 1.4
+  STEPS:
+  - 50000
+  THRESHOLD_INIT: 0.8
+  THRESHOLD_MAX: 0.9
+  THRESHOLD_MINI: 0.7
+  TTBBR_DROP_INCONSISTENT: false
+  TTBBR_ENABLED: false
+  TTBBR_IOU_THRESH: 0.7
+  WARMUP_FACTOR: 0.001
+  WARMUP_ITERS: 0
+  WARMUP_METHOD: linear
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: null
+  WEIGHT_DECAY_NORM: 0.0
+  XAI_FILTER_ENABLED: false
+  XAI_METHOD: eigencam
+  XAI_MODE: drop
+  XAI_THRESHOLD: 0.02
+TEST:
+  AUG:
+    ENABLED: false
+    FLIP: true
+    MAX_SIZE: 4000
+    MIN_SIZES:
+    - 400
+    - 500
+    - 600
+    - 700
+    - 800
+    - 900
+    - 1000
+    - 1100
+    - 1200
+  CTAOD_YOO:
+    ADAPTER_RATIO: 32
+    ALPHA_FOREGROUND: 1.0
+    ALPHA_GLOBAL: 1.0
+    COLLECT_IOU_THR: 0.5
+    COLLECT_NUM_IMAGES: -1
+    DIAG_PREPOST_FRAMES: 0
+    EMA_GAMMA: 128
+    FOREGROUND_ALIGN: KL
+    FREQ_WEIGHT: true
+    GLOBAL_ALIGN: KL
+    SKIP_BETA: 1.05
+    SKIP_PERIOD: 10
+    SKIP_REDUNDANT: ''
+    SKIP_TAU: 1.1
+    SOURCE_STATS_PATH: ''
+    TH_BG: 0.5
+  DETECTIONS_PER_IMAGE: 100
+  EVAL_PERIOD: 4000
+  EXPECTED_RESULTS: []
+  KEYPOINT_OKS_SIGMAS: []
+  PRECISE_BN:
+    ENABLED: false
+    NUM_ITER: 200
+VERSION: 2
+VIS_PERIOD: 0
+
+[10/16 07:34:32 detectron2]: Full config saved to /workspace/output/ctta_acdc/paper26_preupd_acdc4_ctcmt_s123/config.yaml
+[10/16 07:34:33 d2.checkpoint.detection_checkpoint]: [DetectionCheckpointer] Loading from /workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth ...
+[10/16 07:34:33 fvcore.common.checkpoint]: [Checkpointer] Loading from /workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth ...
+[10/16 07:34:33 d2.checkpoint.detection_checkpoint]: [DetectionCheckpointer] Loading from /workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth ...
+[10/16 07:34:33 fvcore.common.checkpoint]: [Checkpointer] Loading from /workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth ...
+[10/16 07:34:34 d2.checkpoint.detection_checkpoint]: [DetectionCheckpointer] Loading from /workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth ...
+[10/16 07:34:34 fvcore.common.checkpoint]: [Checkpointer] Loading from /workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth ...
+[10/16 07:34:34 d2.engine.defaults]: Model:
+CTCMT_MTL(
+  (student): PanopticFPN(
+    (backbone): FPN(
+      (fpn_lateral2): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_output2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (fpn_lateral3): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_output3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (fpn_lateral4): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_output4): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (fpn_lateral5): Conv2d(2048, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_output5): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (top_block): LastLevelMaxPool()
+      (bottom_up): ResNet(
+        (stem): BasicStem(
+          (conv1): Conv2d(
+            3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+        )
+        (res2): Sequential(
+          (0): BottleneckBlock(
+            (shortcut): Conv2d(
+              64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv1): Conv2d(
+              64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+          )
+          (1): BottleneckBlock(
+            (conv1): Conv2d(
+              256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+          )
+          (2): BottleneckBlock(
+            (conv1): Conv2d(
+              256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+          )
+        )
+        (res3): Sequential(
+          (0): BottleneckBlock(
+            (shortcut): Conv2d(
+              256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv1): Conv2d(
+              256, 128, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+          )
+          (1): BottleneckBlock(
+            (conv1): Conv2d(
+              512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+          )
+          (2): BottleneckBlock(
+            (conv1): Conv2d(
+              512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+          )
+          (3): BottleneckBlock(
+            (conv1): Conv2d(
+              512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+          )
+        )
+        (res4): Sequential(
+          (0): BottleneckBlock(
+            (shortcut): Conv2d(
+              512, 1024, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+            (conv1): Conv2d(
+              512, 256, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (1): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (2): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (3): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (4): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (5): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+        )
+        (res5): Sequential(
+          (0): BottleneckBlock(
+            (shortcut): Conv2d(
+              1024, 2048, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+            )
+            (conv1): Conv2d(
+              1024, 512, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+            )
+          )
+          (1): BottleneckBlock(
+            (conv1): Conv2d(
+              2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+            )
+          )
+          (2): BottleneckBlock(
+            (conv1): Conv2d(
+              2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+            )
+          )
+        )
+      )
+    )
+    (proposal_generator): RPN(
+      (rpn_head): StandardRPNHead(
+        (conv): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (objectness_logits): Conv2d(256, 3, kernel_size=(1, 1), stride=(1, 1))
+        (anchor_deltas): Conv2d(256, 12, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (anchor_generator): DefaultAnchorGenerator(
+        (cell_anchors): BufferList()
+      )
+    )
+    (roi_heads): StandardROIHeads(
+      (box_pooler): ROIPooler(
+        (level_poolers): ModuleList(
+          (0): ROIAlign(output_size=(7, 7), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+          (1): ROIAlign(output_size=(7, 7), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+          (2): ROIAlign(output_size=(7, 7), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+          (3): ROIAlign(output_size=(7, 7), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+        )
+      )
+      (box_head): FastRCNNConvFCHead(
+        (flatten): Flatten(start_dim=1, end_dim=-1)
+        (fc1): Linear(in_features=12544, out_features=1024, bias=True)
+        (fc_relu1): ReLU()
+        (fc2): Linear(in_features=1024, out_features=1024, bias=True)
+        (fc_relu2): ReLU()
+      )
+      (box_predictor): FastRCNNOutputLayers(
+        (cls_score): Linear(in_features=1024, out_features=9, bias=True)
+        (bbox_pred): Linear(in_features=1024, out_features=32, bias=True)
+      )
+      (mask_pooler): ROIPooler(
+        (level_poolers): ModuleList(
+          (0): ROIAlign(output_size=(14, 14), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+          (1): ROIAlign(output_size=(14, 14), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+          (2): ROIAlign(output_size=(14, 14), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+          (3): ROIAlign(output_size=(14, 14), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+        )
+      )
+      (mask_head): MaskRCNNConvUpsampleHead(
+        (mask_fcn1): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (mask_fcn2): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (mask_fcn3): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (mask_fcn4): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (deconv): ConvTranspose2d(256, 256, kernel_size=(2, 2), stride=(2, 2))
+        (deconv_relu): ReLU()
+        (predictor): Conv2d(256, 8, kernel_size=(1, 1), stride=(1, 1))
+      )
+    )
+    (sem_seg_head): SemSegFPNHead(
+      (p2): Sequential(
+        (0): Conv2d(
+          256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+      )
+      (p3): Sequential(
+        (0): Conv2d(
+          256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (1): Upsample(scale_factor=2.0, mode='bilinear')
+      )
+      (p4): Sequential(
+        (0): Conv2d(
+          256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (1): Upsample(scale_factor=2.0, mode='bilinear')
+        (2): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (3): Upsample(scale_factor=2.0, mode='bilinear')
+      )
+      (p5): Sequential(
+        (0): Conv2d(
+          256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (1): Upsample(scale_factor=2.0, mode='bilinear')
+        (2): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (3): Upsample(scale_factor=2.0, mode='bilinear')
+        (4): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (5): Upsample(scale_factor=2.0, mode='bilinear')
+      )
+      (predictor): Conv2d(128, 19, kernel_size=(1, 1), stride=(1, 1))
+    )
+  )
+  (teacher): PanopticFPN(
+    (backbone): FPN(
+      (fpn_lateral2): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_output2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (fpn_lateral3): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_output3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (fpn_lateral4): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_output4): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (fpn_lateral5): Conv2d(2048, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_output5): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (top_block): LastLevelMaxPool()
+      (bottom_up): ResNet(
+        (stem): BasicStem(
+          (conv1): Conv2d(
+            3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+        )
+        (res2): Sequential(
+          (0): BottleneckBlock(
+            (shortcut): Conv2d(
+              64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv1): Conv2d(
+              64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+          )
+          (1): BottleneckBlock(
+            (conv1): Conv2d(
+              256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+          )
+          (2): BottleneckBlock(
+            (conv1): Conv2d(
+              256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+          )
+        )
+        (res3): Sequential(
+          (0): BottleneckBlock(
+            (shortcut): Conv2d(
+              256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv1): Conv2d(
+              256, 128, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+          )
+          (1): BottleneckBlock(
+            (conv1): Conv2d(
+              512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+          )
+          (2): BottleneckBlock(
+            (conv1): Conv2d(
+              512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+          )
+          (3): BottleneckBlock(
+            (conv1): Conv2d(
+              512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+          )
+        )
+        (res4): Sequential(
+          (0): BottleneckBlock(
+            (shortcut): Conv2d(
+              512, 1024, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+            (conv1): Conv2d(
+              512, 256, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (1): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (2): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (3): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (4): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (5): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+        )
+        (res5): Sequential(
+          (0): BottleneckBlock(
+            (shortcut): Conv2d(
+              1024, 2048, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+            )
+            (conv1): Conv2d(
+              1024, 512, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+            )
+          )
+          (1): BottleneckBlock(
+            (conv1): Conv2d(
+              2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+            )
+          )
+          (2): BottleneckBlock(
+            (conv1): Conv2d(
+              2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+            )
+          )
+        )
+      )
+    )
+    (proposal_generator): RPN(
+      (rpn_head): StandardRPNHead(
+        (conv): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (objectness_logits): Conv2d(256, 3, kernel_size=(1, 1), stride=(1, 1))
+        (anchor_deltas): Conv2d(256, 12, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (anchor_generator): DefaultAnchorGenerator(
+        (cell_anchors): BufferList()
+      )
+    )
+    (roi_heads): StandardROIHeads(
+      (box_pooler): ROIPooler(
+        (level_poolers): ModuleList(
+          (0): ROIAlign(output_size=(7, 7), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+          (1): ROIAlign(output_size=(7, 7), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+          (2): ROIAlign(output_size=(7, 7), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+          (3): ROIAlign(output_size=(7, 7), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+        )
+      )
+      (box_head): FastRCNNConvFCHead(
+        (flatten): Flatten(start_dim=1, end_dim=-1)
+        (fc1): Linear(in_features=12544, out_features=1024, bias=True)
+        (fc_relu1): ReLU()
+        (fc2): Linear(in_features=1024, out_features=1024, bias=True)
+        (fc_relu2): ReLU()
+      )
+      (box_predictor): FastRCNNOutputLayers(
+        (cls_score): Linear(in_features=1024, out_features=9, bias=True)
+        (bbox_pred): Linear(in_features=1024, out_features=32, bias=True)
+      )
+      (mask_pooler): ROIPooler(
+        (level_poolers): ModuleList(
+          (0): ROIAlign(output_size=(14, 14), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+          (1): ROIAlign(output_size=(14, 14), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+          (2): ROIAlign(output_size=(14, 14), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+          (3): ROIAlign(output_size=(14, 14), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+        )
+      )
+      (mask_head): MaskRCNNConvUpsampleHead(
+        (mask_fcn1): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (mask_fcn2): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (mask_fcn3): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (mask_fcn4): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (deconv): ConvTranspose2d(256, 256, kernel_size=(2, 2), stride=(2, 2))
+        (deconv_relu): ReLU()
+        (predictor): Conv2d(256, 8, kernel_size=(1, 1), stride=(1, 1))
+      )
+    )
+    (sem_seg_head): SemSegFPNHead(
+      (p2): Sequential(
+        (0): Conv2d(
+          256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+      )
+      (p3): Sequential(
+        (0): Conv2d(
+          256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (1): Upsample(scale_factor=2.0, mode='bilinear')
+      )
+      (p4): Sequential(
+        (0): Conv2d(
+          256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (1): Upsample(scale_factor=2.0, mode='bilinear')
+        (2): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (3): Upsample(scale_factor=2.0, mode='bilinear')
+      )
+      (p5): Sequential(
+        (0): Conv2d(
+          256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (1): Upsample(scale_factor=2.0, mode='bilinear')
+        (2): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (3): Upsample(scale_factor=2.0, mode='bilinear')
+        (4): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (5): Upsample(scale_factor=2.0, mode='bilinear')
+      )
+      (predictor): Conv2d(128, 19, kernel_size=(1, 1), stride=(1, 1))
+    )
+  )
+  (anchor): PanopticFPN(
+    (backbone): FPN(
+      (fpn_lateral2): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_output2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (fpn_lateral3): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_output3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (fpn_lateral4): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_output4): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (fpn_lateral5): Conv2d(2048, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_output5): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (top_block): LastLevelMaxPool()
+      (bottom_up): ResNet(
+        (stem): BasicStem(
+          (conv1): Conv2d(
+            3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+        )
+        (res2): Sequential(
+          (0): BottleneckBlock(
+            (shortcut): Conv2d(
+              64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv1): Conv2d(
+              64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+          )
+          (1): BottleneckBlock(
+            (conv1): Conv2d(
+              256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+          )
+          (2): BottleneckBlock(
+            (conv1): Conv2d(
+              256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+          )
+        )
+        (res3): Sequential(
+          (0): BottleneckBlock(
+            (shortcut): Conv2d(
+              256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv1): Conv2d(
+              256, 128, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+          )
+          (1): BottleneckBlock(
+            (conv1): Conv2d(
+              512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+          )
+          (2): BottleneckBlock(
+            (conv1): Conv2d(
+              512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+          )
+          (3): BottleneckBlock(
+            (conv1): Conv2d(
+              512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+          )
+        )
+        (res4): Sequential(
+          (0): BottleneckBlock(
+            (shortcut): Conv2d(
+              512, 1024, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+            (conv1): Conv2d(
+              512, 256, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (1): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (2): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (3): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (4): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+          (5): BottleneckBlock(
+            (conv1): Conv2d(
+              1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+            )
+          )
+        )
+        (res5): Sequential(
+          (0): BottleneckBlock(
+            (shortcut): Conv2d(
+              1024, 2048, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+            )
+            (conv1): Conv2d(
+              1024, 512, kernel_size=(1, 1), stride=(2, 2), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+            )
+          )
+          (1): BottleneckBlock(
+            (conv1): Conv2d(
+              2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+            )
+          )
+          (2): BottleneckBlock(
+            (conv1): Conv2d(
+              2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv2): Conv2d(
+              512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+            )
+            (conv3): Conv2d(
+              512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+              (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+            )
+          )
+        )
+      )
+    )
+    (proposal_generator): RPN(
+      (rpn_head): StandardRPNHead(
+        (conv): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (objectness_logits): Conv2d(256, 3, kernel_size=(1, 1), stride=(1, 1))
+        (anchor_deltas): Conv2d(256, 12, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (anchor_generator): DefaultAnchorGenerator(
+        (cell_anchors): BufferList()
+      )
+    )
+    (roi_heads): StandardROIHeads(
+      (box_pooler): ROIPooler(
+        (level_poolers): ModuleList(
+          (0): ROIAlign(output_size=(7, 7), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+          (1): ROIAlign(output_size=(7, 7), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+          (2): ROIAlign(output_size=(7, 7), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+          (3): ROIAlign(output_size=(7, 7), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+        )
+      )
+      (box_head): FastRCNNConvFCHead(
+        (flatten): Flatten(start_dim=1, end_dim=-1)
+        (fc1): Linear(in_features=12544, out_features=1024, bias=True)
+        (fc_relu1): ReLU()
+        (fc2): Linear(in_features=1024, out_features=1024, bias=True)
+        (fc_relu2): ReLU()
+      )
+      (box_predictor): FastRCNNOutputLayers(
+        (cls_score): Linear(in_features=1024, out_features=9, bias=True)
+        (bbox_pred): Linear(in_features=1024, out_features=32, bias=True)
+      )
+      (mask_pooler): ROIPooler(
+        (level_poolers): ModuleList(
+          (0): ROIAlign(output_size=(14, 14), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+          (1): ROIAlign(output_size=(14, 14), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+          (2): ROIAlign(output_size=(14, 14), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+          (3): ROIAlign(output_size=(14, 14), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+        )
+      )
+      (mask_head): MaskRCNNConvUpsampleHead(
+        (mask_fcn1): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (mask_fcn2): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (mask_fcn3): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (mask_fcn4): Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (deconv): ConvTranspose2d(256, 256, kernel_size=(2, 2), stride=(2, 2))
+        (deconv_relu): ReLU()
+        (predictor): Conv2d(256, 8, kernel_size=(1, 1), stride=(1, 1))
+      )
+    )
+    (sem_seg_head): SemSegFPNHead(
+      (p2): Sequential(
+        (0): Conv2d(
+          256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+      )
+      (p3): Sequential(
+        (0): Conv2d(
+          256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (1): Upsample(scale_factor=2.0, mode='bilinear')
+      )
+      (p4): Sequential(
+        (0): Conv2d(
+          256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (1): Upsample(scale_factor=2.0, mode='bilinear')
+        (2): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (3): Upsample(scale_factor=2.0, mode='bilinear')
+      )
+      (p5): Sequential(
+        (0): Conv2d(
+          256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (1): Upsample(scale_factor=2.0, mode='bilinear')
+        (2): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (3): Upsample(scale_factor=2.0, mode='bilinear')
+        (4): Conv2d(
+          128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+          (norm): GroupNorm(32, 128, eps=1e-05, affine=True)
+        )
+        (5): Upsample(scale_factor=2.0, mode='bilinear')
+      )
+      (predictor): Conv2d(128, 19, kernel_size=(1, 1), stride=(1, 1))
+    )
+  )
+)
+[10/16 07:34:34 d2.data.datasets.ACDC]: Loaded 400 images in COCO format from /datasets/ACDC/gt_detection/fog/instancesonly_fog_train_gt_detection.json
+[10/16 07:34:34 d2.data.build]: Distribution of instances among all 8 categories:
+|  category  | #instances   |  category  | #instances   |  category  | #instances   |
+|:----------:|:-------------|:----------:|:-------------|:----------:|:-------------|
+|   person   | 174          |   rider    | 26           |    car     | 1630         |
+|   truck    | 360          |    bus     | 18           |   train    | 21           |
+| motorcycle | 13           |  bicycle   | 35           |            |              |
+|   total    | 2277         |            |              |            |              |
+[10/16 07:34:34 d2.data.detection_utils]: Augmentations used in training: [RandomApply(
+    p=0.8
+    ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
+), RandomGrayscale(p=0.2), RandomApply(
+    p=0.5
+    <detectron2.data.transforms.augmentation_impl.GaussianBlur object at 0x7f19b06abd90>
+), Compose(
+    ToTensor()
+    RandomErasing(p=0.7, scale=(0.05, 0.2), ratio=(0.3, 3.3), value=random, inplace=False)
+    RandomErasing(p=0.5, scale=(0.02, 0.2), ratio=(0.1, 6), value=random, inplace=False)
+    RandomErasing(p=0.3, scale=(0.02, 0.2), ratio=(0.05, 8), value=random, inplace=False)
+    ToPILImage()
+)]
+[10/16 07:34:34 d2.data.dataset_mapper]: [DatasetMapper] Augmentations used in inference: [ResizeShortestEdge(short_edge_length=(1024, 1024), max_size=2048, sample_style='choice')]
+[10/16 07:34:34 d2.data.common]: Serializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[10/16 07:34:34 d2.data.common]: Serializing 400 elements to byte tensors and concatenating them all ...
+[10/16 07:34:34 d2.data.common]: Serialized dataset takes 0.82 MiB
+[10/16 07:34:34 d2.data.datasets.ACDC]: Loaded 400 images in COCO format from /datasets/ACDC/gt_detection/fog/instancesonly_fog_train_gt_detection.json
+[10/16 07:34:34 d2.evaluation.evaluator]: Start inference on 400 batches
+/usr/local/lib/python3.11/dist-packages/torch/functional.py:504: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3526.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+[CT-CMT-ROUTE] shared=58 resnet=42 fpn=16 lam=1.00
+[10/16 07:34:44 d2.evaluation.evaluator]: Inference done 11/400. Dataloading: 0.0023 s/iter. Inference: 0.6609 s/iter. Eval: 0.1020 s/iter. Total: 0.7652 s/iter. ETA=0:04:57
+[10/16 07:34:49 d2.evaluation.evaluator]: Inference done 18/400. Dataloading: 0.0026 s/iter. Inference: 0.6632 s/iter. Eval: 0.1021 s/iter. Total: 0.7679 s/iter. ETA=0:04:53
+[10/16 07:34:55 d2.evaluation.evaluator]: Inference done 25/400. Dataloading: 0.0027 s/iter. Inference: 0.6641 s/iter. Eval: 0.1037 s/iter. Total: 0.7705 s/iter. ETA=0:04:48
+[10/16 07:35:00 d2.evaluation.evaluator]: Inference done 32/400. Dataloading: 0.0027 s/iter. Inference: 0.6685 s/iter. Eval: 0.1031 s/iter. Total: 0.7743 s/iter. ETA=0:04:44
+[10/16 07:35:05 d2.evaluation.evaluator]: Inference done 39/400. Dataloading: 0.0027 s/iter. Inference: 0.6677 s/iter. Eval: 0.1019 s/iter. Total: 0.7723 s/iter. ETA=0:04:38
+[10/16 07:35:11 d2.evaluation.evaluator]: Inference done 46/400. Dataloading: 0.0027 s/iter. Inference: 0.6676 s/iter. Eval: 0.1012 s/iter. Total: 0.7716 s/iter. ETA=0:04:33
+[CT-CMT-MTL] iter=50 score_em=0.781 n_pseudo=2 thr=0.764/0.835/0.900 segaug=50/50 lam=1.00 route=resnet det/loss_rpn_cls=0.030 det/loss_rpn_loc=0.002 det/loss_cls=0.016 det/loss_box_reg=0.033 seg/soft_ce=1.018 seg/anchor_marginal=0.012 ctcr=0.059
+[CT-CMT-GRAD] iter=50 mode=resnet_route cos=0.0390 cos_mean=0.1066 conflict_rate=0.2857 applied_rate=1.0000 g_det=3.27567 g_aux=9.57589 g_aux_proj=nan g_det_R=3.11850 g_aux_R=8.68614 g_aux_R_applied=8.68614 g_det_FPN=1.00248 g_aux_FPN=4.03097 g_aux_FPN_applied=4.03097 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=42
+[10/16 07:35:16 d2.evaluation.evaluator]: Inference done 53/400. Dataloading: 0.0027 s/iter. Inference: 0.6677 s/iter. Eval: 0.1018 s/iter. Total: 0.7723 s/iter. ETA=0:04:27
+[10/16 07:35:22 d2.evaluation.evaluator]: Inference done 60/400. Dataloading: 0.0027 s/iter. Inference: 0.6682 s/iter. Eval: 0.1019 s/iter. Total: 0.7729 s/iter. ETA=0:04:22
+[10/16 07:35:27 d2.evaluation.evaluator]: Inference done 67/400. Dataloading: 0.0027 s/iter. Inference: 0.6683 s/iter. Eval: 0.1015 s/iter. Total: 0.7726 s/iter. ETA=0:04:17
+[10/16 07:35:32 d2.evaluation.evaluator]: Inference done 74/400. Dataloading: 0.0027 s/iter. Inference: 0.6688 s/iter. Eval: 0.1021 s/iter. Total: 0.7737 s/iter. ETA=0:04:12
+[10/16 07:35:38 d2.evaluation.evaluator]: Inference done 81/400. Dataloading: 0.0027 s/iter. Inference: 0.6702 s/iter. Eval: 0.1017 s/iter. Total: 0.7746 s/iter. ETA=0:04:07
+[10/16 07:35:43 d2.evaluation.evaluator]: Inference done 88/400. Dataloading: 0.0027 s/iter. Inference: 0.6700 s/iter. Eval: 0.1016 s/iter. Total: 0.7744 s/iter. ETA=0:04:01
+[10/16 07:35:49 d2.evaluation.evaluator]: Inference done 96/400. Dataloading: 0.0027 s/iter. Inference: 0.6648 s/iter. Eval: 0.1021 s/iter. Total: 0.7697 s/iter. ETA=0:03:53
+[CT-CMT-MTL] iter=100 score_em=0.843 n_pseudo=1 thr=0.775/0.844/0.900 segaug=99/100 lam=1.00 route=resnet det/loss_rpn_cls=0.010 det/loss_rpn_loc=0.004 det/loss_cls=0.021 det/loss_box_reg=0.012 seg/soft_ce=0.556 seg/anchor_marginal=0.010 ctcr=0.010
+[CT-CMT-GRAD] iter=100 mode=resnet_route cos=0.0645 cos_mean=0.0899 conflict_rate=0.2381 applied_rate=1.0000 g_det=1.62527 g_aux=4.63446 g_aux_proj=nan g_det_R=1.36644 g_aux_R=3.85593 g_aux_R_applied=3.85593 g_det_FPN=0.87997 g_aux_FPN=2.57100 g_aux_FPN_applied=2.57100 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=84
+[10/16 07:35:54 d2.evaluation.evaluator]: Inference done 103/400. Dataloading: 0.0027 s/iter. Inference: 0.6651 s/iter. Eval: 0.1013 s/iter. Total: 0.7691 s/iter. ETA=0:03:48
+[10/16 07:36:00 d2.evaluation.evaluator]: Inference done 110/400. Dataloading: 0.0027 s/iter. Inference: 0.6635 s/iter. Eval: 0.1007 s/iter. Total: 0.7670 s/iter. ETA=0:03:42
+[10/16 07:36:05 d2.evaluation.evaluator]: Inference done 117/400. Dataloading: 0.0027 s/iter. Inference: 0.6638 s/iter. Eval: 0.0999 s/iter. Total: 0.7664 s/iter. ETA=0:03:36
+[10/16 07:36:10 d2.evaluation.evaluator]: Inference done 124/400. Dataloading: 0.0027 s/iter. Inference: 0.6624 s/iter. Eval: 0.0994 s/iter. Total: 0.7645 s/iter. ETA=0:03:31
+[10/16 07:36:16 d2.evaluation.evaluator]: Inference done 131/400. Dataloading: 0.0027 s/iter. Inference: 0.6637 s/iter. Eval: 0.0993 s/iter. Total: 0.7657 s/iter. ETA=0:03:25
+[10/16 07:36:21 d2.evaluation.evaluator]: Inference done 138/400. Dataloading: 0.0026 s/iter. Inference: 0.6635 s/iter. Eval: 0.0996 s/iter. Total: 0.7657 s/iter. ETA=0:03:20
+[10/16 07:36:26 d2.evaluation.evaluator]: Inference done 145/400. Dataloading: 0.0026 s/iter. Inference: 0.6638 s/iter. Eval: 0.0994 s/iter. Total: 0.7659 s/iter. ETA=0:03:15
+[CT-CMT-MTL] iter=150 score_em=0.771 n_pseudo=2 thr=0.740/0.830/0.900 segaug=149/150 lam=1.00 route=resnet det/loss_rpn_cls=0.015 det/loss_rpn_loc=0.018 det/loss_cls=0.063 det/loss_box_reg=0.045 seg/soft_ce=1.066 seg/anchor_marginal=0.013 ctcr=0.348
+[CT-CMT-GRAD] iter=150 mode=resnet_route cos=0.5090 cos_mean=0.0928 conflict_rate=0.2339 applied_rate=1.0000 g_det=6.72289 g_aux=11.21731 g_aux_proj=nan g_det_R=6.49217 g_aux_R=9.76655 g_aux_R_applied=9.76655 g_det_FPN=1.74612 g_aux_FPN=5.51748 g_aux_FPN_applied=5.51748 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=124
+[10/16 07:36:32 d2.evaluation.evaluator]: Inference done 152/400. Dataloading: 0.0026 s/iter. Inference: 0.6633 s/iter. Eval: 0.0993 s/iter. Total: 0.7653 s/iter. ETA=0:03:09
+[10/16 07:36:37 d2.evaluation.evaluator]: Inference done 159/400. Dataloading: 0.0026 s/iter. Inference: 0.6645 s/iter. Eval: 0.1001 s/iter. Total: 0.7673 s/iter. ETA=0:03:04
+[10/16 07:36:43 d2.evaluation.evaluator]: Inference done 166/400. Dataloading: 0.0026 s/iter. Inference: 0.6654 s/iter. Eval: 0.1003 s/iter. Total: 0.7683 s/iter. ETA=0:02:59
+[10/16 07:36:48 d2.evaluation.evaluator]: Inference done 173/400. Dataloading: 0.0026 s/iter. Inference: 0.6657 s/iter. Eval: 0.1006 s/iter. Total: 0.7689 s/iter. ETA=0:02:54
+[10/16 07:36:54 d2.evaluation.evaluator]: Inference done 180/400. Dataloading: 0.0026 s/iter. Inference: 0.6654 s/iter. Eval: 0.1005 s/iter. Total: 0.7686 s/iter. ETA=0:02:49
+[10/16 07:36:59 d2.evaluation.evaluator]: Inference done 187/400. Dataloading: 0.0026 s/iter. Inference: 0.6645 s/iter. Eval: 0.1005 s/iter. Total: 0.7676 s/iter. ETA=0:02:43
+[10/16 07:37:04 d2.evaluation.evaluator]: Inference done 194/400. Dataloading: 0.0026 s/iter. Inference: 0.6636 s/iter. Eval: 0.1001 s/iter. Total: 0.7663 s/iter. ETA=0:02:37
+[CT-CMT-MTL] iter=200 score_em=0.673 n_pseudo=1 thr=0.755/0.828/0.900 segaug=199/200 lam=1.00 route=resnet det/loss_rpn_cls=0.019 det/loss_rpn_loc=0.003 det/loss_cls=0.025 det/loss_box_reg=0.064 seg/soft_ce=0.926 seg/anchor_marginal=0.016 ctcr=0.010
+[CT-CMT-GRAD] iter=200 mode=resnet_route cos=0.0399 cos_mean=0.1044 conflict_rate=0.2112 applied_rate=1.0000 g_det=5.07413 g_aux=3.94790 g_aux_proj=nan g_det_R=4.90571 g_aux_R=3.34460 g_aux_R_applied=3.34460 g_det_FPN=1.29647 g_aux_FPN=2.09751 g_aux_FPN_applied=2.09751 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=161
+[10/16 07:37:09 d2.evaluation.evaluator]: Inference done 201/400. Dataloading: 0.0026 s/iter. Inference: 0.6634 s/iter. Eval: 0.0998 s/iter. Total: 0.7658 s/iter. ETA=0:02:32
+[10/16 07:37:15 d2.evaluation.evaluator]: Inference done 208/400. Dataloading: 0.0026 s/iter. Inference: 0.6642 s/iter. Eval: 0.0998 s/iter. Total: 0.7666 s/iter. ETA=0:02:27
+[10/16 07:37:20 d2.evaluation.evaluator]: Inference done 215/400. Dataloading: 0.0026 s/iter. Inference: 0.6634 s/iter. Eval: 0.0997 s/iter. Total: 0.7657 s/iter. ETA=0:02:21
+[10/16 07:37:25 d2.evaluation.evaluator]: Inference done 222/400. Dataloading: 0.0026 s/iter. Inference: 0.6642 s/iter. Eval: 0.0999 s/iter. Total: 0.7667 s/iter. ETA=0:02:16
+[10/16 07:37:31 d2.evaluation.evaluator]: Inference done 229/400. Dataloading: 0.0026 s/iter. Inference: 0.6635 s/iter. Eval: 0.0998 s/iter. Total: 0.7658 s/iter. ETA=0:02:10
+[10/16 07:37:36 d2.evaluation.evaluator]: Inference done 236/400. Dataloading: 0.0026 s/iter. Inference: 0.6633 s/iter. Eval: 0.0998 s/iter. Total: 0.7657 s/iter. ETA=0:02:05
+[10/16 07:37:41 d2.evaluation.evaluator]: Inference done 243/400. Dataloading: 0.0025 s/iter. Inference: 0.6635 s/iter. Eval: 0.0998 s/iter. Total: 0.7659 s/iter. ETA=0:02:00
+[CT-CMT-MTL] iter=250 score_em=0.707 n_pseudo=6 thr=0.720/0.809/0.900 segaug=249/250 lam=1.00 route=resnet det/loss_rpn_cls=0.099 det/loss_rpn_loc=0.036 det/loss_cls=0.130 det/loss_box_reg=0.120 seg/soft_ce=0.947 seg/anchor_marginal=0.026 ctcr=0.014
+[CT-CMT-GRAD] iter=250 mode=resnet_route cos=0.1182 cos_mean=0.1093 conflict_rate=0.1791 applied_rate=1.0000 g_det=4.67530 g_aux=4.21150 g_aux_proj=nan g_det_R=3.93407 g_aux_R=3.53795 g_aux_R_applied=3.53795 g_det_FPN=2.52617 g_aux_FPN=2.28464 g_aux_FPN_applied=2.28464 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=201
+[10/16 07:37:47 d2.evaluation.evaluator]: Inference done 250/400. Dataloading: 0.0026 s/iter. Inference: 0.6639 s/iter. Eval: 0.1001 s/iter. Total: 0.7665 s/iter. ETA=0:01:54
+[10/16 07:37:52 d2.evaluation.evaluator]: Inference done 257/400. Dataloading: 0.0025 s/iter. Inference: 0.6645 s/iter. Eval: 0.1000 s/iter. Total: 0.7671 s/iter. ETA=0:01:49
+[10/16 07:37:58 d2.evaluation.evaluator]: Inference done 264/400. Dataloading: 0.0025 s/iter. Inference: 0.6643 s/iter. Eval: 0.0995 s/iter. Total: 0.7664 s/iter. ETA=0:01:44
+[10/16 07:38:03 d2.evaluation.evaluator]: Inference done 271/400. Dataloading: 0.0025 s/iter. Inference: 0.6641 s/iter. Eval: 0.0994 s/iter. Total: 0.7661 s/iter. ETA=0:01:38
+[10/16 07:38:08 d2.evaluation.evaluator]: Inference done 278/400. Dataloading: 0.0025 s/iter. Inference: 0.6635 s/iter. Eval: 0.0993 s/iter. Total: 0.7654 s/iter. ETA=0:01:33
+[10/16 07:38:13 d2.evaluation.evaluator]: Inference done 285/400. Dataloading: 0.0025 s/iter. Inference: 0.6626 s/iter. Eval: 0.0992 s/iter. Total: 0.7644 s/iter. ETA=0:01:27
+[10/16 07:38:19 d2.evaluation.evaluator]: Inference done 292/400. Dataloading: 0.0025 s/iter. Inference: 0.6627 s/iter. Eval: 0.0995 s/iter. Total: 0.7648 s/iter. ETA=0:01:22
+[10/16 07:38:24 d2.evaluation.evaluator]: Inference done 299/400. Dataloading: 0.0025 s/iter. Inference: 0.6625 s/iter. Eval: 0.0997 s/iter. Total: 0.7648 s/iter. ETA=0:01:17
+[CT-CMT-MTL] iter=300 score_em=0.559 n_pseudo=3 thr=0.705/0.803/0.900 segaug=299/300 lam=1.00 route=resnet det/loss_rpn_cls=0.026 det/loss_rpn_loc=0.004 det/loss_cls=0.096 det/loss_box_reg=0.060 seg/soft_ce=1.071 seg/anchor_marginal=0.018 ctcr=0.021
+[CT-CMT-GRAD] iter=300 mode=resnet_route cos=0.0258 cos_mean=0.1062 conflict_rate=0.1737 applied_rate=1.0000 g_det=5.85927 g_aux=6.87677 g_aux_proj=nan g_det_R=5.41150 g_aux_R=5.97813 g_aux_R_applied=5.97813 g_det_FPN=2.24648 g_aux_FPN=3.39881 g_aux_FPN_applied=3.39881 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=236
+[10/16 07:38:29 d2.evaluation.evaluator]: Inference done 306/400. Dataloading: 0.0025 s/iter. Inference: 0.6621 s/iter. Eval: 0.0999 s/iter. Total: 0.7646 s/iter. ETA=0:01:11
+[10/16 07:38:35 d2.evaluation.evaluator]: Inference done 313/400. Dataloading: 0.0025 s/iter. Inference: 0.6624 s/iter. Eval: 0.1000 s/iter. Total: 0.7650 s/iter. ETA=0:01:06
+[10/16 07:38:40 d2.evaluation.evaluator]: Inference done 320/400. Dataloading: 0.0025 s/iter. Inference: 0.6626 s/iter. Eval: 0.0999 s/iter. Total: 0.7651 s/iter. ETA=0:01:01
+[10/16 07:38:46 d2.evaluation.evaluator]: Inference done 327/400. Dataloading: 0.0025 s/iter. Inference: 0.6628 s/iter. Eval: 0.1004 s/iter. Total: 0.7658 s/iter. ETA=0:00:55
+[10/16 07:38:51 d2.evaluation.evaluator]: Inference done 334/400. Dataloading: 0.0025 s/iter. Inference: 0.6633 s/iter. Eval: 0.1007 s/iter. Total: 0.7666 s/iter. ETA=0:00:50
+[10/16 07:38:57 d2.evaluation.evaluator]: Inference done 341/400. Dataloading: 0.0025 s/iter. Inference: 0.6639 s/iter. Eval: 0.1009 s/iter. Total: 0.7674 s/iter. ETA=0:00:45
+[10/16 07:39:02 d2.evaluation.evaluator]: Inference done 348/400. Dataloading: 0.0025 s/iter. Inference: 0.6638 s/iter. Eval: 0.1014 s/iter. Total: 0.7678 s/iter. ETA=0:00:39
+[CT-CMT-MTL] iter=350 score_em=0.738 n_pseudo=11 thr=0.775/0.849/0.900 segaug=349/350 lam=1.00 route=resnet det/loss_rpn_cls=0.022 det/loss_rpn_loc=0.048 det/loss_cls=0.202 det/loss_box_reg=0.244 seg/soft_ce=0.674 seg/anchor_marginal=0.007 ctcr=0.406
+[CT-CMT-GRAD] iter=350 mode=resnet_route cos=0.3013 cos_mean=0.1104 conflict_rate=0.1697 applied_rate=1.0000 g_det=8.24981 g_aux=14.50965 g_aux_proj=nan g_det_R=7.74075 g_aux_R=13.90364 g_aux_R_applied=13.90364 g_det_FPN=2.85308 g_aux_FPN=4.14954 g_aux_FPN_applied=4.14954 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=277
+[10/16 07:39:08 d2.evaluation.evaluator]: Inference done 355/400. Dataloading: 0.0025 s/iter. Inference: 0.6641 s/iter. Eval: 0.1016 s/iter. Total: 0.7683 s/iter. ETA=0:00:34
+[10/16 07:39:14 d2.evaluation.evaluator]: Inference done 362/400. Dataloading: 0.0025 s/iter. Inference: 0.6643 s/iter. Eval: 0.1023 s/iter. Total: 0.7692 s/iter. ETA=0:00:29
+[10/16 07:39:19 d2.evaluation.evaluator]: Inference done 369/400. Dataloading: 0.0025 s/iter. Inference: 0.6648 s/iter. Eval: 0.1026 s/iter. Total: 0.7700 s/iter. ETA=0:00:23
+[10/16 07:39:25 d2.evaluation.evaluator]: Inference done 376/400. Dataloading: 0.0025 s/iter. Inference: 0.6642 s/iter. Eval: 0.1028 s/iter. Total: 0.7696 s/iter. ETA=0:00:18
+[10/16 07:39:30 d2.evaluation.evaluator]: Inference done 383/400. Dataloading: 0.0025 s/iter. Inference: 0.6644 s/iter. Eval: 0.1031 s/iter. Total: 0.7701 s/iter. ETA=0:00:13
+[10/16 07:39:35 d2.evaluation.evaluator]: Inference done 390/400. Dataloading: 0.0025 s/iter. Inference: 0.6641 s/iter. Eval: 0.1032 s/iter. Total: 0.7698 s/iter. ETA=0:00:07
+[10/16 07:39:41 d2.evaluation.evaluator]: Inference done 397/400. Dataloading: 0.0025 s/iter. Inference: 0.6637 s/iter. Eval: 0.1031 s/iter. Total: 0.7694 s/iter. ETA=0:00:02
+[CT-CMT-MTL] iter=400 score_em=0.703 n_pseudo=12 thr=0.839/0.870/0.900 segaug=396/400 lam=1.00 route=resnet det/loss_rpn_cls=0.016 det/loss_rpn_loc=0.091 det/loss_cls=0.239 det/loss_box_reg=0.418 seg/soft_ce=0.732 seg/anchor_marginal=0.013 ctcr=0.039
+[CT-CMT-GRAD] iter=400 mode=resnet_route cos=0.0522 cos_mean=0.1106 conflict_rate=0.1651 applied_rate=1.0000 g_det=14.07155 g_aux=4.12175 g_aux_proj=nan g_det_R=13.71568 g_aux_R=3.45245 g_aux_R_applied=3.45245 g_det_FPN=3.14463 g_aux_FPN=2.25153 g_aux_FPN_applied=2.25153 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=321
+[10/16 07:39:43 d2.evaluation.evaluator]: Total inference time: 0:05:03.778892 (0.769060 s / iter per device, on 1 devices)
+[10/16 07:39:43 d2.evaluation.evaluator]: Total inference pure compute time: 0:04:21 (0.663129 s / iter per device, on 1 devices)
+[10/16 07:39:43 d2.evaluation.sem_seg_evaluation]: OrderedDict([('sem_seg', {'mIoU': 44.96769291500773, 'fwIoU': 69.8701439030647, 'IoU-road': 64.54805946319249, 'BoundaryIoU-road': 73.29706993268938, 'min(IoU, B-Iou)-road': 64.54805946319249, 'IoU-sidewalk': 38.82634785662015, 'BoundaryIoU-sidewalk': 21.995860578487914, 'min(IoU, B-Iou)-sidewalk': 21.995860578487914, 'IoU-building': 56.39500601853974, 'BoundaryIoU-building': 31.984911578076748, 'min(IoU, B-Iou)-building': 31.984911578076748, 'IoU-wall': 13.820766535503193, 'BoundaryIoU-wall': 16.224540773968556, 'min(IoU, B-Iou)-wall': 13.820766535503193, 'IoU-fence': 11.415516569687131, 'BoundaryIoU-fence': 5.718802814133554, 'min(IoU, B-Iou)-fence': 5.718802814133554, 'IoU-pole': 33.55632500710942, 'BoundaryIoU-pole': 25.180741086081493, 'min(IoU, B-Iou)-pole': 25.180741086081493, 'IoU-traffic light': 32.39163273187687, 'BoundaryIoU-traffic light': 22.203928558423534, 'min(IoU, B-Iou)-traffic light': 22.203928558423534, 'IoU-traffic sign': 58.943123019944984, 'BoundaryIoU-traffic sign': 10.588040973490521, 'min(IoU, B-Iou)-traffic sign': 10.588040973490521, 'IoU-vegetation': 74.52012635073085, 'BoundaryIoU-vegetation': 26.681775034108114, 'min(IoU, B-Iou)-vegetation': 26.681775034108114, 'IoU-terrain': 46.10018438600151, 'BoundaryIoU-terrain': 25.649991997430288, 'min(IoU, B-Iou)-terrain': 25.649991997430288, 'IoU-sky': 82.73358016975801, 'BoundaryIoU-sky': 43.573268148376755, 'min(IoU, B-Iou)-sky': 43.573268148376755, 'IoU-person': 29.252484885746487, 'BoundaryIoU-person': 10.939656710678547, 'min(IoU, B-Iou)-person': 10.939656710678547, 'IoU-rider': 51.19826854141147, 'BoundaryIoU-rider': 8.403005003234126, 'min(IoU, B-Iou)-rider': 8.403005003234126, 'IoU-car': 76.862867655583, 'BoundaryIoU-car': 0.0, 'min(IoU, B-Iou)-car': 0.0, 'IoU-truck': 35.671538656749426, 'BoundaryIoU-truck': 0.0, 'min(IoU, B-Iou)-truck': 0.0, 'IoU-bus': 28.32796768518123, 'BoundaryIoU-bus': 0.0, 'min(IoU, B-Iou)-bus': 0.0, 'IoU-train': 45.33786204682662, 'BoundaryIoU-train': 0.0, 'min(IoU, B-Iou)-train': 0.0, 'IoU-motorcycle': 29.95232702083388, 'BoundaryIoU-motorcycle': 0.0, 'min(IoU, B-Iou)-motorcycle': 0.0, 'IoU-bicycle': 44.532180783850556, 'BoundaryIoU-bicycle': 0.0, 'min(IoU, B-Iou)-bicycle': 0.0, 'mACC': 58.30449617649677, 'pACC': 80.88786466297823, 'ACC-road': 98.2432281412158, 'ACC-sidewalk': 57.78201544336709, 'ACC-building': 91.27880650457816, 'ACC-wall': 20.65323282450568, 'ACC-fence': 12.47196670378979, 'ACC-pole': 45.134107459762674, 'ACC-traffic light': 34.323870008573195, 'ACC-traffic sign': 73.32691608155064, 'ACC-vegetation': 78.29711058382264, 'ACC-terrain': 54.79252686013183, 'ACC-sky': 83.27762901848442, 'ACC-person': 60.73218295709727, 'ACC-rider': 62.86900752087852, 'ACC-car': 89.12304481948851, 'ACC-truck': 41.26011080751482, 'ACC-bus': 34.45264254825844, 'ACC-train': 58.83382435069874, 'ACC-motorcycle': 47.66435442295199, 'ACC-bicycle': 63.26885029676852})])
+[10/16 07:39:43 d2.evaluation.coco_evaluation]: Preparing results for COCO format ...
+[10/16 07:39:43 d2.evaluation.coco_evaluation]: Saving results to /workspace/output/ctta_acdc/paper26_preupd_acdc4_ctcmt_s123/inference/coco_instances_results.json
+[10/16 07:39:43 d2.evaluation.coco_evaluation]: Evaluating predictions with unofficial COCO API...
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+[10/16 07:39:43 d2.evaluation.fast_eval_api]: Evaluate annotation type *bbox*
+[10/16 07:39:43 d2.evaluation.fast_eval_api]: COCOeval_opt.evaluate() finished in 0.04 seconds.
+[10/16 07:39:43 d2.evaluation.fast_eval_api]: Accumulating evaluation results...
+[10/16 07:39:43 d2.evaluation.fast_eval_api]: COCOeval_opt.accumulate() finished in 0.01 seconds.
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.352
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.551
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.387
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.219
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.390
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.576
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.349
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.458
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.460
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.340
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.498
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.642
+[10/16 07:39:43 d2.evaluation.coco_evaluation]: Evaluation results for bbox: 
+|   AP   |  AP50  |  AP75  |  APs   |  APm   |  APl   |
+|:------:|:------:|:------:|:------:|:------:|:------:|
+| 35.210 | 55.136 | 38.729 | 21.915 | 39.005 | 57.636 |
+[10/16 07:39:43 d2.evaluation.coco_evaluation]: Per-category bbox AP: 
+| category   | AP     | category   | AP     | category   | AP     |
+|:-----------|:-------|:-----------|:-------|:-----------|:-------|
+| person     | 31.281 | rider      | 42.326 | car        | 49.726 |
+| truck      | 33.992 | bus        | 48.147 | train      | 19.101 |
+| motorcycle | 25.189 | bicycle    | 31.916 |            |        |
+Loading and preparing results...
+DONE (t=0.02s)
+creating index...
+index created!
+[10/16 07:39:43 d2.evaluation.fast_eval_api]: Evaluate annotation type *segm*
+[10/16 07:39:43 d2.evaluation.fast_eval_api]: COCOeval_opt.evaluate() finished in 0.05 seconds.
+[10/16 07:39:43 d2.evaluation.fast_eval_api]: Accumulating evaluation results...
+[10/16 07:39:43 d2.evaluation.fast_eval_api]: COCOeval_opt.accumulate() finished in 0.01 seconds.
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.315
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.537
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.302
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.174
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.347
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.496
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.302
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.407
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.409
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.303
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.414
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.534
+[10/16 07:39:43 d2.evaluation.coco_evaluation]: Evaluation results for segm: 
+|   AP   |  AP50  |  AP75  |  APs   |  APm   |  APl   |
+|:------:|:------:|:------:|:------:|:------:|:------:|
+| 31.499 | 53.702 | 30.239 | 17.354 | 34.692 | 49.608 |
+[10/16 07:39:43 d2.evaluation.coco_evaluation]: Per-category segm AP: 
+| category   | AP     | category   | AP     | category   | AP     |
+|:-----------|:-------|:-----------|:-------|:-----------|:-------|
+| person     | 30.893 | rider      | 25.957 | car        | 49.239 |
+| truck      | 33.766 | bus        | 49.369 | train      | 28.204 |
+| motorcycle | 16.576 | bicycle    | 17.993 |            |        |
+[10/16 07:39:43 d2.engine.defaults]: Evaluation results for acdc_fog_mtl in csv format:
+[10/16 07:39:43 d2.evaluation.testing]: copypaste: Task: sem_seg
+[10/16 07:39:43 d2.evaluation.testing]: copypaste: mIoU,fwIoU,mACC,pACC
+[10/16 07:39:43 d2.evaluation.testing]: copypaste: 44.9677,69.8701,58.3045,80.8879
+[10/16 07:39:43 d2.evaluation.testing]: copypaste: Task: bbox
+[10/16 07:39:43 d2.evaluation.testing]: copypaste: AP,AP50,AP75,APs,APm,APl
+[10/16 07:39:43 d2.evaluation.testing]: copypaste: 35.2096,55.1365,38.7292,21.9154,39.0049,57.6355
+[10/16 07:39:43 d2.evaluation.testing]: copypaste: Task: segm
+[10/16 07:39:43 d2.evaluation.testing]: copypaste: AP,AP50,AP75,APs,APm,APl
+[10/16 07:39:43 d2.evaluation.testing]: copypaste: 31.4994,53.7017,30.2389,17.3535,34.6917,49.6077
+[10/16 07:39:43 d2.data.datasets.ACDC]: Loaded 400 images in COCO format from /datasets/ACDC/gt_detection/night/instancesonly_night_train_gt_detection.json
+[10/16 07:39:43 d2.data.build]: Distribution of instances among all 8 categories:
+|  category  | #instances   |  category  | #instances   |  category  | #instances   |
+|:----------:|:-------------|:----------:|:-------------|:----------:|:-------------|
+|   person   | 661          |   rider    | 140          |    car     | 1634         |
+|   truck    | 14           |    bus     | 57           |   train    | 98           |
+| motorcycle | 118          |  bicycle   | 120          |            |              |
+|   total    | 2842         |            |              |            |              |
+[10/16 07:39:43 d2.data.detection_utils]: Augmentations used in training: [RandomApply(
+    p=0.8
+    ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
+), RandomGrayscale(p=0.2), RandomApply(
+    p=0.5
+    <detectron2.data.transforms.augmentation_impl.GaussianBlur object at 0x7f19b080ef90>
+), Compose(
+    ToTensor()
+    RandomErasing(p=0.7, scale=(0.05, 0.2), ratio=(0.3, 3.3), value=random, inplace=False)
+    RandomErasing(p=0.5, scale=(0.02, 0.2), ratio=(0.1, 6), value=random, inplace=False)
+    RandomErasing(p=0.3, scale=(0.02, 0.2), ratio=(0.05, 8), value=random, inplace=False)
+    ToPILImage()
+)]
+[10/16 07:39:43 d2.data.dataset_mapper]: [DatasetMapper] Augmentations used in inference: [ResizeShortestEdge(short_edge_length=(1024, 1024), max_size=2048, sample_style='choice')]
+[10/16 07:39:43 d2.data.common]: Serializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[10/16 07:39:43 d2.data.common]: Serializing 400 elements to byte tensors and concatenating them all ...
+[10/16 07:39:43 d2.data.common]: Serialized dataset takes 0.98 MiB
+[10/16 07:39:43 d2.data.datasets.ACDC]: Loaded 400 images in COCO format from /datasets/ACDC/gt_detection/night/instancesonly_night_train_gt_detection.json
+[10/16 07:39:43 d2.evaluation.evaluator]: Start inference on 400 batches
+[10/16 07:39:53 d2.evaluation.evaluator]: Inference done 11/400. Dataloading: 0.0021 s/iter. Inference: 0.6842 s/iter. Eval: 0.1304 s/iter. Total: 0.8167 s/iter. ETA=0:05:17
+[10/16 07:39:58 d2.evaluation.evaluator]: Inference done 18/400. Dataloading: 0.0024 s/iter. Inference: 0.6621 s/iter. Eval: 0.1259 s/iter. Total: 0.7904 s/iter. ETA=0:05:01
+[10/16 07:40:04 d2.evaluation.evaluator]: Inference done 25/400. Dataloading: 0.0025 s/iter. Inference: 0.6656 s/iter. Eval: 0.1247 s/iter. Total: 0.7929 s/iter. ETA=0:04:57
+[10/16 07:40:09 d2.evaluation.evaluator]: Inference done 32/400. Dataloading: 0.0026 s/iter. Inference: 0.6637 s/iter. Eval: 0.1255 s/iter. Total: 0.7918 s/iter. ETA=0:04:51
+[10/16 07:40:15 d2.evaluation.evaluator]: Inference done 39/400. Dataloading: 0.0026 s/iter. Inference: 0.6654 s/iter. Eval: 0.1242 s/iter. Total: 0.7923 s/iter. ETA=0:04:46
+[10/16 07:40:20 d2.evaluation.evaluator]: Inference done 46/400. Dataloading: 0.0026 s/iter. Inference: 0.6669 s/iter. Eval: 0.1237 s/iter. Total: 0.7933 s/iter. ETA=0:04:40
+[CT-CMT-MTL] iter=450 score_em=0.673 n_pseudo=1 thr=0.805/0.860/0.900 segaug=446/450 lam=1.00 route=resnet det/loss_rpn_cls=0.039 det/loss_rpn_loc=0.002 det/loss_cls=0.189 det/loss_box_reg=0.128 seg/soft_ce=0.665 seg/anchor_marginal=0.016 ctcr=0.218
+[CT-CMT-GRAD] iter=450 mode=resnet_route cos=0.1645 cos_mean=0.1136 conflict_rate=0.1579 applied_rate=1.0000 g_det=7.05524 g_aux=14.38569 g_aux_proj=nan g_det_R=6.35682 g_aux_R=13.23908 g_aux_R_applied=13.23908 g_det_FPN=3.06061 g_aux_FPN=5.62803 g_aux_FPN_applied=5.62803 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=361
+[10/16 07:40:26 d2.evaluation.evaluator]: Inference done 53/400. Dataloading: 0.0026 s/iter. Inference: 0.6657 s/iter. Eval: 0.1219 s/iter. Total: 0.7902 s/iter. ETA=0:04:34
+[10/16 07:40:31 d2.evaluation.evaluator]: Inference done 60/400. Dataloading: 0.0026 s/iter. Inference: 0.6646 s/iter. Eval: 0.1209 s/iter. Total: 0.7882 s/iter. ETA=0:04:27
+[10/16 07:40:36 d2.evaluation.evaluator]: Inference done 67/400. Dataloading: 0.0027 s/iter. Inference: 0.6638 s/iter. Eval: 0.1196 s/iter. Total: 0.7860 s/iter. ETA=0:04:21
+[10/16 07:40:42 d2.evaluation.evaluator]: Inference done 74/400. Dataloading: 0.0027 s/iter. Inference: 0.6660 s/iter. Eval: 0.1176 s/iter. Total: 0.7863 s/iter. ETA=0:04:16
+[10/16 07:40:47 d2.evaluation.evaluator]: Inference done 81/400. Dataloading: 0.0027 s/iter. Inference: 0.6653 s/iter. Eval: 0.1162 s/iter. Total: 0.7842 s/iter. ETA=0:04:10
+[10/16 07:40:53 d2.evaluation.evaluator]: Inference done 88/400. Dataloading: 0.0027 s/iter. Inference: 0.6657 s/iter. Eval: 0.1155 s/iter. Total: 0.7840 s/iter. ETA=0:04:04
+[10/16 07:40:58 d2.evaluation.evaluator]: Inference done 95/400. Dataloading: 0.0027 s/iter. Inference: 0.6663 s/iter. Eval: 0.1149 s/iter. Total: 0.7839 s/iter. ETA=0:03:59
+[CT-CMT-MTL] iter=500 score_em=0.625 n_pseudo=2 thr=0.734/0.860/0.900 segaug=496/500 lam=1.00 route=resnet det/loss_rpn_cls=0.001 det/loss_rpn_loc=0.003 det/loss_cls=0.047 det/loss_box_reg=0.074 seg/soft_ce=0.805 seg/anchor_marginal=0.009 ctcr=0.004
+[CT-CMT-GRAD] iter=500 mode=resnet_route cos=0.0515 cos_mean=0.1154 conflict_rate=0.1542 applied_rate=1.0000 g_det=4.66222 g_aux=8.07573 g_aux_proj=nan g_det_R=4.52066 g_aux_R=7.51759 g_aux_R_applied=7.51759 g_det_FPN=1.14015 g_aux_FPN=2.95012 g_aux_FPN_applied=2.95012 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=402
+[10/16 07:41:04 d2.evaluation.evaluator]: Inference done 102/400. Dataloading: 0.0027 s/iter. Inference: 0.6668 s/iter. Eval: 0.1145 s/iter. Total: 0.7840 s/iter. ETA=0:03:53
+[10/16 07:41:09 d2.evaluation.evaluator]: Inference done 109/400. Dataloading: 0.0027 s/iter. Inference: 0.6661 s/iter. Eval: 0.1134 s/iter. Total: 0.7822 s/iter. ETA=0:03:47
+[10/16 07:41:14 d2.evaluation.evaluator]: Inference done 116/400. Dataloading: 0.0027 s/iter. Inference: 0.6646 s/iter. Eval: 0.1121 s/iter. Total: 0.7794 s/iter. ETA=0:03:41
+[10/16 07:41:19 d2.evaluation.evaluator]: Inference done 123/400. Dataloading: 0.0027 s/iter. Inference: 0.6633 s/iter. Eval: 0.1112 s/iter. Total: 0.7773 s/iter. ETA=0:03:35
+[10/16 07:41:25 d2.evaluation.evaluator]: Inference done 130/400. Dataloading: 0.0027 s/iter. Inference: 0.6615 s/iter. Eval: 0.1103 s/iter. Total: 0.7745 s/iter. ETA=0:03:29
+[10/16 07:41:30 d2.evaluation.evaluator]: Inference done 137/400. Dataloading: 0.0027 s/iter. Inference: 0.6607 s/iter. Eval: 0.1096 s/iter. Total: 0.7730 s/iter. ETA=0:03:23
+[10/16 07:41:35 d2.evaluation.evaluator]: Inference done 144/400. Dataloading: 0.0027 s/iter. Inference: 0.6606 s/iter. Eval: 0.1091 s/iter. Total: 0.7724 s/iter. ETA=0:03:17
+[CT-CMT-MTL] iter=550 score_em=0.736 n_pseudo=1 thr=0.720/0.853/0.900 segaug=546/550 lam=1.00 route=resnet det/loss_rpn_cls=0.019 det/loss_rpn_loc=0.005 det/loss_cls=0.065 det/loss_box_reg=0.049 seg/soft_ce=0.864 seg/anchor_marginal=0.027 ctcr=0.242
+[CT-CMT-GRAD] iter=550 mode=resnet_route cos=0.3346 cos_mean=0.1169 conflict_rate=0.1551 applied_rate=1.0000 g_det=2.39601 g_aux=12.07994 g_aux_proj=nan g_det_R=2.02830 g_aux_R=10.92330 g_aux_R_applied=10.92330 g_det_FPN=1.27549 g_aux_FPN=5.15814 g_aux_FPN_applied=5.15814 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=432
+[10/16 07:41:40 d2.evaluation.evaluator]: Inference done 151/400. Dataloading: 0.0027 s/iter. Inference: 0.6604 s/iter. Eval: 0.1080 s/iter. Total: 0.7712 s/iter. ETA=0:03:12
+[10/16 07:41:46 d2.evaluation.evaluator]: Inference done 158/400. Dataloading: 0.0027 s/iter. Inference: 0.6603 s/iter. Eval: 0.1075 s/iter. Total: 0.7705 s/iter. ETA=0:03:06
+[10/16 07:41:51 d2.evaluation.evaluator]: Inference done 165/400. Dataloading: 0.0027 s/iter. Inference: 0.6595 s/iter. Eval: 0.1081 s/iter. Total: 0.7704 s/iter. ETA=0:03:01
+[10/16 07:41:56 d2.evaluation.evaluator]: Inference done 172/400. Dataloading: 0.0027 s/iter. Inference: 0.6589 s/iter. Eval: 0.1077 s/iter. Total: 0.7693 s/iter. ETA=0:02:55
+[10/16 07:42:02 d2.evaluation.evaluator]: Inference done 179/400. Dataloading: 0.0027 s/iter. Inference: 0.6596 s/iter. Eval: 0.1073 s/iter. Total: 0.7696 s/iter. ETA=0:02:50
+[10/16 07:42:07 d2.evaluation.evaluator]: Inference done 186/400. Dataloading: 0.0027 s/iter. Inference: 0.6595 s/iter. Eval: 0.1066 s/iter. Total: 0.7688 s/iter. ETA=0:02:44
+[10/16 07:42:12 d2.evaluation.evaluator]: Inference done 193/400. Dataloading: 0.0027 s/iter. Inference: 0.6600 s/iter. Eval: 0.1063 s/iter. Total: 0.7690 s/iter. ETA=0:02:39
+[CT-CMT-MTL] iter=600 score_em=0.646 n_pseudo=1 thr=0.730/0.861/0.900 segaug=596/600 lam=1.00 route=resnet det/loss_rpn_cls=0.000 det/loss_rpn_loc=0.003 det/loss_cls=0.011 det/loss_box_reg=0.036 seg/soft_ce=0.819 seg/anchor_marginal=0.004 ctcr=0.040
+[CT-CMT-GRAD] iter=600 mode=resnet_route cos=0.0163 cos_mean=0.1234 conflict_rate=0.1517 applied_rate=1.0000 g_det=1.55317 g_aux=7.29449 g_aux_proj=nan g_det_R=1.41517 g_aux_R=6.17767 g_aux_R_applied=6.17767 g_det_FPN=0.64003 g_aux_FPN=3.87891 g_aux_FPN_applied=3.87891 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=468
+[10/16 07:42:18 d2.evaluation.evaluator]: Inference done 200/400. Dataloading: 0.0026 s/iter. Inference: 0.6600 s/iter. Eval: 0.1065 s/iter. Total: 0.7692 s/iter. ETA=0:02:33
+[10/16 07:42:23 d2.evaluation.evaluator]: Inference done 207/400. Dataloading: 0.0026 s/iter. Inference: 0.6606 s/iter. Eval: 0.1065 s/iter. Total: 0.7697 s/iter. ETA=0:02:28
+[10/16 07:42:29 d2.evaluation.evaluator]: Inference done 214/400. Dataloading: 0.0026 s/iter. Inference: 0.6612 s/iter. Eval: 0.1067 s/iter. Total: 0.7706 s/iter. ETA=0:02:23
+[10/16 07:42:34 d2.evaluation.evaluator]: Inference done 221/400. Dataloading: 0.0026 s/iter. Inference: 0.6606 s/iter. Eval: 0.1066 s/iter. Total: 0.7699 s/iter. ETA=0:02:17
+[10/16 07:42:39 d2.evaluation.evaluator]: Inference done 228/400. Dataloading: 0.0026 s/iter. Inference: 0.6598 s/iter. Eval: 0.1067 s/iter. Total: 0.7692 s/iter. ETA=0:02:12
+[10/16 07:42:45 d2.evaluation.evaluator]: Inference done 235/400. Dataloading: 0.0026 s/iter. Inference: 0.6598 s/iter. Eval: 0.1066 s/iter. Total: 0.7692 s/iter. ETA=0:02:06
+[10/16 07:42:50 d2.evaluation.evaluator]: Inference done 242/400. Dataloading: 0.0026 s/iter. Inference: 0.6589 s/iter. Eval: 0.1062 s/iter. Total: 0.7678 s/iter. ETA=0:02:01
+[10/16 07:42:55 d2.evaluation.evaluator]: Inference done 249/400. Dataloading: 0.0026 s/iter. Inference: 0.6587 s/iter. Eval: 0.1062 s/iter. Total: 0.7675 s/iter. ETA=0:01:55
+[CT-CMT-MTL] iter=650 score_em=0.729 n_pseudo=3 thr=0.731/0.845/0.900 segaug=645/650 lam=1.00 route=resnet det/loss_rpn_cls=0.024 det/loss_rpn_loc=0.006 det/loss_cls=0.195 det/loss_box_reg=0.171 seg/soft_ce=1.393 seg/anchor_marginal=0.040 ctcr=0.033
+[CT-CMT-GRAD] iter=650 mode=resnet_route cos=0.0906 cos_mean=0.1215 conflict_rate=0.1511 applied_rate=1.0000 g_det=5.66648 g_aux=23.64345 g_aux_proj=nan g_det_R=5.32048 g_aux_R=22.65157 g_aux_R_applied=22.65157 g_det_FPN=1.94976 g_aux_FPN=6.77637 g_aux_FPN_applied=6.77637 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=503
+[10/16 07:43:00 d2.evaluation.evaluator]: Inference done 256/400. Dataloading: 0.0026 s/iter. Inference: 0.6582 s/iter. Eval: 0.1061 s/iter. Total: 0.7670 s/iter. ETA=0:01:50
+[10/16 07:43:06 d2.evaluation.evaluator]: Inference done 263/400. Dataloading: 0.0026 s/iter. Inference: 0.6587 s/iter. Eval: 0.1062 s/iter. Total: 0.7676 s/iter. ETA=0:01:45
+[10/16 07:43:11 d2.evaluation.evaluator]: Inference done 270/400. Dataloading: 0.0026 s/iter. Inference: 0.6596 s/iter. Eval: 0.1063 s/iter. Total: 0.7685 s/iter. ETA=0:01:39
+[10/16 07:43:17 d2.evaluation.evaluator]: Inference done 277/400. Dataloading: 0.0026 s/iter. Inference: 0.6597 s/iter. Eval: 0.1066 s/iter. Total: 0.7690 s/iter. ETA=0:01:34
+[10/16 07:43:22 d2.evaluation.evaluator]: Inference done 284/400. Dataloading: 0.0026 s/iter. Inference: 0.6590 s/iter. Eval: 0.1069 s/iter. Total: 0.7686 s/iter. ETA=0:01:29
+[10/16 07:43:28 d2.evaluation.evaluator]: Inference done 291/400. Dataloading: 0.0026 s/iter. Inference: 0.6595 s/iter. Eval: 0.1070 s/iter. Total: 0.7691 s/iter. ETA=0:01:23
+[10/16 07:43:33 d2.evaluation.evaluator]: Inference done 298/400. Dataloading: 0.0026 s/iter. Inference: 0.6603 s/iter. Eval: 0.1073 s/iter. Total: 0.7702 s/iter. ETA=0:01:18
+[CT-CMT-MTL] iter=700 score_em=0.623 n_pseudo=0 thr=0.739/0.844/0.900 segaug=695/700 lam=1.00 route=resnet seg/soft_ce=0.683 seg/anchor_marginal=0.009
+[CT-CMT-GRAD] iter=700 mode=resnet_route cos=nan cos_mean=0.1227 conflict_rate=0.1519 applied_rate=1.0000 g_det=nan g_aux=nan g_aux_proj=nan g_det_R=nan g_aux_R=nan g_aux_R_applied=nan g_det_FPN=nan g_aux_FPN=nan g_aux_FPN_applied=nan gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=540
+[10/16 07:43:38 d2.evaluation.evaluator]: Inference done 305/400. Dataloading: 0.0026 s/iter. Inference: 0.6593 s/iter. Eval: 0.1073 s/iter. Total: 0.7692 s/iter. ETA=0:01:13
+[10/16 07:43:44 d2.evaluation.evaluator]: Inference done 312/400. Dataloading: 0.0025 s/iter. Inference: 0.6587 s/iter. Eval: 0.1070 s/iter. Total: 0.7683 s/iter. ETA=0:01:07
+[10/16 07:43:49 d2.evaluation.evaluator]: Inference done 319/400. Dataloading: 0.0025 s/iter. Inference: 0.6584 s/iter. Eval: 0.1069 s/iter. Total: 0.7679 s/iter. ETA=0:01:02
+[10/16 07:43:54 d2.evaluation.evaluator]: Inference done 326/400. Dataloading: 0.0025 s/iter. Inference: 0.6579 s/iter. Eval: 0.1070 s/iter. Total: 0.7675 s/iter. ETA=0:00:56
+[10/16 07:44:00 d2.evaluation.evaluator]: Inference done 333/400. Dataloading: 0.0025 s/iter. Inference: 0.6582 s/iter. Eval: 0.1071 s/iter. Total: 0.7679 s/iter. ETA=0:00:51
+[10/16 07:44:05 d2.evaluation.evaluator]: Inference done 340/400. Dataloading: 0.0025 s/iter. Inference: 0.6585 s/iter. Eval: 0.1070 s/iter. Total: 0.7681 s/iter. ETA=0:00:46
+[10/16 07:44:11 d2.evaluation.evaluator]: Inference done 347/400. Dataloading: 0.0025 s/iter. Inference: 0.6592 s/iter. Eval: 0.1069 s/iter. Total: 0.7687 s/iter. ETA=0:00:40
+[CT-CMT-MTL] iter=750 score_em=0.727 n_pseudo=1 thr=0.719/0.832/0.900 segaug=745/750 lam=1.00 route=resnet seg/soft_ce=1.101 seg/anchor_marginal=0.044 ctcr=0.076
+[CT-CMT-GRAD] iter=750 mode=resnet_route cos=nan cos_mean=0.1245 conflict_rate=0.1489 applied_rate=1.0000 g_det=nan g_aux=nan g_aux_proj=nan g_det_R=nan g_aux_R=nan g_aux_R_applied=nan g_det_FPN=nan g_aux_FPN=nan g_aux_FPN_applied=nan gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=571
+[10/16 07:44:16 d2.evaluation.evaluator]: Inference done 355/400. Dataloading: 0.0025 s/iter. Inference: 0.6578 s/iter. Eval: 0.1067 s/iter. Total: 0.7671 s/iter. ETA=0:00:34
+[10/16 07:44:21 d2.evaluation.evaluator]: Inference done 362/400. Dataloading: 0.0025 s/iter. Inference: 0.6579 s/iter. Eval: 0.1063 s/iter. Total: 0.7668 s/iter. ETA=0:00:29
+[10/16 07:44:27 d2.evaluation.evaluator]: Inference done 370/400. Dataloading: 0.0025 s/iter. Inference: 0.6566 s/iter. Eval: 0.1060 s/iter. Total: 0.7652 s/iter. ETA=0:00:22
+[10/16 07:44:32 d2.evaluation.evaluator]: Inference done 377/400. Dataloading: 0.0025 s/iter. Inference: 0.6559 s/iter. Eval: 0.1057 s/iter. Total: 0.7642 s/iter. ETA=0:00:17
+[10/16 07:44:37 d2.evaluation.evaluator]: Inference done 384/400. Dataloading: 0.0025 s/iter. Inference: 0.6552 s/iter. Eval: 0.1056 s/iter. Total: 0.7634 s/iter. ETA=0:00:12
+[10/16 07:44:42 d2.evaluation.evaluator]: Inference done 391/400. Dataloading: 0.0025 s/iter. Inference: 0.6548 s/iter. Eval: 0.1055 s/iter. Total: 0.7629 s/iter. ETA=0:00:06
+[10/16 07:44:48 d2.evaluation.evaluator]: Inference done 399/400. Dataloading: 0.0025 s/iter. Inference: 0.6540 s/iter. Eval: 0.1052 s/iter. Total: 0.7618 s/iter. ETA=0:00:00
+[CT-CMT-MTL] iter=800 score_em=0.387 n_pseudo=0 thr=0.785/0.833/0.865 segaug=795/800 lam=1.00 route=resnet seg/soft_ce=0.751 seg/anchor_marginal=0.025
+[CT-CMT-GRAD] iter=800 mode=resnet_route cos=nan cos_mean=0.1251 conflict_rate=0.1482 applied_rate=1.0000 g_det=nan g_aux=nan g_aux_proj=nan g_det_R=nan g_aux_R=nan g_aux_R_applied=nan g_det_FPN=nan g_aux_FPN=nan g_aux_FPN_applied=nan gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=587
+[10/16 07:44:49 d2.evaluation.evaluator]: Total inference time: 0:05:00.890016 (0.761747 s / iter per device, on 1 devices)
+[10/16 07:44:49 d2.evaluation.evaluator]: Total inference pure compute time: 0:04:18 (0.653786 s / iter per device, on 1 devices)
+[10/16 07:44:49 d2.evaluation.sem_seg_evaluation]: OrderedDict([('sem_seg', {'mIoU': 21.182418680750683, 'fwIoU': 44.00920169745229, 'IoU-road': 76.56742542077208, 'BoundaryIoU-road': 70.20917139545794, 'min(IoU, B-Iou)-road': 70.20917139545794, 'IoU-sidewalk': 24.859426531711755, 'BoundaryIoU-sidewalk': 17.014224989064004, 'min(IoU, B-Iou)-sidewalk': 17.014224989064004, 'IoU-building': 48.459203494076085, 'BoundaryIoU-building': 22.47299978007241, 'min(IoU, B-Iou)-building': 22.47299978007241, 'IoU-wall': 9.631642377705234, 'BoundaryIoU-wall': 11.172997127353975, 'min(IoU, B-Iou)-wall': 9.631642377705234, 'IoU-fence': 8.662365084334816, 'BoundaryIoU-fence': 4.378496385838058, 'min(IoU, B-Iou)-fence': 4.378496385838058, 'IoU-pole': 26.542825856249703, 'BoundaryIoU-pole': 4.987352118911499, 'min(IoU, B-Iou)-pole': 4.987352118911499, 'IoU-traffic light': 25.324760474384682, 'BoundaryIoU-traffic light': 8.913055334512562, 'min(IoU, B-Iou)-traffic light': 8.913055334512562, 'IoU-traffic sign': 21.221149212228713, 'BoundaryIoU-traffic sign': 6.134139663944747, 'min(IoU, B-Iou)-traffic sign': 6.134139663944747, 'IoU-vegetation': 33.994198929377696, 'BoundaryIoU-vegetation': 11.899745252887447, 'min(IoU, B-Iou)-vegetation': 11.899745252887447, 'IoU-terrain': 7.490317122151123, 'BoundaryIoU-terrain': 4.182448595511875, 'min(IoU, B-Iou)-terrain': 4.182448595511875, 'IoU-sky': 0.8540859122165678, 'BoundaryIoU-sky': 2.3236879901907703, 'min(IoU, B-Iou)-sky': 0.8540859122165678, 'IoU-person': 27.66175713347183, 'BoundaryIoU-person': 5.936400293572928, 'min(IoU, B-Iou)-person': 5.936400293572928, 'IoU-rider': 8.782380230148814, 'BoundaryIoU-rider': 3.818466604747032, 'min(IoU, B-Iou)-rider': 3.818466604747032, 'IoU-car': 47.855938006501376, 'BoundaryIoU-car': 0.0, 'min(IoU, B-Iou)-car': 0.0, 'IoU-truck': 0.2773933114181955, 'BoundaryIoU-truck': 0.0, 'min(IoU, B-Iou)-truck': 0.0, 'IoU-bus': 3.5025476193475713, 'BoundaryIoU-bus': 0.0, 'min(IoU, B-Iou)-bus': 0.0, 'IoU-train': 3.986178610245835, 'BoundaryIoU-train': 0.0, 'min(IoU, B-Iou)-train': 0.0, 'IoU-motorcycle': 15.793533895148437, 'BoundaryIoU-motorcycle': 0.0, 'min(IoU, B-Iou)-motorcycle': 0.0, 'IoU-bicycle': 10.998825712772469, 'BoundaryIoU-bicycle': 0.0, 'min(IoU, B-Iou)-bicycle': 0.0, 'mACC': 32.11920088758591, 'pACC': 59.26803079274973, 'ACC-road': 90.72622734726767, 'ACC-sidewalk': 29.725312682425603, 'ACC-building': 62.71216400518729, 'ACC-wall': 18.63216482912644, 'ACC-fence': 10.104543384991272, 'ACC-pole': 31.2471369776936, 'ACC-traffic light': 27.229614407626222, 'ACC-traffic sign': 26.23165118085246, 'ACC-vegetation': 83.68298707554939, 'ACC-terrain': 56.137954229292895, 'ACC-sky': 0.856676331519109, 'ACC-person': 50.77376349798299, 'ACC-rider': 10.316, 'ACC-car': 60.09263290792577, 'ACC-truck': 7.049273791581288, 'ACC-bus': 4.616981825719773, 'ACC-train': 4.082163507783125, 'ACC-motorcycle': 24.153336340608625, 'ACC-bicycle': 11.89423254099871})])
+[10/16 07:44:49 d2.evaluation.coco_evaluation]: Preparing results for COCO format ...
+[10/16 07:44:49 d2.evaluation.coco_evaluation]: Saving results to /workspace/output/ctta_acdc/paper26_preupd_acdc4_ctcmt_s123/inference/coco_instances_results.json
+[10/16 07:44:49 d2.evaluation.coco_evaluation]: Evaluating predictions with unofficial COCO API...
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+[10/16 07:44:49 d2.evaluation.fast_eval_api]: Evaluate annotation type *bbox*
+[10/16 07:44:49 d2.evaluation.fast_eval_api]: COCOeval_opt.evaluate() finished in 0.10 seconds.
+[10/16 07:44:49 d2.evaluation.fast_eval_api]: Accumulating evaluation results...
+[10/16 07:44:49 d2.evaluation.fast_eval_api]: COCOeval_opt.accumulate() finished in 0.01 seconds.
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.086
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.173
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.078
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.053
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.111
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.181
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.076
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.122
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.125
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.078
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.167
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.213
+[10/16 07:44:49 d2.evaluation.coco_evaluation]: Evaluation results for bbox: 
+|  AP   |  AP50  |  AP75  |  APs  |  APm   |  APl   |
+|:-----:|:------:|:------:|:-----:|:------:|:------:|
+| 8.632 | 17.320 | 7.767  | 5.319 | 11.133 | 18.125 |
+[10/16 07:44:49 d2.evaluation.coco_evaluation]: Per-category bbox AP: 
+| category   | AP     | category   | AP    | category   | AP     |
+|:-----------|:-------|:-----------|:------|:-----------|:-------|
+| person     | 19.067 | rider      | 8.989 | car        | 23.814 |
+| truck      | 0.000  | bus        | 3.183 | train      | 2.857  |
+| motorcycle | 3.720  | bicycle    | 7.427 |            |        |
+Loading and preparing results...
+DONE (t=0.01s)
+creating index...
+index created!
+[10/16 07:44:49 d2.evaluation.fast_eval_api]: Evaluate annotation type *segm*
+[10/16 07:44:49 d2.evaluation.fast_eval_api]: COCOeval_opt.evaluate() finished in 0.05 seconds.
+[10/16 07:44:49 d2.evaluation.fast_eval_api]: Accumulating evaluation results...
+[10/16 07:44:49 d2.evaluation.fast_eval_api]: COCOeval_opt.accumulate() finished in 0.01 seconds.
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.066
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.148
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.056
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.034
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.095
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.138
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.056
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.091
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.093
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.056
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.128
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.158
+[10/16 07:44:49 d2.evaluation.coco_evaluation]: Evaluation results for segm: 
+|  AP   |  AP50  |  AP75  |  APs  |  APm  |  APl   |
+|:-----:|:------:|:------:|:-----:|:-----:|:------:|
+| 6.625 | 14.835 | 5.618  | 3.449 | 9.501 | 13.799 |
+[10/16 07:44:49 d2.evaluation.coco_evaluation]: Per-category segm AP: 
+| category   | AP     | category   | AP    | category   | AP     |
+|:-----------|:-------|:-----------|:------|:-----------|:-------|
+| person     | 14.696 | rider      | 2.755 | car        | 22.297 |
+| truck      | 0.000  | bus        | 3.551 | train      | 2.376  |
+| motorcycle | 3.639  | bicycle    | 3.687 |            |        |
+[10/16 07:44:49 d2.engine.defaults]: Evaluation results for acdc_night_mtl in csv format:
+[10/16 07:44:49 d2.evaluation.testing]: copypaste: Task: sem_seg
+[10/16 07:44:49 d2.evaluation.testing]: copypaste: mIoU,fwIoU,mACC,pACC
+[10/16 07:44:49 d2.evaluation.testing]: copypaste: 21.1824,44.0092,32.1192,59.2680
+[10/16 07:44:49 d2.evaluation.testing]: copypaste: Task: bbox
+[10/16 07:44:49 d2.evaluation.testing]: copypaste: AP,AP50,AP75,APs,APm,APl
+[10/16 07:44:49 d2.evaluation.testing]: copypaste: 8.6322,17.3204,7.7669,5.3190,11.1330,18.1254
+[10/16 07:44:49 d2.evaluation.testing]: copypaste: Task: segm
+[10/16 07:44:49 d2.evaluation.testing]: copypaste: AP,AP50,AP75,APs,APm,APl
+[10/16 07:44:49 d2.evaluation.testing]: copypaste: 6.6250,14.8347,5.6175,3.4486,9.5006,13.7993
+[10/16 07:44:49 d2.data.datasets.ACDC]: Loaded 400 images in COCO format from /datasets/ACDC/gt_detection/rain/instancesonly_rain_train_gt_detection.json
+[10/16 07:44:49 d2.data.build]: Distribution of instances among all 8 categories:
+|  category  | #instances   |  category  | #instances   |  category  | #instances   |
+|:----------:|:-------------|:----------:|:-------------|:----------:|:-------------|
+|   person   | 237          |   rider    | 21           |    car     | 1433         |
+|   truck    | 31           |    bus     | 37           |   train    | 37           |
+| motorcycle | 77           |  bicycle   | 93           |            |              |
+|   total    | 1966         |            |              |            |              |
+[10/16 07:44:49 d2.data.detection_utils]: Augmentations used in training: [RandomApply(
+    p=0.8
+    ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
+), RandomGrayscale(p=0.2), RandomApply(
+    p=0.5
+    <detectron2.data.transforms.augmentation_impl.GaussianBlur object at 0x7f19b0870450>
+), Compose(
+    ToTensor()
+    RandomErasing(p=0.7, scale=(0.05, 0.2), ratio=(0.3, 3.3), value=random, inplace=False)
+    RandomErasing(p=0.5, scale=(0.02, 0.2), ratio=(0.1, 6), value=random, inplace=False)
+    RandomErasing(p=0.3, scale=(0.02, 0.2), ratio=(0.05, 8), value=random, inplace=False)
+    ToPILImage()
+)]
+[10/16 07:44:49 d2.data.dataset_mapper]: [DatasetMapper] Augmentations used in inference: [ResizeShortestEdge(short_edge_length=(1024, 1024), max_size=2048, sample_style='choice')]
+[10/16 07:44:49 d2.data.common]: Serializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[10/16 07:44:49 d2.data.common]: Serializing 400 elements to byte tensors and concatenating them all ...
+[10/16 07:44:49 d2.data.common]: Serialized dataset takes 0.79 MiB
+[10/16 07:44:49 d2.data.datasets.ACDC]: Loaded 400 images in COCO format from /datasets/ACDC/gt_detection/rain/instancesonly_rain_train_gt_detection.json
+[10/16 07:44:49 d2.evaluation.evaluator]: Start inference on 400 batches
+[10/16 07:44:58 d2.evaluation.evaluator]: Inference done 11/400. Dataloading: 0.0023 s/iter. Inference: 0.6942 s/iter. Eval: 0.1226 s/iter. Total: 0.8190 s/iter. ETA=0:05:18
+[10/16 07:45:04 d2.evaluation.evaluator]: Inference done 18/400. Dataloading: 0.0025 s/iter. Inference: 0.6937 s/iter. Eval: 0.1255 s/iter. Total: 0.8217 s/iter. ETA=0:05:13
+[10/16 07:45:09 d2.evaluation.evaluator]: Inference done 24/400. Dataloading: 0.0026 s/iter. Inference: 0.6937 s/iter. Eval: 0.1303 s/iter. Total: 0.8266 s/iter. ETA=0:05:10
+[10/16 07:45:15 d2.evaluation.evaluator]: Inference done 31/400. Dataloading: 0.0026 s/iter. Inference: 0.6933 s/iter. Eval: 0.1250 s/iter. Total: 0.8210 s/iter. ETA=0:05:02
+[10/16 07:45:20 d2.evaluation.evaluator]: Inference done 38/400. Dataloading: 0.0026 s/iter. Inference: 0.6901 s/iter. Eval: 0.1237 s/iter. Total: 0.8165 s/iter. ETA=0:04:55
+[10/16 07:45:26 d2.evaluation.evaluator]: Inference done 45/400. Dataloading: 0.0026 s/iter. Inference: 0.6880 s/iter. Eval: 0.1254 s/iter. Total: 0.8161 s/iter. ETA=0:04:49
+[CT-CMT-MTL] iter=850 score_em=0.654 n_pseudo=5 thr=0.750/0.827/0.900 segaug=845/850 lam=1.00 route=resnet det/loss_rpn_cls=0.088 det/loss_rpn_loc=0.042 det/loss_cls=0.335 det/loss_box_reg=0.120 seg/soft_ce=1.178 seg/anchor_marginal=0.023 ctcr=0.771
+[CT-CMT-GRAD] iter=850 mode=resnet_route cos=0.3300 cos_mean=0.1253 conflict_rate=0.1472 applied_rate=1.0000 g_det=7.99043 g_aux=21.82183 g_aux_proj=nan g_det_R=7.23480 g_aux_R=19.86078 g_aux_R_applied=19.86078 g_det_FPN=3.39185 g_aux_FPN=9.04110 g_aux_FPN_applied=9.04110 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=632
+[10/16 07:45:31 d2.evaluation.evaluator]: Inference done 52/400. Dataloading: 0.0026 s/iter. Inference: 0.6842 s/iter. Eval: 0.1238 s/iter. Total: 0.8107 s/iter. ETA=0:04:42
+[10/16 07:45:37 d2.evaluation.evaluator]: Inference done 59/400. Dataloading: 0.0027 s/iter. Inference: 0.6843 s/iter. Eval: 0.1231 s/iter. Total: 0.8101 s/iter. ETA=0:04:36
+[10/16 07:45:43 d2.evaluation.evaluator]: Inference done 66/400. Dataloading: 0.0026 s/iter. Inference: 0.6819 s/iter. Eval: 0.1225 s/iter. Total: 0.8071 s/iter. ETA=0:04:29
+[10/16 07:45:48 d2.evaluation.evaluator]: Inference done 73/400. Dataloading: 0.0026 s/iter. Inference: 0.6799 s/iter. Eval: 0.1212 s/iter. Total: 0.8038 s/iter. ETA=0:04:22
+[10/16 07:45:53 d2.evaluation.evaluator]: Inference done 80/400. Dataloading: 0.0026 s/iter. Inference: 0.6741 s/iter. Eval: 0.1193 s/iter. Total: 0.7960 s/iter. ETA=0:04:14
+[10/16 07:45:59 d2.evaluation.evaluator]: Inference done 87/400. Dataloading: 0.0026 s/iter. Inference: 0.6756 s/iter. Eval: 0.1188 s/iter. Total: 0.7971 s/iter. ETA=0:04:09
+[10/16 07:46:04 d2.evaluation.evaluator]: Inference done 94/400. Dataloading: 0.0026 s/iter. Inference: 0.6727 s/iter. Eval: 0.1185 s/iter. Total: 0.7938 s/iter. ETA=0:04:02
+[CT-CMT-MTL] iter=900 score_em=0.583 n_pseudo=4 thr=0.706/0.805/0.900 segaug=894/900 lam=1.00 route=resnet det/loss_rpn_cls=0.062 det/loss_rpn_loc=0.067 det/loss_cls=0.128 det/loss_box_reg=0.113 seg/soft_ce=0.678 seg/anchor_marginal=0.006 ctcr=0.123
+[CT-CMT-GRAD] iter=900 mode=resnet_route cos=0.1149 cos_mean=0.1231 conflict_rate=0.1482 applied_rate=1.0000 g_det=3.71621 g_aux=6.98364 g_aux_proj=nan g_det_R=2.95754 g_aux_R=6.24152 g_aux_R_applied=6.24152 g_det_FPN=2.25015 g_aux_FPN=3.13282 g_aux_FPN_applied=3.13282 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=668
+[10/16 07:46:09 d2.evaluation.evaluator]: Inference done 101/400. Dataloading: 0.0026 s/iter. Inference: 0.6720 s/iter. Eval: 0.1188 s/iter. Total: 0.7935 s/iter. ETA=0:03:57
+[10/16 07:46:15 d2.evaluation.evaluator]: Inference done 108/400. Dataloading: 0.0026 s/iter. Inference: 0.6704 s/iter. Eval: 0.1178 s/iter. Total: 0.7909 s/iter. ETA=0:03:50
+[10/16 07:46:20 d2.evaluation.evaluator]: Inference done 115/400. Dataloading: 0.0026 s/iter. Inference: 0.6691 s/iter. Eval: 0.1178 s/iter. Total: 0.7896 s/iter. ETA=0:03:45
+[10/16 07:46:26 d2.evaluation.evaluator]: Inference done 122/400. Dataloading: 0.0026 s/iter. Inference: 0.6697 s/iter. Eval: 0.1174 s/iter. Total: 0.7897 s/iter. ETA=0:03:39
+[10/16 07:46:31 d2.evaluation.evaluator]: Inference done 129/400. Dataloading: 0.0026 s/iter. Inference: 0.6702 s/iter. Eval: 0.1168 s/iter. Total: 0.7896 s/iter. ETA=0:03:33
+[10/16 07:46:37 d2.evaluation.evaluator]: Inference done 136/400. Dataloading: 0.0026 s/iter. Inference: 0.6707 s/iter. Eval: 0.1165 s/iter. Total: 0.7900 s/iter. ETA=0:03:28
+[10/16 07:46:42 d2.evaluation.evaluator]: Inference done 143/400. Dataloading: 0.0026 s/iter. Inference: 0.6703 s/iter. Eval: 0.1163 s/iter. Total: 0.7894 s/iter. ETA=0:03:22
+[CT-CMT-MTL] iter=950 score_em=0.551 n_pseudo=4 thr=0.731/0.817/0.900 segaug=944/950 lam=1.00 route=resnet det/loss_rpn_cls=0.019 det/loss_rpn_loc=0.014 det/loss_cls=0.127 det/loss_box_reg=0.122 seg/soft_ce=0.737 seg/anchor_marginal=0.007 ctcr=0.139
+[CT-CMT-GRAD] iter=950 mode=resnet_route cos=0.0792 cos_mean=0.1262 conflict_rate=0.1491 applied_rate=1.0000 g_det=5.40066 g_aux=4.99275 g_aux_proj=nan g_det_R=4.95529 g_aux_R=4.06161 g_aux_R_applied=4.06161 g_det_FPN=2.14760 g_aux_FPN=2.90360 g_aux_FPN_applied=2.90360 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=704
+[10/16 07:46:48 d2.evaluation.evaluator]: Inference done 150/400. Dataloading: 0.0027 s/iter. Inference: 0.6693 s/iter. Eval: 0.1162 s/iter. Total: 0.7883 s/iter. ETA=0:03:17
+[10/16 07:46:53 d2.evaluation.evaluator]: Inference done 157/400. Dataloading: 0.0027 s/iter. Inference: 0.6691 s/iter. Eval: 0.1159 s/iter. Total: 0.7878 s/iter. ETA=0:03:11
+[10/16 07:46:59 d2.evaluation.evaluator]: Inference done 164/400. Dataloading: 0.0027 s/iter. Inference: 0.6694 s/iter. Eval: 0.1157 s/iter. Total: 0.7878 s/iter. ETA=0:03:05
+[10/16 07:47:04 d2.evaluation.evaluator]: Inference done 171/400. Dataloading: 0.0027 s/iter. Inference: 0.6691 s/iter. Eval: 0.1152 s/iter. Total: 0.7869 s/iter. ETA=0:03:00
+[10/16 07:47:10 d2.evaluation.evaluator]: Inference done 178/400. Dataloading: 0.0027 s/iter. Inference: 0.6694 s/iter. Eval: 0.1153 s/iter. Total: 0.7874 s/iter. ETA=0:02:54
+[10/16 07:47:15 d2.evaluation.evaluator]: Inference done 185/400. Dataloading: 0.0027 s/iter. Inference: 0.6686 s/iter. Eval: 0.1152 s/iter. Total: 0.7864 s/iter. ETA=0:02:49
+[10/16 07:47:20 d2.evaluation.evaluator]: Inference done 192/400. Dataloading: 0.0026 s/iter. Inference: 0.6689 s/iter. Eval: 0.1153 s/iter. Total: 0.7869 s/iter. ETA=0:02:43
+[10/16 07:47:26 d2.evaluation.evaluator]: Inference done 199/400. Dataloading: 0.0026 s/iter. Inference: 0.6686 s/iter. Eval: 0.1148 s/iter. Total: 0.7861 s/iter. ETA=0:02:38
+[CT-CMT-MTL] iter=1000 score_em=0.507 n_pseudo=0 thr=0.700/0.819/0.900 segaug=994/1000 lam=1.00 route=resnet seg/soft_ce=0.683 seg/anchor_marginal=0.021
+[CT-CMT-GRAD] iter=1000 mode=resnet_route cos=nan cos_mean=0.1250 conflict_rate=0.1500 applied_rate=1.0000 g_det=nan g_aux=nan g_aux_proj=nan g_det_R=nan g_aux_R=nan g_aux_R_applied=nan g_det_FPN=nan g_aux_FPN=nan g_aux_FPN_applied=nan gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=740
+[10/16 07:47:31 d2.evaluation.evaluator]: Inference done 206/400. Dataloading: 0.0027 s/iter. Inference: 0.6680 s/iter. Eval: 0.1147 s/iter. Total: 0.7854 s/iter. ETA=0:02:32
+[10/16 07:47:36 d2.evaluation.evaluator]: Inference done 213/400. Dataloading: 0.0027 s/iter. Inference: 0.6673 s/iter. Eval: 0.1141 s/iter. Total: 0.7841 s/iter. ETA=0:02:26
+[10/16 07:47:42 d2.evaluation.evaluator]: Inference done 220/400. Dataloading: 0.0027 s/iter. Inference: 0.6662 s/iter. Eval: 0.1141 s/iter. Total: 0.7831 s/iter. ETA=0:02:20
+[10/16 07:47:47 d2.evaluation.evaluator]: Inference done 226/400. Dataloading: 0.0027 s/iter. Inference: 0.6670 s/iter. Eval: 0.1148 s/iter. Total: 0.7845 s/iter. ETA=0:02:16
+[10/16 07:47:52 d2.evaluation.evaluator]: Inference done 232/400. Dataloading: 0.0027 s/iter. Inference: 0.6678 s/iter. Eval: 0.1154 s/iter. Total: 0.7860 s/iter. ETA=0:02:12
+[10/16 07:47:57 d2.evaluation.evaluator]: Inference done 238/400. Dataloading: 0.0027 s/iter. Inference: 0.6686 s/iter. Eval: 0.1159 s/iter. Total: 0.7872 s/iter. ETA=0:02:07
+[10/16 07:48:02 d2.evaluation.evaluator]: Inference done 245/400. Dataloading: 0.0027 s/iter. Inference: 0.6685 s/iter. Eval: 0.1170 s/iter. Total: 0.7882 s/iter. ETA=0:02:02
+[CT-CMT-MTL] iter=1050 score_em=0.467 n_pseudo=1 thr=0.755/0.818/0.898 segaug=1044/1050 lam=1.00 route=resnet seg/soft_ce=0.408 seg/anchor_marginal=0.006 ctcr=0.175
+[CT-CMT-GRAD] iter=1050 mode=resnet_route cos=nan cos_mean=0.1284 conflict_rate=0.1491 applied_rate=1.0000 g_det=nan g_aux=nan g_aux_proj=nan g_det_R=nan g_aux_R=nan g_aux_R_applied=nan g_det_FPN=nan g_aux_FPN=nan g_aux_FPN_applied=nan gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=778
+[10/16 07:48:08 d2.evaluation.evaluator]: Inference done 252/400. Dataloading: 0.0026 s/iter. Inference: 0.6687 s/iter. Eval: 0.1179 s/iter. Total: 0.7894 s/iter. ETA=0:01:56
+[10/16 07:48:14 d2.evaluation.evaluator]: Inference done 259/400. Dataloading: 0.0026 s/iter. Inference: 0.6694 s/iter. Eval: 0.1184 s/iter. Total: 0.7905 s/iter. ETA=0:01:51
+[10/16 07:48:20 d2.evaluation.evaluator]: Inference done 266/400. Dataloading: 0.0026 s/iter. Inference: 0.6695 s/iter. Eval: 0.1185 s/iter. Total: 0.7907 s/iter. ETA=0:01:45
+[10/16 07:48:25 d2.evaluation.evaluator]: Inference done 272/400. Dataloading: 0.0026 s/iter. Inference: 0.6701 s/iter. Eval: 0.1192 s/iter. Total: 0.7920 s/iter. ETA=0:01:41
+[10/16 07:48:30 d2.evaluation.evaluator]: Inference done 279/400. Dataloading: 0.0026 s/iter. Inference: 0.6699 s/iter. Eval: 0.1201 s/iter. Total: 0.7927 s/iter. ETA=0:01:35
+[10/16 07:48:36 d2.evaluation.evaluator]: Inference done 286/400. Dataloading: 0.0026 s/iter. Inference: 0.6700 s/iter. Eval: 0.1204 s/iter. Total: 0.7930 s/iter. ETA=0:01:30
+[10/16 07:48:42 d2.evaluation.evaluator]: Inference done 293/400. Dataloading: 0.0026 s/iter. Inference: 0.6701 s/iter. Eval: 0.1204 s/iter. Total: 0.7932 s/iter. ETA=0:01:24
+[CT-CMT-MTL] iter=1100 score_em=0.658 n_pseudo=3 thr=0.772/0.845/0.900 segaug=1094/1100 lam=1.00 route=resnet det/loss_rpn_cls=0.638 det/loss_rpn_loc=0.224 det/loss_cls=0.053 det/loss_box_reg=0.003 seg/soft_ce=0.688 seg/anchor_marginal=0.020 ctcr=0.452
+[CT-CMT-GRAD] iter=1100 mode=resnet_route cos=0.3196 cos_mean=0.1265 conflict_rate=0.1482 applied_rate=1.0000 g_det=24.13472 g_aux=12.13565 g_aux_proj=nan g_det_R=21.60853 g_aux_R=10.24687 g_aux_R_applied=10.24687 g_det_FPN=10.74972 g_aux_FPN=6.50197 g_aux_FPN_applied=6.50197 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=823
+[10/16 07:48:47 d2.evaluation.evaluator]: Inference done 300/400. Dataloading: 0.0026 s/iter. Inference: 0.6706 s/iter. Eval: 0.1200 s/iter. Total: 0.7932 s/iter. ETA=0:01:19
+[10/16 07:48:53 d2.evaluation.evaluator]: Inference done 307/400. Dataloading: 0.0026 s/iter. Inference: 0.6706 s/iter. Eval: 0.1202 s/iter. Total: 0.7935 s/iter. ETA=0:01:13
+[10/16 07:48:58 d2.evaluation.evaluator]: Inference done 314/400. Dataloading: 0.0026 s/iter. Inference: 0.6700 s/iter. Eval: 0.1199 s/iter. Total: 0.7926 s/iter. ETA=0:01:08
+[10/16 07:49:03 d2.evaluation.evaluator]: Inference done 321/400. Dataloading: 0.0026 s/iter. Inference: 0.6688 s/iter. Eval: 0.1197 s/iter. Total: 0.7912 s/iter. ETA=0:01:02
+[10/16 07:49:08 d2.evaluation.evaluator]: Inference done 328/400. Dataloading: 0.0026 s/iter. Inference: 0.6683 s/iter. Eval: 0.1192 s/iter. Total: 0.7901 s/iter. ETA=0:00:56
+[10/16 07:49:14 d2.evaluation.evaluator]: Inference done 335/400. Dataloading: 0.0026 s/iter. Inference: 0.6687 s/iter. Eval: 0.1192 s/iter. Total: 0.7905 s/iter. ETA=0:00:51
+[10/16 07:49:19 d2.evaluation.evaluator]: Inference done 342/400. Dataloading: 0.0026 s/iter. Inference: 0.6682 s/iter. Eval: 0.1187 s/iter. Total: 0.7896 s/iter. ETA=0:00:45
+[10/16 07:49:25 d2.evaluation.evaluator]: Inference done 349/400. Dataloading: 0.0026 s/iter. Inference: 0.6677 s/iter. Eval: 0.1185 s/iter. Total: 0.7888 s/iter. ETA=0:00:40
+[CT-CMT-MTL] iter=1150 score_em=0.502 n_pseudo=2 thr=0.764/0.833/0.900 segaug=1143/1150 lam=1.00 route=resnet det/loss_rpn_cls=0.005 det/loss_rpn_loc=0.006 det/loss_cls=0.081 det/loss_box_reg=0.100 seg/soft_ce=0.413 seg/anchor_marginal=0.003 ctcr=0.019
+[CT-CMT-GRAD] iter=1150 mode=resnet_route cos=0.0016 cos_mean=0.1273 conflict_rate=0.1492 applied_rate=1.0000 g_det=9.93838 g_aux=3.17428 g_aux_proj=nan g_det_R=9.82964 g_aux_R=3.00183 g_aux_R_applied=3.00183 g_det_FPN=1.46614 g_aux_FPN=1.03202 g_aux_FPN_applied=1.03202 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=858
+[10/16 07:49:30 d2.evaluation.evaluator]: Inference done 356/400. Dataloading: 0.0026 s/iter. Inference: 0.6675 s/iter. Eval: 0.1185 s/iter. Total: 0.7887 s/iter. ETA=0:00:34
+[10/16 07:49:36 d2.evaluation.evaluator]: Inference done 363/400. Dataloading: 0.0026 s/iter. Inference: 0.6677 s/iter. Eval: 0.1182 s/iter. Total: 0.7886 s/iter. ETA=0:00:29
+[10/16 07:49:41 d2.evaluation.evaluator]: Inference done 370/400. Dataloading: 0.0026 s/iter. Inference: 0.6676 s/iter. Eval: 0.1182 s/iter. Total: 0.7884 s/iter. ETA=0:00:23
+[10/16 07:49:46 d2.evaluation.evaluator]: Inference done 377/400. Dataloading: 0.0026 s/iter. Inference: 0.6669 s/iter. Eval: 0.1184 s/iter. Total: 0.7880 s/iter. ETA=0:00:18
+[10/16 07:49:52 d2.evaluation.evaluator]: Inference done 384/400. Dataloading: 0.0026 s/iter. Inference: 0.6668 s/iter. Eval: 0.1187 s/iter. Total: 0.7881 s/iter. ETA=0:00:12
+[10/16 07:49:58 d2.evaluation.evaluator]: Inference done 391/400. Dataloading: 0.0026 s/iter. Inference: 0.6670 s/iter. Eval: 0.1191 s/iter. Total: 0.7887 s/iter. ETA=0:00:07
+[10/16 07:50:03 d2.evaluation.evaluator]: Inference done 398/400. Dataloading: 0.0026 s/iter. Inference: 0.6669 s/iter. Eval: 0.1194 s/iter. Total: 0.7890 s/iter. ETA=0:00:01
+[CT-CMT-MTL] iter=1200 score_em=0.533 n_pseudo=3 thr=0.748/0.817/0.900 segaug=1192/1200 lam=1.00 route=resnet det/loss_rpn_cls=0.063 det/loss_rpn_loc=0.034 det/loss_cls=0.096 det/loss_box_reg=0.060 seg/soft_ce=0.788 seg/anchor_marginal=0.021 ctcr=1.146
+[CT-CMT-GRAD] iter=1200 mode=resnet_route cos=0.2475 cos_mean=0.1272 conflict_rate=0.1483 applied_rate=1.0000 g_det=3.58600 g_aux=13.42801 g_aux_proj=nan g_det_R=3.08972 g_aux_R=11.65900 g_aux_R_applied=11.65900 g_det_FPN=1.82018 g_aux_FPN=6.66177 g_aux_FPN_applied=6.66177 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=897
+[10/16 07:50:05 d2.evaluation.evaluator]: Total inference time: 0:05:11.777494 (0.789310 s / iter per device, on 1 devices)
+[10/16 07:50:05 d2.evaluation.evaluator]: Total inference pure compute time: 0:04:23 (0.667037 s / iter per device, on 1 devices)
+[10/16 07:50:05 d2.evaluation.sem_seg_evaluation]: OrderedDict([('sem_seg', {'mIoU': 44.379165373774235, 'fwIoU': 75.9673332318567, 'IoU-road': 70.06166445862617, 'BoundaryIoU-road': 75.1472122489663, 'min(IoU, B-Iou)-road': 70.06166445862617, 'IoU-sidewalk': 34.53762907260345, 'BoundaryIoU-sidewalk': 21.79550809878961, 'min(IoU, B-Iou)-sidewalk': 21.79550809878961, 'IoU-building': 77.6483371941522, 'BoundaryIoU-building': 47.61398009655486, 'min(IoU, B-Iou)-building': 47.61398009655486, 'IoU-wall': 19.40815855287175, 'BoundaryIoU-wall': 23.956177079259835, 'min(IoU, B-Iou)-wall': 19.40815855287175, 'IoU-fence': 16.894022362456802, 'BoundaryIoU-fence': 9.088737402460332, 'min(IoU, B-Iou)-fence': 9.088737402460332, 'IoU-pole': 42.17480118844541, 'BoundaryIoU-pole': 21.2629190788947, 'min(IoU, B-Iou)-pole': 21.2629190788947, 'IoU-traffic light': 49.23778996761615, 'BoundaryIoU-traffic light': 43.44443024880379, 'min(IoU, B-Iou)-traffic light': 43.44443024880379, 'IoU-traffic sign': 52.82730751363627, 'BoundaryIoU-traffic sign': 13.826644676744662, 'min(IoU, B-Iou)-traffic sign': 13.826644676744662, 'IoU-vegetation': 84.68807784393927, 'BoundaryIoU-vegetation': 44.580633601163925, 'min(IoU, B-Iou)-vegetation': 44.580633601163925, 'IoU-terrain': 45.46922566729056, 'BoundaryIoU-terrain': 23.635896974687423, 'min(IoU, B-Iou)-terrain': 23.635896974687423, 'IoU-sky': 89.5737546191073, 'BoundaryIoU-sky': 69.84033390324964, 'min(IoU, B-Iou)-sky': 69.84033390324964, 'IoU-person': 24.935060462136686, 'BoundaryIoU-person': 24.88866459259926, 'min(IoU, B-Iou)-person': 24.88866459259926, 'IoU-rider': 32.14081299441496, 'BoundaryIoU-rider': 10.173630344695036, 'min(IoU, B-Iou)-rider': 10.173630344695036, 'IoU-car': 71.92879619467567, 'BoundaryIoU-car': 0.0, 'min(IoU, B-Iou)-car': 0.0, 'IoU-truck': 13.960949002887494, 'BoundaryIoU-truck': 0.0, 'min(IoU, B-Iou)-truck': 0.0, 'IoU-bus': 15.339054298278077, 'BoundaryIoU-bus': 0.0, 'min(IoU, B-Iou)-bus': 0.0, 'IoU-train': 31.388714481599727, 'BoundaryIoU-train': 0.0, 'min(IoU, B-Iou)-train': 0.0, 'IoU-motorcycle': 27.308838662550457, 'BoundaryIoU-motorcycle': 0.0, 'min(IoU, B-Iou)-motorcycle': 0.0, 'IoU-bicycle': 43.68114756442182, 'BoundaryIoU-bicycle': 0.0, 'min(IoU, B-Iou)-bicycle': 0.0, 'mACC': 58.51910241848909, 'pACC': 85.2891190329421, 'ACC-road': 92.4831659830467, 'ACC-sidewalk': 43.40129346184132, 'ACC-building': 94.60351807236502, 'ACC-wall': 24.582619343177193, 'ACC-fence': 23.48735192859772, 'ACC-pole': 53.059811344344496, 'ACC-traffic light': 52.81916760309251, 'ACC-traffic sign': 63.83591582763232, 'ACC-vegetation': 88.493675993722, 'ACC-terrain': 71.52368298264714, 'ACC-sky': 90.01980523611222, 'ACC-person': 69.10269259036546, 'ACC-rider': 50.21981228877781, 'ACC-car': 84.90197764051004, 'ACC-truck': 29.066020087680993, 'ACC-bus': 16.794248196941847, 'ACC-train': 58.30675081801131, 'ACC-motorcycle': 43.510296083184194, 'ACC-bicycle': 61.651140469242684})])
+[10/16 07:50:05 d2.evaluation.coco_evaluation]: Preparing results for COCO format ...
+[10/16 07:50:05 d2.evaluation.coco_evaluation]: Saving results to /workspace/output/ctta_acdc/paper26_preupd_acdc4_ctcmt_s123/inference/coco_instances_results.json
+[10/16 07:50:05 d2.evaluation.coco_evaluation]: Evaluating predictions with unofficial COCO API...
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+[10/16 07:50:05 d2.evaluation.fast_eval_api]: Evaluate annotation type *bbox*
+[10/16 07:50:05 d2.evaluation.fast_eval_api]: COCOeval_opt.evaluate() finished in 0.05 seconds.
+[10/16 07:50:05 d2.evaluation.fast_eval_api]: Accumulating evaluation results...
+[10/16 07:50:05 d2.evaluation.fast_eval_api]: COCOeval_opt.accumulate() finished in 0.02 seconds.
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.215
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.377
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.211
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.099
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.222
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.433
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.226
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.316
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.320
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.167
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.305
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.532
+[10/16 07:50:05 d2.evaluation.coco_evaluation]: Evaluation results for bbox: 
+|   AP   |  AP50  |  AP75  |  APs  |  APm   |  APl   |
+|:------:|:------:|:------:|:-----:|:------:|:------:|
+| 21.539 | 37.654 | 21.075 | 9.857 | 22.220 | 43.325 |
+[10/16 07:50:05 d2.evaluation.coco_evaluation]: Per-category bbox AP: 
+| category   | AP     | category   | AP     | category   | AP     |
+|:-----------|:-------|:-----------|:-------|:-----------|:-------|
+| person     | 20.784 | rider      | 15.230 | car        | 53.319 |
+| truck      | 17.832 | bus        | 11.787 | train      | 18.930 |
+| motorcycle | 18.758 | bicycle    | 15.676 |            |        |
+Loading and preparing results...
+DONE (t=0.03s)
+creating index...
+index created!
+[10/16 07:50:05 d2.evaluation.fast_eval_api]: Evaluate annotation type *segm*
+[10/16 07:50:05 d2.evaluation.fast_eval_api]: COCOeval_opt.evaluate() finished in 0.06 seconds.
+[10/16 07:50:05 d2.evaluation.fast_eval_api]: Accumulating evaluation results...
+[10/16 07:50:06 d2.evaluation.fast_eval_api]: COCOeval_opt.accumulate() finished in 0.02 seconds.
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.198
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.370
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.183
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.078
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.206
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.397
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.211
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.283
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.285
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.145
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.265
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.458
+[10/16 07:50:06 d2.evaluation.coco_evaluation]: Evaluation results for segm: 
+|   AP   |  AP50  |  AP75  |  APs  |  APm   |  APl   |
+|:------:|:------:|:------:|:-----:|:------:|:------:|
+| 19.800 | 37.045 | 18.293 | 7.826 | 20.614 | 39.702 |
+[10/16 07:50:06 d2.evaluation.coco_evaluation]: Per-category segm AP: 
+| category   | AP     | category   | AP     | category   | AP     |
+|:-----------|:-------|:-----------|:-------|:-----------|:-------|
+| person     | 17.350 | rider      | 17.320 | car        | 48.454 |
+| truck      | 14.112 | bus        | 14.436 | train      | 24.533 |
+| motorcycle | 11.162 | bicycle    | 11.030 |            |        |
+[10/16 07:50:06 d2.engine.defaults]: Evaluation results for acdc_rain_mtl in csv format:
+[10/16 07:50:06 d2.evaluation.testing]: copypaste: Task: sem_seg
+[10/16 07:50:06 d2.evaluation.testing]: copypaste: mIoU,fwIoU,mACC,pACC
+[10/16 07:50:06 d2.evaluation.testing]: copypaste: 44.3792,75.9673,58.5191,85.2891
+[10/16 07:50:06 d2.evaluation.testing]: copypaste: Task: bbox
+[10/16 07:50:06 d2.evaluation.testing]: copypaste: AP,AP50,AP75,APs,APm,APl
+[10/16 07:50:06 d2.evaluation.testing]: copypaste: 21.5393,37.6538,21.0753,9.8569,22.2203,43.3251
+[10/16 07:50:06 d2.evaluation.testing]: copypaste: Task: segm
+[10/16 07:50:06 d2.evaluation.testing]: copypaste: AP,AP50,AP75,APs,APm,APl
+[10/16 07:50:06 d2.evaluation.testing]: copypaste: 19.7998,37.0448,18.2933,7.8255,20.6143,39.7017
+[10/16 07:50:06 d2.data.datasets.ACDC]: Loaded 400 images in COCO format from /datasets/ACDC/gt_detection/snow/instancesonly_snow_train_gt_detection.json
+[10/16 07:50:06 d2.data.build]: Distribution of instances among all 8 categories:
+|  category  | #instances   |  category  | #instances   |  category  | #instances   |
+|:----------:|:-------------|:----------:|:-------------|:----------:|:-------------|
+|   person   | 585          |   rider    | 37           |    car     | 1753         |
+|   truck    | 132          |    bus     | 56           |   train    | 56           |
+| motorcycle | 31           |  bicycle   | 96           |            |              |
+|   total    | 2746         |            |              |            |              |
+[10/16 07:50:06 d2.data.detection_utils]: Augmentations used in training: [RandomApply(
+    p=0.8
+    ColorJitter(brightness=(0.6, 1.4), contrast=(0.6, 1.4), saturation=(0.6, 1.4), hue=(-0.1, 0.1))
+), RandomGrayscale(p=0.2), RandomApply(
+    p=0.5
+    <detectron2.data.transforms.augmentation_impl.GaussianBlur object at 0x7f1a7af4ef90>
+), Compose(
+    ToTensor()
+    RandomErasing(p=0.7, scale=(0.05, 0.2), ratio=(0.3, 3.3), value=random, inplace=False)
+    RandomErasing(p=0.5, scale=(0.02, 0.2), ratio=(0.1, 6), value=random, inplace=False)
+    RandomErasing(p=0.3, scale=(0.02, 0.2), ratio=(0.05, 8), value=random, inplace=False)
+    ToPILImage()
+)]
+[10/16 07:50:06 d2.data.dataset_mapper]: [DatasetMapper] Augmentations used in inference: [ResizeShortestEdge(short_edge_length=(1024, 1024), max_size=2048, sample_style='choice')]
+[10/16 07:50:06 d2.data.common]: Serializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[10/16 07:50:06 d2.data.common]: Serializing 400 elements to byte tensors and concatenating them all ...
+[10/16 07:50:06 d2.data.common]: Serialized dataset takes 1.09 MiB
+[10/16 07:50:06 d2.data.datasets.ACDC]: Loaded 400 images in COCO format from /datasets/ACDC/gt_detection/snow/instancesonly_snow_train_gt_detection.json
+[10/16 07:50:06 d2.evaluation.evaluator]: Start inference on 400 batches
+[10/16 07:50:14 d2.evaluation.evaluator]: Inference done 11/400. Dataloading: 0.0023 s/iter. Inference: 0.6536 s/iter. Eval: 0.1074 s/iter. Total: 0.7634 s/iter. ETA=0:04:56
+[10/16 07:50:20 d2.evaluation.evaluator]: Inference done 18/400. Dataloading: 0.0026 s/iter. Inference: 0.6569 s/iter. Eval: 0.1128 s/iter. Total: 0.7723 s/iter. ETA=0:04:55
+[10/16 07:50:25 d2.evaluation.evaluator]: Inference done 25/400. Dataloading: 0.0027 s/iter. Inference: 0.6624 s/iter. Eval: 0.1126 s/iter. Total: 0.7777 s/iter. ETA=0:04:51
+[10/16 07:50:31 d2.evaluation.evaluator]: Inference done 32/400. Dataloading: 0.0027 s/iter. Inference: 0.6651 s/iter. Eval: 0.1122 s/iter. Total: 0.7801 s/iter. ETA=0:04:47
+[10/16 07:50:36 d2.evaluation.evaluator]: Inference done 39/400. Dataloading: 0.0027 s/iter. Inference: 0.6604 s/iter. Eval: 0.1136 s/iter. Total: 0.7767 s/iter. ETA=0:04:40
+[10/16 07:50:42 d2.evaluation.evaluator]: Inference done 46/400. Dataloading: 0.0027 s/iter. Inference: 0.6598 s/iter. Eval: 0.1120 s/iter. Total: 0.7746 s/iter. ETA=0:04:34
+[CT-CMT-MTL] iter=1250 score_em=0.638 n_pseudo=7 thr=0.727/0.817/0.900 segaug=1242/1250 lam=1.00 route=resnet det/loss_rpn_cls=0.245 det/loss_rpn_loc=0.124 det/loss_cls=0.118 det/loss_box_reg=0.005 seg/soft_ce=0.742 seg/anchor_marginal=0.009 ctcr=0.437
+[CT-CMT-GRAD] iter=1250 mode=resnet_route cos=0.0579 cos_mean=0.1268 conflict_rate=0.1488 applied_rate=1.0000 g_det=5.26060 g_aux=7.92452 g_aux_proj=nan g_det_R=4.21281 g_aux_R=6.92842 g_aux_R_applied=6.92842 g_det_FPN=3.15058 g_aux_FPN=3.84644 g_aux_FPN_applied=3.84644 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=934
+[10/16 07:50:47 d2.evaluation.evaluator]: Inference done 53/400. Dataloading: 0.0027 s/iter. Inference: 0.6597 s/iter. Eval: 0.1125 s/iter. Total: 0.7750 s/iter. ETA=0:04:28
+[10/16 07:50:52 d2.evaluation.evaluator]: Inference done 60/400. Dataloading: 0.0027 s/iter. Inference: 0.6579 s/iter. Eval: 0.1114 s/iter. Total: 0.7720 s/iter. ETA=0:04:22
+[10/16 07:50:58 d2.evaluation.evaluator]: Inference done 67/400. Dataloading: 0.0027 s/iter. Inference: 0.6571 s/iter. Eval: 0.1164 s/iter. Total: 0.7762 s/iter. ETA=0:04:18
+[10/16 07:51:03 d2.evaluation.evaluator]: Inference done 74/400. Dataloading: 0.0027 s/iter. Inference: 0.6537 s/iter. Eval: 0.1190 s/iter. Total: 0.7755 s/iter. ETA=0:04:12
+[10/16 07:51:09 d2.evaluation.evaluator]: Inference done 81/400. Dataloading: 0.0027 s/iter. Inference: 0.6556 s/iter. Eval: 0.1190 s/iter. Total: 0.7774 s/iter. ETA=0:04:07
+[10/16 07:51:14 d2.evaluation.evaluator]: Inference done 88/400. Dataloading: 0.0027 s/iter. Inference: 0.6583 s/iter. Eval: 0.1184 s/iter. Total: 0.7794 s/iter. ETA=0:04:03
+[10/16 07:51:20 d2.evaluation.evaluator]: Inference done 95/400. Dataloading: 0.0027 s/iter. Inference: 0.6593 s/iter. Eval: 0.1184 s/iter. Total: 0.7805 s/iter. ETA=0:03:58
+[CT-CMT-MTL] iter=1300 score_em=0.587 n_pseudo=2 thr=0.751/0.824/0.900 segaug=1289/1300 lam=1.00 route=resnet det/loss_rpn_cls=0.005 det/loss_rpn_loc=0.007 det/loss_cls=0.044 det/loss_box_reg=0.066 seg/soft_ce=0.470 seg/anchor_marginal=0.002 ctcr=0.044
+[CT-CMT-GRAD] iter=1300 mode=resnet_route cos=-0.2443 cos_mean=0.1261 conflict_rate=0.1487 applied_rate=1.0000 g_det=6.48688 g_aux=2.83585 g_aux_proj=nan g_det_R=6.35969 g_aux_R=2.43542 g_aux_R_applied=2.43542 g_det_FPN=1.27826 g_aux_FPN=1.45285 g_aux_FPN_applied=1.45285 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=975
+[10/16 07:51:25 d2.evaluation.evaluator]: Inference done 102/400. Dataloading: 0.0027 s/iter. Inference: 0.6583 s/iter. Eval: 0.1178 s/iter. Total: 0.7789 s/iter. ETA=0:03:52
+[10/16 07:51:31 d2.evaluation.evaluator]: Inference done 109/400. Dataloading: 0.0027 s/iter. Inference: 0.6594 s/iter. Eval: 0.1183 s/iter. Total: 0.7804 s/iter. ETA=0:03:47
+[10/16 07:51:37 d2.evaluation.evaluator]: Inference done 116/400. Dataloading: 0.0027 s/iter. Inference: 0.6612 s/iter. Eval: 0.1180 s/iter. Total: 0.7820 s/iter. ETA=0:03:42
+[10/16 07:51:42 d2.evaluation.evaluator]: Inference done 123/400. Dataloading: 0.0027 s/iter. Inference: 0.6611 s/iter. Eval: 0.1174 s/iter. Total: 0.7813 s/iter. ETA=0:03:36
+[10/16 07:51:48 d2.evaluation.evaluator]: Inference done 130/400. Dataloading: 0.0027 s/iter. Inference: 0.6628 s/iter. Eval: 0.1174 s/iter. Total: 0.7829 s/iter. ETA=0:03:31
+[10/16 07:51:53 d2.evaluation.evaluator]: Inference done 137/400. Dataloading: 0.0027 s/iter. Inference: 0.6635 s/iter. Eval: 0.1170 s/iter. Total: 0.7832 s/iter. ETA=0:03:25
+[10/16 07:51:59 d2.evaluation.evaluator]: Inference done 144/400. Dataloading: 0.0027 s/iter. Inference: 0.6648 s/iter. Eval: 0.1172 s/iter. Total: 0.7847 s/iter. ETA=0:03:20
+[CT-CMT-MTL] iter=1350 score_em=0.556 n_pseudo=5 thr=0.713/0.807/0.900 segaug=1339/1350 lam=1.00 route=resnet det/loss_rpn_cls=0.044 det/loss_rpn_loc=0.064 det/loss_cls=0.154 det/loss_box_reg=0.164 seg/soft_ce=0.573 seg/anchor_marginal=0.009 ctcr=0.059
+[CT-CMT-GRAD] iter=1350 mode=resnet_route cos=0.2761 cos_mean=0.1254 conflict_rate=0.1461 applied_rate=1.0000 g_det=7.27772 g_aux=3.13929 g_aux_proj=nan g_det_R=6.64986 g_aux_R=2.79642 g_aux_R_applied=2.79642 g_det_FPN=2.95711 g_aux_FPN=1.42660 g_aux_FPN_applied=1.42660 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=1020
+[10/16 07:52:04 d2.evaluation.evaluator]: Inference done 151/400. Dataloading: 0.0027 s/iter. Inference: 0.6654 s/iter. Eval: 0.1172 s/iter. Total: 0.7853 s/iter. ETA=0:03:15
+[10/16 07:52:10 d2.evaluation.evaluator]: Inference done 158/400. Dataloading: 0.0027 s/iter. Inference: 0.6652 s/iter. Eval: 0.1175 s/iter. Total: 0.7855 s/iter. ETA=0:03:10
+[10/16 07:52:15 d2.evaluation.evaluator]: Inference done 164/400. Dataloading: 0.0027 s/iter. Inference: 0.6663 s/iter. Eval: 0.1185 s/iter. Total: 0.7876 s/iter. ETA=0:03:05
+[10/16 07:52:20 d2.evaluation.evaluator]: Inference done 170/400. Dataloading: 0.0027 s/iter. Inference: 0.6673 s/iter. Eval: 0.1199 s/iter. Total: 0.7899 s/iter. ETA=0:03:01
+[10/16 07:52:26 d2.evaluation.evaluator]: Inference done 177/400. Dataloading: 0.0027 s/iter. Inference: 0.6682 s/iter. Eval: 0.1204 s/iter. Total: 0.7914 s/iter. ETA=0:02:56
+[10/16 07:52:32 d2.evaluation.evaluator]: Inference done 184/400. Dataloading: 0.0027 s/iter. Inference: 0.6690 s/iter. Eval: 0.1205 s/iter. Total: 0.7922 s/iter. ETA=0:02:51
+[10/16 07:52:37 d2.evaluation.evaluator]: Inference done 191/400. Dataloading: 0.0027 s/iter. Inference: 0.6693 s/iter. Eval: 0.1211 s/iter. Total: 0.7930 s/iter. ETA=0:02:45
+[10/16 07:52:43 d2.evaluation.evaluator]: Inference done 198/400. Dataloading: 0.0027 s/iter. Inference: 0.6699 s/iter. Eval: 0.1212 s/iter. Total: 0.7939 s/iter. ETA=0:02:40
+[CT-CMT-MTL] iter=1400 score_em=0.630 n_pseudo=3 thr=0.730/0.826/0.900 segaug=1389/1400 lam=1.00 route=resnet det/loss_rpn_cls=0.002 det/loss_rpn_loc=0.029 det/loss_cls=0.037 det/loss_box_reg=0.100 seg/soft_ce=0.658 seg/anchor_marginal=0.010 ctcr=0.019
+[CT-CMT-GRAD] iter=1400 mode=resnet_route cos=0.0265 cos_mean=0.1274 conflict_rate=0.1426 applied_rate=1.0000 g_det=3.20161 g_aux=3.38366 g_aux_proj=nan g_det_R=2.72144 g_aux_R=2.91306 g_aux_R_applied=2.91306 g_det_FPN=1.68645 g_aux_FPN=1.72141 g_aux_FPN_applied=1.72141 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=1066
+[10/16 07:52:49 d2.evaluation.evaluator]: Inference done 205/400. Dataloading: 0.0027 s/iter. Inference: 0.6701 s/iter. Eval: 0.1211 s/iter. Total: 0.7939 s/iter. ETA=0:02:34
+[10/16 07:52:54 d2.evaluation.evaluator]: Inference done 212/400. Dataloading: 0.0027 s/iter. Inference: 0.6702 s/iter. Eval: 0.1212 s/iter. Total: 0.7941 s/iter. ETA=0:02:29
+[10/16 07:53:00 d2.evaluation.evaluator]: Inference done 219/400. Dataloading: 0.0026 s/iter. Inference: 0.6708 s/iter. Eval: 0.1212 s/iter. Total: 0.7948 s/iter. ETA=0:02:23
+[10/16 07:53:05 d2.evaluation.evaluator]: Inference done 226/400. Dataloading: 0.0026 s/iter. Inference: 0.6710 s/iter. Eval: 0.1209 s/iter. Total: 0.7946 s/iter. ETA=0:02:18
+[10/16 07:53:11 d2.evaluation.evaluator]: Inference done 233/400. Dataloading: 0.0026 s/iter. Inference: 0.6711 s/iter. Eval: 0.1209 s/iter. Total: 0.7946 s/iter. ETA=0:02:12
+[10/16 07:53:17 d2.evaluation.evaluator]: Inference done 240/400. Dataloading: 0.0026 s/iter. Inference: 0.6717 s/iter. Eval: 0.1212 s/iter. Total: 0.7957 s/iter. ETA=0:02:07
+[10/16 07:53:22 d2.evaluation.evaluator]: Inference done 246/400. Dataloading: 0.0026 s/iter. Inference: 0.6721 s/iter. Eval: 0.1219 s/iter. Total: 0.7967 s/iter. ETA=0:02:02
+[CT-CMT-MTL] iter=1450 score_em=0.516 n_pseudo=2 thr=0.742/0.825/0.900 segaug=1439/1450 lam=1.00 route=resnet seg/soft_ce=0.749 seg/anchor_marginal=0.006 ctcr=0.012
+[CT-CMT-GRAD] iter=1450 mode=resnet_route cos=nan cos_mean=0.1280 conflict_rate=0.1413 applied_rate=1.0000 g_det=nan g_aux=nan g_aux_proj=nan g_det_R=nan g_aux_R=nan g_aux_R_applied=nan g_det_FPN=nan g_aux_FPN=nan g_aux_FPN_applied=nan gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=1111
+[10/16 07:53:27 d2.evaluation.evaluator]: Inference done 253/400. Dataloading: 0.0026 s/iter. Inference: 0.6723 s/iter. Eval: 0.1219 s/iter. Total: 0.7969 s/iter. ETA=0:01:57
+[10/16 07:53:33 d2.evaluation.evaluator]: Inference done 260/400. Dataloading: 0.0026 s/iter. Inference: 0.6728 s/iter. Eval: 0.1222 s/iter. Total: 0.7977 s/iter. ETA=0:01:51
+[10/16 07:53:39 d2.evaluation.evaluator]: Inference done 267/400. Dataloading: 0.0026 s/iter. Inference: 0.6728 s/iter. Eval: 0.1223 s/iter. Total: 0.7978 s/iter. ETA=0:01:46
+[10/16 07:53:44 d2.evaluation.evaluator]: Inference done 273/400. Dataloading: 0.0026 s/iter. Inference: 0.6728 s/iter. Eval: 0.1231 s/iter. Total: 0.7986 s/iter. ETA=0:01:41
+[10/16 07:53:49 d2.evaluation.evaluator]: Inference done 280/400. Dataloading: 0.0026 s/iter. Inference: 0.6729 s/iter. Eval: 0.1232 s/iter. Total: 0.7988 s/iter. ETA=0:01:35
+[10/16 07:53:55 d2.evaluation.evaluator]: Inference done 287/400. Dataloading: 0.0026 s/iter. Inference: 0.6730 s/iter. Eval: 0.1230 s/iter. Total: 0.7986 s/iter. ETA=0:01:30
+[10/16 07:54:01 d2.evaluation.evaluator]: Inference done 294/400. Dataloading: 0.0026 s/iter. Inference: 0.6734 s/iter. Eval: 0.1231 s/iter. Total: 0.7991 s/iter. ETA=0:01:24
+[CT-CMT-MTL] iter=1500 score_em=0.692 n_pseudo=8 thr=0.756/0.842/0.900 segaug=1489/1500 lam=1.00 route=resnet det/loss_rpn_cls=0.146 det/loss_rpn_loc=0.110 det/loss_cls=0.278 det/loss_box_reg=0.297 seg/soft_ce=0.905 seg/anchor_marginal=0.040 ctcr=0.171
+[CT-CMT-GRAD] iter=1500 mode=resnet_route cos=0.1268 cos_mean=0.1278 conflict_rate=0.1392 applied_rate=1.0000 g_det=6.18695 g_aux=4.38144 g_aux_proj=nan g_det_R=5.51024 g_aux_R=3.68063 g_aux_R_applied=3.68063 g_det_FPN=2.81347 g_aux_FPN=2.37696 g_aux_FPN_applied=2.37696 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=1157
+[10/16 07:54:06 d2.evaluation.evaluator]: Inference done 301/400. Dataloading: 0.0026 s/iter. Inference: 0.6738 s/iter. Eval: 0.1229 s/iter. Total: 0.7994 s/iter. ETA=0:01:19
+[10/16 07:54:12 d2.evaluation.evaluator]: Inference done 308/400. Dataloading: 0.0026 s/iter. Inference: 0.6731 s/iter. Eval: 0.1228 s/iter. Total: 0.7986 s/iter. ETA=0:01:13
+[10/16 07:54:17 d2.evaluation.evaluator]: Inference done 315/400. Dataloading: 0.0026 s/iter. Inference: 0.6732 s/iter. Eval: 0.1228 s/iter. Total: 0.7987 s/iter. ETA=0:01:07
+[10/16 07:54:23 d2.evaluation.evaluator]: Inference done 322/400. Dataloading: 0.0026 s/iter. Inference: 0.6732 s/iter. Eval: 0.1227 s/iter. Total: 0.7986 s/iter. ETA=0:01:02
+[10/16 07:54:28 d2.evaluation.evaluator]: Inference done 329/400. Dataloading: 0.0026 s/iter. Inference: 0.6729 s/iter. Eval: 0.1225 s/iter. Total: 0.7982 s/iter. ETA=0:00:56
+[10/16 07:54:34 d2.evaluation.evaluator]: Inference done 336/400. Dataloading: 0.0026 s/iter. Inference: 0.6733 s/iter. Eval: 0.1224 s/iter. Total: 0.7984 s/iter. ETA=0:00:51
+[10/16 07:54:40 d2.evaluation.evaluator]: Inference done 343/400. Dataloading: 0.0026 s/iter. Inference: 0.6733 s/iter. Eval: 0.1229 s/iter. Total: 0.7989 s/iter. ETA=0:00:45
+[10/16 07:54:45 d2.evaluation.evaluator]: Inference done 349/400. Dataloading: 0.0026 s/iter. Inference: 0.6736 s/iter. Eval: 0.1233 s/iter. Total: 0.7996 s/iter. ETA=0:00:40
+[CT-CMT-MTL] iter=1550 score_em=0.580 n_pseudo=4 thr=0.730/0.850/0.900 segaug=1539/1550 lam=1.00 route=resnet det/loss_rpn_cls=0.102 det/loss_rpn_loc=0.026 det/loss_cls=0.132 det/loss_box_reg=0.095 seg/soft_ce=0.844 seg/anchor_marginal=0.009 ctcr=0.173
+[CT-CMT-GRAD] iter=1550 mode=resnet_route cos=0.1191 cos_mean=0.1285 conflict_rate=0.1368 applied_rate=1.0000 g_det=5.11528 g_aux=5.59951 g_aux_proj=nan g_det_R=4.74397 g_aux_R=4.92262 g_aux_R_applied=4.92262 g_det_FPN=1.91332 g_aux_FPN=2.66878 g_aux_FPN_applied=2.66878 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=1199
+[10/16 07:54:50 d2.evaluation.evaluator]: Inference done 356/400. Dataloading: 0.0026 s/iter. Inference: 0.6737 s/iter. Eval: 0.1233 s/iter. Total: 0.7997 s/iter. ETA=0:00:35
+[10/16 07:54:56 d2.evaluation.evaluator]: Inference done 363/400. Dataloading: 0.0026 s/iter. Inference: 0.6737 s/iter. Eval: 0.1231 s/iter. Total: 0.7995 s/iter. ETA=0:00:29
+[10/16 07:55:01 d2.evaluation.evaluator]: Inference done 370/400. Dataloading: 0.0026 s/iter. Inference: 0.6735 s/iter. Eval: 0.1230 s/iter. Total: 0.7991 s/iter. ETA=0:00:23
+[10/16 07:55:07 d2.evaluation.evaluator]: Inference done 377/400. Dataloading: 0.0026 s/iter. Inference: 0.6738 s/iter. Eval: 0.1227 s/iter. Total: 0.7991 s/iter. ETA=0:00:18
+[10/16 07:55:13 d2.evaluation.evaluator]: Inference done 384/400. Dataloading: 0.0026 s/iter. Inference: 0.6737 s/iter. Eval: 0.1226 s/iter. Total: 0.7990 s/iter. ETA=0:00:12
+[10/16 07:55:18 d2.evaluation.evaluator]: Inference done 391/400. Dataloading: 0.0026 s/iter. Inference: 0.6732 s/iter. Eval: 0.1224 s/iter. Total: 0.7983 s/iter. ETA=0:00:07
+[10/16 07:55:23 d2.evaluation.evaluator]: Inference done 398/400. Dataloading: 0.0026 s/iter. Inference: 0.6726 s/iter. Eval: 0.1222 s/iter. Total: 0.7975 s/iter. ETA=0:00:01
+[CT-CMT-MTL] iter=1600 score_em=0.617 n_pseudo=6 thr=0.756/0.840/0.897 segaug=1589/1600 lam=1.00 route=resnet det/loss_rpn_cls=0.052 det/loss_rpn_loc=0.035 det/loss_cls=0.259 det/loss_box_reg=0.231 seg/soft_ce=0.639 seg/anchor_marginal=0.011 ctcr=0.211
+[CT-CMT-GRAD] iter=1600 mode=resnet_route cos=0.1827 cos_mean=0.1269 conflict_rate=0.1382 applied_rate=1.0000 g_det=9.65513 g_aux=14.23404 g_aux_proj=nan g_det_R=9.08588 g_aux_R=13.52119 g_aux_R_applied=13.52119 g_det_FPN=3.26625 g_aux_FPN=4.44808 g_aux_FPN_applied=4.44808 gamma=nan gamma_mean=0.0000 w_det=nan w_det_mean=0.0000 fallbacks=0 n_steps=1237
+[10/16 07:55:25 d2.evaluation.evaluator]: Total inference time: 0:05:14.967734 (0.797387 s / iter per device, on 1 devices)
+[10/16 07:55:25 d2.evaluation.evaluator]: Total inference pure compute time: 0:04:25 (0.672467 s / iter per device, on 1 devices)
+[10/16 07:55:25 d2.evaluation.sem_seg_evaluation]: OrderedDict([('sem_seg', {'mIoU': 40.73800885316028, 'fwIoU': 68.23682370206893, 'IoU-road': 59.545758074424484, 'BoundaryIoU-road': 69.84194394432227, 'min(IoU, B-Iou)-road': 59.545758074424484, 'IoU-sidewalk': 30.38856227197218, 'BoundaryIoU-sidewalk': 19.324179390551553, 'min(IoU, B-Iou)-sidewalk': 19.324179390551553, 'IoU-building': 72.60913239031659, 'BoundaryIoU-building': 35.17214284017132, 'min(IoU, B-Iou)-building': 35.17214284017132, 'IoU-wall': 15.531762300887067, 'BoundaryIoU-wall': 17.615876992256652, 'min(IoU, B-Iou)-wall': 15.531762300887067, 'IoU-fence': 25.812436727052145, 'BoundaryIoU-fence': 9.69973172346646, 'min(IoU, B-Iou)-fence': 9.69973172346646, 'IoU-pole': 37.8365128245045, 'BoundaryIoU-pole': 19.373148372313853, 'min(IoU, B-Iou)-pole': 19.373148372313853, 'IoU-traffic light': 44.790623419214874, 'BoundaryIoU-traffic light': 31.628291495760596, 'min(IoU, B-Iou)-traffic light': 31.628291495760596, 'IoU-traffic sign': 50.019470942799835, 'BoundaryIoU-traffic sign': 12.979589887246961, 'min(IoU, B-Iou)-traffic sign': 12.979589887246961, 'IoU-vegetation': 72.84758066764543, 'BoundaryIoU-vegetation': 35.988838254026014, 'min(IoU, B-Iou)-vegetation': 35.988838254026014, 'IoU-terrain': 0.6069175310114926, 'BoundaryIoU-terrain': 4.2719245403177375, 'min(IoU, B-Iou)-terrain': 0.6069175310114926, 'IoU-sky': 82.75018114840512, 'BoundaryIoU-sky': 50.9778834287055, 'min(IoU, B-Iou)-sky': 50.9778834287055, 'IoU-person': 46.27854580391782, 'BoundaryIoU-person': 32.54785815686543, 'min(IoU, B-Iou)-person': 32.54785815686543, 'IoU-rider': 32.682541217149975, 'BoundaryIoU-rider': 11.830655781570538, 'min(IoU, B-Iou)-rider': 11.830655781570538, 'IoU-car': 74.64697104388829, 'BoundaryIoU-car': 0.0, 'min(IoU, B-Iou)-car': 0.0, 'IoU-truck': 18.770867217647073, 'BoundaryIoU-truck': 0.0, 'min(IoU, B-Iou)-truck': 0.0, 'IoU-bus': 9.96542621933592, 'BoundaryIoU-bus': 0.0, 'min(IoU, B-Iou)-bus': 0.0, 'IoU-train': 48.91467747339172, 'BoundaryIoU-train': 0.0, 'min(IoU, B-Iou)-train': 0.0, 'IoU-motorcycle': 11.73841707456047, 'BoundaryIoU-motorcycle': 0.0, 'min(IoU, B-Iou)-motorcycle': 0.0, 'IoU-bicycle': 38.28578386192036, 'BoundaryIoU-bicycle': 0.0, 'min(IoU, B-Iou)-bicycle': 0.0, 'mACC': 53.85656610631246, 'pACC': 79.92417879049515, 'ACC-road': 92.79465336672696, 'ACC-sidewalk': 44.0607816988866, 'ACC-building': 91.03108723893756, 'ACC-wall': 20.811204725040227, 'ACC-fence': 30.512964860817583, 'ACC-pole': 50.04204353769565, 'ACC-traffic light': 47.143703256375716, 'ACC-traffic sign': 65.15041956635991, 'ACC-vegetation': 77.02355196521657, 'ACC-terrain': 0.6539635563524007, 'ACC-sky': 83.55922782729047, 'ACC-person': 77.54506186242165, 'ACC-rider': 61.69602885761216, 'ACC-car': 89.31647364114113, 'ACC-truck': 26.304264125517374, 'ACC-bus': 13.328860426640615, 'ACC-train': 61.05817030526415, 'ACC-motorcycle': 22.796690953450703, 'ACC-bicycle': 68.44560424818901})])
+[10/16 07:55:25 d2.evaluation.coco_evaluation]: Preparing results for COCO format ...
+[10/16 07:55:25 d2.evaluation.coco_evaluation]: Saving results to /workspace/output/ctta_acdc/paper26_preupd_acdc4_ctcmt_s123/inference/coco_instances_results.json
+[10/16 07:55:25 d2.evaluation.coco_evaluation]: Evaluating predictions with unofficial COCO API...
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+[10/16 07:55:25 d2.evaluation.fast_eval_api]: Evaluate annotation type *bbox*
+[10/16 07:55:25 d2.evaluation.fast_eval_api]: COCOeval_opt.evaluate() finished in 0.06 seconds.
+[10/16 07:55:25 d2.evaluation.fast_eval_api]: Accumulating evaluation results...
+[10/16 07:55:25 d2.evaluation.fast_eval_api]: COCOeval_opt.accumulate() finished in 0.02 seconds.
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.246
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.417
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.259
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.141
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.263
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.393
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.214
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.326
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.329
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.195
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.343
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.475
+[10/16 07:55:25 d2.evaluation.coco_evaluation]: Evaluation results for bbox: 
+|   AP   |  AP50  |  AP75  |  APs   |  APm   |  APl   |
+|:------:|:------:|:------:|:------:|:------:|:------:|
+| 24.615 | 41.711 | 25.877 | 14.136 | 26.346 | 39.251 |
+[10/16 07:55:25 d2.evaluation.coco_evaluation]: Per-category bbox AP: 
+| category   | AP     | category   | AP     | category   | AP     |
+|:-----------|:-------|:-----------|:-------|:-----------|:-------|
+| person     | 36.968 | rider      | 22.184 | car        | 58.500 |
+| truck      | 15.825 | bus        | 19.439 | train      | 19.539 |
+| motorcycle | 5.862  | bicycle    | 18.604 |            |        |
+Loading and preparing results...
+DONE (t=0.03s)
+creating index...
+index created!
+[10/16 07:55:25 d2.evaluation.fast_eval_api]: Evaluate annotation type *segm*
+[10/16 07:55:25 d2.evaluation.fast_eval_api]: COCOeval_opt.evaluate() finished in 0.14 seconds.
+[10/16 07:55:25 d2.evaluation.fast_eval_api]: Accumulating evaluation results...
+[10/16 07:55:25 d2.evaluation.fast_eval_api]: COCOeval_opt.accumulate() finished in 0.02 seconds.
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.226
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.406
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.222
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.109
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.238
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.382
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.197
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.293
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.296
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.175
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.298
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.416
+[10/16 07:55:25 d2.evaluation.coco_evaluation]: Evaluation results for segm: 
+|   AP   |  AP50  |  AP75  |  APs   |  APm   |  APl   |
+|:------:|:------:|:------:|:------:|:------:|:------:|
+| 22.570 | 40.629 | 22.156 | 10.870 | 23.841 | 38.225 |
+[10/16 07:55:25 d2.evaluation.coco_evaluation]: Per-category segm AP: 
+| category   | AP     | category   | AP     | category   | AP     |
+|:-----------|:-------|:-----------|:-------|:-----------|:-------|
+| person     | 33.681 | rider      | 15.874 | car        | 53.280 |
+| truck      | 16.543 | bus        | 20.177 | train      | 25.105 |
+| motorcycle | 5.529  | bicycle    | 10.373 |            |        |
+[10/16 07:55:25 d2.engine.defaults]: Evaluation results for acdc_snow_mtl in csv format:
+[10/16 07:55:25 d2.evaluation.testing]: copypaste: Task: sem_seg
+[10/16 07:55:25 d2.evaluation.testing]: copypaste: mIoU,fwIoU,mACC,pACC
+[10/16 07:55:25 d2.evaluation.testing]: copypaste: 40.7380,68.2368,53.8566,79.9242
+[10/16 07:55:25 d2.evaluation.testing]: copypaste: Task: bbox
+[10/16 07:55:25 d2.evaluation.testing]: copypaste: AP,AP50,AP75,APs,APm,APl
+[10/16 07:55:25 d2.evaluation.testing]: copypaste: 24.6148,41.7114,25.8770,14.1362,26.3460,39.2510
+[10/16 07:55:25 d2.evaluation.testing]: copypaste: Task: segm
+[10/16 07:55:25 d2.evaluation.testing]: copypaste: AP,AP50,AP75,APs,APm,APl
+[10/16 07:55:25 d2.evaluation.testing]: copypaste: 22.5702,40.6286,22.1560,10.8697,23.8408,38.2245

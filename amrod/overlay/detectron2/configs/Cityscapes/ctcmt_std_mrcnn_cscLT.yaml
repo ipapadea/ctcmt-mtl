@@ -1,0 +1,89 @@
+# ST-D --- true detection specialist under our detection CTTA.
+#
+# SPECIALIST / SOURCE-MODEL STUDY. This changes the source checkpoint, so it is
+# NOT same-source with E13a/E15/E21 and must never appear in the main ablation
+# table. What it isolates versus E15 is the source model + architecture:
+#   E15  = det-only adaptation on the Panoptic-FPN MTL checkpoint
+#   ST-D = det-only adaptation on a Mask R-CNN R50-FPN specialist checkpoint
+#
+# Every SOLVER value below is copied verbatim from E15's resolved config so the
+# only differences are CTCMT_STUDENT_META_ARCH, MODEL.WEIGHTS and the stream.
+# Verified by scripts/verify_specialist_configs.py.
+#
+# Bonus: amrod_mask_rcnn_R_50_CS_C.yaml uses the same checkpoint, giving a
+# genuine same-source head-to-head against AMROD on its native architecture.
+_BASE_: "./mask_rcnn_R_50_FPN_singletask.yaml"
+
+MODEL:
+  META_ARCHITECTURE: "CTCMT_MTL"
+  CTCMT_STUDENT_META_ARCH: "GeneralizedRCNN"
+  WEIGHTS: "/workspace/output/mask_rcnn_R50_cityscapes/model_final.pth"
+  MASK_ON: True
+
+DATASETS:
+  TRAIN: ("cityscapes_fine_instance_seg_train",)
+  # Detection-only dataset names: a Mask R-CNN emits no sem_seg, so the MTL
+  # variants would attach a sem_seg evaluator with nothing to evaluate.
+  TEST: ("fog", "motion_blur", "snow", "brightness", "defocus_blur")
+
+SOLVER:
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.001
+  WEIGHT_DECAY: 0.0001
+  STEPS: (50000,)
+  MAX_ITER: 70000
+  WARMUP_ITERS: 0
+
+  # --- mean teacher + restoration
+  MT: 0.9998
+  RST_M: 0.01
+  CTCMT_CROSS_TASK_FISHER: True
+  CTCMT_BACKBONE_RST_FACTOR: 0.1
+  CTCMT_FISHER_RESTORE: False
+
+  # --- AMROD dynamic thresholds + score-EMA gate
+  THRESHOLD_INIT: 0.80
+  THRESHOLD_MAX: 0.80
+  THRESHOLD_MINI: 0.7
+  ALPHA_DT: 1.3
+  GAMMA_DT: 0.95
+  SCORE_EM: 0.5
+  SCORE_GAMMA: 0.7
+  SCORE_THRESH: 1.4
+
+  # --- loss weights (seg/cross-task terms are inert under DET_ONLY, but are
+  #     kept identical to E15 so the configs differ in nothing but the source)
+  CTCMT_WEIGHT_DET: 1.0
+  CTCMT_WEIGHT_SEG: 1.0
+  CTCMT_WEIGHT_CTCL: 0.5
+  CTCMT_WEIGHT_CTCR: 0.3
+  CTCMT_CTCR_MODE: "soft_seg_global"
+  CTCMT_CTCR_WEIGHT_FLOOR: 0.2
+  CTCMT_CTCR_MASK_THRESH: 0.3
+  CTCMT_CTCL_ENABLED: True
+  CTCMT_CTCL_SEG_VIEW: True
+  CTCMT_CTCL_TEMPERATURE: 0.07
+  CTCMT_CTCL_PROJ_DIM: 128
+
+  # --- segmentation-side machinery (inert here, identical to E15)
+  CTCMT_CLASS_BALANCED_CE: True
+  CTCMT_CLASS_BALANCE_BETA: 0.5
+  CTCMT_CLASS_MARGINAL_EMA: 0.999
+  CTCMT_SEG_LOSS_SCALE_PRESERVE: True
+  CTCMT_ANCHOR_MARGINAL_WEIGHT: 0.1
+  CTCMT_SEG_AUG_ENABLED: True
+  CTCMT_SEG_AUG_CONF_THRESH: 0.95
+  CTCMT_SEG_AUG_SCALES: (0.75, 1.0, 1.25)
+  CTCMT_SEG_AUG_FLIPS: (False, True)
+
+  # --- student sees the strong view, teacher the weak one
+  CTCMT_STRONG_AUG_STUDENT: True
+
+  # --- single-task switches
+  CTCMT_DET_ONLY: True
+  CTCMT_SEG_ONLY: False
+  CTCMT_CTPV_ENABLED: False
+  CTCMT_PROTO_ANCHOR: False
+  CTCMT_CONFLICT_MODE: "none"
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/std_mrcnn"

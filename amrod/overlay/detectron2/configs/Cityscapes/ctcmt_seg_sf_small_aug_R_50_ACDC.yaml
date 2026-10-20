@@ -1,0 +1,11 @@
+# Milder aug (3 scales x 2 flips = 6 views): less noisy teacher on night.
+_BASE_: "./ctcmt_seg_semfpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_SEG_AUG_ENABLED: True
+  CTCMT_SEG_AUG_CONF_THRESH: 0.95
+  CTCMT_SEG_AUG_SCALES: (0.75, 1.0, 1.25)
+  CTCMT_SEG_AUG_FLIPS: (False, True)
+  CTCMT_SEG_PROTO_CONF_THRESH: 0.95
+
+OUTPUT_DIR: "/workspace/output/ctcmt_seg_sf_small_aug_R50_C2ACDC"

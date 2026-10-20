@@ -1,0 +1,18 @@
+# E32 --- DIAGNOSTIC ONLY. Not a paper row.
+#
+# The ACDC counterpart of E30: E11 (the ACDC full-MTL recipe, THRESHOLD_MAX
+# 0.90) + AMROD's Randomized Restoration. ONE factor from E11.
+#
+# Why ACDC matters here: the Cityscapes-C evidence for restoration comes from a
+# stream where segmentation drifts badly (E13a -5.16 mIoU). ACDC drifts far
+# less, so if the gain is genuinely a drift fix it should be SMALL here. A
+# large gain on ACDC would instead mean the rule is doing something other than
+# what we think, and would undercut the drift explanation.
+#
+# The restoration rule is AMROD's and must never be reported as ours.
+_BASE_: "./ctcmt_e11_bothsc_ctcrD.yaml"
+
+SOLVER:
+  CTCMT_FISHER_RESTORE: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e32_fisher_full_acdc"

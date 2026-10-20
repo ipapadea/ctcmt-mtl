@@ -1,0 +1,4 @@
+# CTCMT_MTL+V2 (full method). Seed 0 for variance estimation.
+_BASE_: "./ctcmt_v2_cross_fisher_pfn_R_50_ACDC.yaml"
+SEED: 0
+OUTPUT_DIR: "/workspace/output/ctcmt_v2_seed0"

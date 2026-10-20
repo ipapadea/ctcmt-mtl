@@ -1,0 +1,6 @@
+_BASE_: "./ctaod_pfn_R_50_ACDC.yaml"
+
+MODEL:
+  WEIGHTS: "/workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth"
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/newsrc_ctaod_acdc"

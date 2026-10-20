@@ -1,0 +1,16 @@
+# A2 — V2 + per-box full-box CT-CR + CTPV OFF.
+#
+# Controlled aggregation ablation:
+# - same full rectangular bbox supervision assumption as legacy A
+# - no semantic support mask / no q(i) weighting
+# - same per-box CE normalization + equal box averaging as B/C
+_BASE_: "./ctcmt_v2_cross_fisher_pfn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_CTPV_ENABLED: False
+  CTCMT_WEIGHT_CTCR: 0.3
+  CTCMT_CTCR_MODE: "per_box_full"
+  CTCMT_CTCR_MASK_THRESH: 0.3
+  CTCMT_CTCR_WEIGHT_FLOOR: 0.2
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/ctcr_A2_v2_perbox_full_no_ctpv"

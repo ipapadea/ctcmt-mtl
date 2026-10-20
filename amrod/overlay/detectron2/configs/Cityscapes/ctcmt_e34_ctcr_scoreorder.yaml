@@ -1,0 +1,18 @@
+# E34 --- CT-CR: the highest-scoring detection wins a box overlap.
+#
+# CT-CR builds its target map one box at a time and later boxes overwrite
+# earlier ones. Detectron2 returns detections score-DESCENDING, so today the
+# LOWEST-scoring overlapping box wins every contested pixel. This is a defect,
+# not a design choice.
+#
+# The 2026-09-21 prior diagnostics also show why it matters: box purity against
+# semantic GT rises 0.36 -> 0.74 from detector score 0.7 to 0.9, so the box
+# currently being overwritten is the reliable one.
+#
+# ONE factor vs E13a.
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_CTCR_SCORE_ORDER: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e34_ctcr_scoreorder"

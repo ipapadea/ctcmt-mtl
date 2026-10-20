@@ -1,0 +1,4 @@
+# Table 4 ablation: MTL no-CL no-V2. Seed 42 for variance estimation.
+_BASE_: "./ctcmt_mtl_no_ctcl_pfn_R_50_ACDC.yaml"
+SEED: 42
+OUTPUT_DIR: "/workspace/output/ctcmt_mtl_no_ctcl_seed42"

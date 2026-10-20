@@ -1,0 +1,10 @@
+# E10-3 — both class-collapse countermeasures together.
+_BASE_: "./ctcmt_e9_strongaug.yaml"
+
+SOLVER:
+  CTCMT_CLASS_BALANCED_CE: True
+  CTCMT_CLASS_BALANCE_BETA: 0.5
+  CTCMT_CLASS_MARGINAL_EMA: 0.999
+  CTCMT_ANCHOR_MARGINAL_WEIGHT: 0.1
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e10_both"

@@ -1,0 +1,4 @@
+# e4b_dir_gate_boost15 seed 0.
+_BASE_: "./ctcmt_e4b_dir_gate_boost15_pfn_R_50_ACDC.yaml"
+SEED: 0
+OUTPUT_DIR: "/workspace/output/ctcmt_e4b_dir_gate_boost15_seed0"

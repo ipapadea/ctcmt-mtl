@@ -1,0 +1,25 @@
+# E23 --- clean DET x SEG factorial control: no cross-task losses.
+#
+# E13a runs CT-CL and CT-CR alongside detection and segmentation, so its -2.00
+# AP50 / -4.68 mIoU interaction versus E15 could come from the cross-task terms
+# rather than from the ordinary det/seg interaction. This arm removes that
+# ambiguity: detection and segmentation soft-CE both backpropagate normally
+# through the shared backbone/FPN, nothing is detached, nothing is routed.
+#
+#     ∇shared = ∇shared L_det + ∇shared L_seg
+#
+# Read against E13a (cross-task ON), E15 (det-only) and E21 (seg-only):
+#   E23 ≈ E13a  -> the cross-task losses are innocent, the det/seg interaction
+#                  alone explains the negative transfer
+#   E23 ≈ E15   -> CT-CL/CT-CR carry the damage and the seg soft-CE is innocent
+#
+# Note: seg/anchor_marginal and class-balanced CE stay ON. They are
+# segmentation-internal regularizers, not cross-task terms, and dropping them
+# too would make this differ from E13a in more than the intended factor.
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_CTCL_ENABLED: False
+  CTCMT_WEIGHT_CTCR: 0.0
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e23_detseg_nocross"

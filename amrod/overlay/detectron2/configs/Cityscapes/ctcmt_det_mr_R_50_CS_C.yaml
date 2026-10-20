@@ -1,0 +1,8 @@
+# CT-CMT-Det on Mask R-CNN source — Cityscapes-to-Cityscapes-C.
+# Same source model as AMROD (mask_rcnn_R50_cityscapes) for a fair comparison.
+_BASE_: "./ctcmt_det_mr_R_50_ACDC.yaml"
+
+DATASETS:
+  TEST: ("defocus_blur","glass_blur","motion_blur","zoom_blur","snow","frost","fog","brightness","contrast","elastic_transform","pixelate","jpeg_compression")
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/ctcmt_det_mr_cs_c"

@@ -1,0 +1,6 @@
+# Loopback variant of ctcmt_e1_ctpv_pfn_R_50_ACDC.yaml — appends cityscapes val as the 5th test domain
+# to measure Forgetting = mAP_Source - mAP_Loopback (Moraiti et al. EJAI 2026 convention).
+_BASE_: "./ctcmt_e1_ctpv_pfn_R_50_ACDC.yaml"
+DATASETS:
+  TEST: ("acdc_fog_mtl", "acdc_night_mtl", "acdc_rain_mtl", "acdc_snow_mtl", "cityscapes_val_mtl")
+OUTPUT_DIR: "/workspace/output/ctcmt_loopback_v2_ctpv"

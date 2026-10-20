@@ -1,0 +1,10 @@
+# Ablation: CTCMT_MTL without any contrastive contribution.
+# Same MTL adapter (det + seg losses), CT-CL and CT-CR disabled.
+# Isolates "vanilla MTL soft-CE" performance from our cross-task terms.
+_BASE_: "./ctcmt_mtl_panoptic_fpn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_CTCL_ENABLED: False
+  CTCMT_WEIGHT_CTCR: 0.0
+
+OUTPUT_DIR: "/workspace/output/ctcmt_mtl_no_ctcl_pfn_R50_C2ACDC"

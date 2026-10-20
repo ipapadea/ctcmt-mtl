@@ -1,0 +1,25 @@
+# Diagnostic-only --- gates the detector-dominant CT-CR redesign.
+#
+# Measures two things that decide whether redesigning CT-CR can matter at all:
+#
+#   1. Each auxiliary objective's share of the SHARED-TRUNK gradient
+#      (gnorm_seg / gnorm_ctcl / gnorm_ctcr vs gnorm_det). If CT-CR's share is
+#      negligible against the weight-1.0 seg soft-CE, no CT-CR reweighting can
+#      move the result and the effort belongs on the segmentation loss instead.
+#
+#   2. How well each candidate CT-CR spatial prior covers the semantic GT inside
+#      a pseudo-box: rectangle (mode A) vs teacher semantic posterior (modes
+#      B/C/D) vs the teacher mask head (detector-derived, currently discarded).
+#      Driven by CTCMT_DIAG_JSONL + CTCMT_MASK_DIAG_GT_ROOT.
+#
+# Adaptation behaviour is E13a's. CTCMT_GRAD_DIAG is logging-only, but on the
+# 1-in-GRAD_DIAG_EVERY steps it reaches the same update through separate
+# backward passes rather than one joint backward, so those steps are
+# numerically (not mathematically) different. Diagnostic runs only.
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_GRAD_DIAG: True
+  CTCMT_GRAD_DIAG_EVERY: 10
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/diag_ctcr_priors"

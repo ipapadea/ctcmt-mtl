@@ -1,0 +1,15 @@
+experiment=paper26_preupd_acdc4_base_s0
+protocol=acdc4
+variant=base
+seed=0
+gpu=0
+config=detectron2/configs/Cityscapes/newsrc_acdc_base.yaml
+predict_before_update=True
+git_sha=a58ba2fd47532e1e2839e8017a0203dc847a3c72
+git_dirty=5
+expected_evals=4
+start_time=2026-10-16T09:34:29+03:00
+end_time=2026-10-16T09:54:00+03:00
+exit_code=0
+eval_count=4
+status=COMPLETE

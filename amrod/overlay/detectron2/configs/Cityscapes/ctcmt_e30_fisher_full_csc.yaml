@@ -1,0 +1,25 @@
+# E30 --- DIAGNOSTIC ONLY. Not a paper row.
+#
+# E13a (the current Cityscapes-C full-MTL recipe) + AMROD's gradient-magnitude
+# "Randomized Restoration" (Wei et al.). ONE factor from E13a.
+#
+# Why: E12 showed that substituting this rule for uniform random restore on the
+# older E10 recipe costs nothing on detection (24.00 vs 23.99 AP50) while
+# lifting mIoU 31.00 -> 32.74 and halving segmentation drift (-5.09 -> -2.19).
+# The per-round delta grows monotonically (+0.9 at R1 to +3.6 at R10), which is
+# the signature of a drift fix rather than a level shift. This tests whether
+# that effect survives on top of CT-CR mode D and THRESHOLD_MAX 0.80.
+#
+# NOTE ON THE MECHANISM. Because `fisher` is taken from p.grad *after*
+# _backward_and_combine, the importance measure here is (g_det + g_seg)^2, not
+# the block-additive g_det^2 + g_seg^2. The cross term means parameters where
+# the two tasks disagree are scored as unimportant and get restored, i.e. this
+# is implicitly conflict-driven restoration. Quantifying that is the point.
+#
+# The restoration rule is AMROD's and must never be reported as ours.
+_BASE_: "./ctcmt_e13a_thrmax080.yaml"
+
+SOLVER:
+  CTCMT_FISHER_RESTORE: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e30_fisher_full_csc"

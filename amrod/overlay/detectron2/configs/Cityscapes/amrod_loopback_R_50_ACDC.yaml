@@ -1,0 +1,7 @@
+# Loopback variant of amrod_mask_rcnn_R_50_ACDC.yaml — appends cityscapes val as
+# the 5th test domain to measure Forgetting = mAP_Source - mAP_Loopback
+# (Moraiti et al. EJAI 2026 convention).
+_BASE_: "./amrod_mask_rcnn_R_50_ACDC.yaml"
+DATASETS:
+  TEST: ("acdc_fog", "acdc_night", "acdc_rain", "acdc_snow", "cityscapes_fine_instance_seg_val")
+OUTPUT_DIR: "/workspace/output/amrod_loopback_R50_C2ACDC"

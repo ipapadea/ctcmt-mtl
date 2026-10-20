@@ -1,0 +1,43 @@
+# MT + object-level CL + SR (Moraiti et al., EJAI 2025) --- same-source port onto the
+# Panoptic-FPN R50 detection branch. Single-task (detection only): no semantic branch.
+# Hyper-parameters are the paper's Sec. 4.2 values (Cityscapes row); see TEST.MTCLSR in
+# detectron2/config/defaults.py. Not tuned for this source model.
+_BASE_: "./mask_rcnn_R_50_FPN_singletask.yaml"
+MODEL:
+  META_ARCHITECTURE: "MTCLSR"
+  WEIGHTS: "/workspace/output/panoptic_fpn_R50_cityscapes_segw1/model_final.pth"
+  MASK_ON: False
+  RESNETS:
+    NORM: "FrozenBN"
+
+INPUT:
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 2048
+
+DATASETS:
+  TRAIN: ("cityscapes_fine_instance_seg_train",)
+  TEST: ("acdc_fog", "acdc_night", "acdc_rain", "acdc_snow")
+
+SOLVER:
+  # Paper: SGD, lr 0.00025, momentum 0.9, weight decay 0.0005 (Nesterov in the code).
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.00025
+  MOMENTUM: 0.9
+  NESTEROV: True
+  WEIGHT_DECAY: 0.0005
+
+TEST:
+  MTCLSR:
+    STEPS: 5
+    VIEWS: 2
+    EMA_ALPHA: 0.99965
+    RESTORE_PROB: 0.01
+    W_CONSISTENCY: 0.005
+    W_CONTRASTIVE: 0.003
+    TEMPERATURE: 0.07
+    PSEUDO_SCORE_THR: 0.7
+    PSEUDO_NMS_IOU: 0.7
+    FEATURE_LEVELS: ("p3", "p4", "p5")
+    PREDICT: "last_step"
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/mtclsr_pfn_R50_C2ACDC"

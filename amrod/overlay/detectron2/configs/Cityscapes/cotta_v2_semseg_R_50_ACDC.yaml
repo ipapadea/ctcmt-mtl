@@ -1,0 +1,8 @@
+# CoTTA + V2: backbone-protected restore on Semantic FPN source.
+_BASE_: "./cotta_semseg_R_50_ACDC.yaml"
+
+SOLVER:
+  # V2: backbone params restored 10x less frequently.
+  CTCMT_BACKBONE_RST_FACTOR: 0.1
+
+OUTPUT_DIR: "/workspace/output/cotta_v2_semseg_R50_C2ACDC"

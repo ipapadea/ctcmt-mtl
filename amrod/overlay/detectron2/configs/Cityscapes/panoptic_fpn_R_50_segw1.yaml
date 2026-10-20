@@ -1,0 +1,45 @@
+# Source retraining --- Panoptic FPN R-50 with the semantic loss at full weight.
+#
+# ONE factor vs ./panoptic_fpn_R_50.yaml, the checkpoint every same-source table
+# is anchored to: MODEL.SEM_SEG_HEAD.LOSS_WEIGHT 0.5 -> 1.0.
+#
+# That 0.5 is Detectron2's inherited COCO Panoptic-FPN default, so the existing
+# MTL source was trained with segmentation down-weighted 2x relative to the
+# Semantic-FPN specialist (./semantic_R_50_FPN_singletask.yaml uses 1.0), which
+# is otherwise matched on init, schedule, batch size and input scales and scores
+# 71.75 mIoU against the MTL branch's 69.24. SEM_SEG_HEAD.LOSS_WEIGHT multiplies
+# loss_sem_seg only and PANOPTIC_FPN.INSTANCE_LOSS_WEIGHT stays 1.0, so the RPN,
+# box and mask losses are untouched.
+#
+# The first LR decay stays at 36k, exactly where the 48k run had it, so
+# model_0047999.pth sees an identical LR trajectory to the existing source model
+# and is a like-for-like comparison point. The second decay and the extra 12k
+# iterations exist only beyond it.
+_BASE_: "./panoptic_fpn_R_50.yaml"
+
+MODEL:
+  SEM_SEG_HEAD:
+    LOSS_WEIGHT: 1.0
+
+DATASETS:
+  TRAIN: ("cityscapes_fine_mtl_train",)
+  # EvalHook.after_train fires regardless of EVAL_PERIOD, and
+  # cityscapes_fine_mtl_val resolves to CityscapesInstanceEvaluator, which
+  # reports neither bbox AP nor mIoU. Evaluate checkpoints offline instead, with
+  # the same path that produced the source-only rows in results.md.
+  TEST: ()
+
+SOLVER:
+  IMS_PER_BATCH: 4
+  BASE_LR: 0.005
+  STEPS: (36000, 52000)
+  MAX_ITER: 60000
+  # No max_to_keep, so every checkpoint is retained.
+  # model_0047999.pth = 48k steps = the comparison point against the old source.
+  CHECKPOINT_PERIOD: 4000
+  WARMUP_ITERS: 1000
+
+TEST:
+  EVAL_PERIOD: 0
+
+OUTPUT_DIR: "/workspace/output/panoptic_fpn_R50_cityscapes_segw1"

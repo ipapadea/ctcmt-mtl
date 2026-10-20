@@ -1,0 +1,8 @@
+# AMROD on Cityscapes-C using the OFFICIAL AMROD source weights (cityscapes_train_final.pth).
+# This should replicate Table 2 in the AMROD paper exactly.
+_BASE_: "./amrod_mask_rcnn_R_50_CS_C.yaml"
+
+MODEL:
+  WEIGHTS: "/workspace/weights/cityscapes_train_final.pth"
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/amrod_official_cs_c"

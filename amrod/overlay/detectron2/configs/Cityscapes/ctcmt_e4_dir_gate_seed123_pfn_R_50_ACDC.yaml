@@ -1,0 +1,4 @@
+# e4_dir_gate seed 123.
+_BASE_: "./ctcmt_e4_dir_gate_pfn_R_50_ACDC.yaml"
+SEED: 123
+OUTPUT_DIR: "/workspace/output/ctcmt_e4_dir_gate_seed123"

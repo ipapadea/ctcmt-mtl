@@ -1,0 +1,12 @@
+# C — V2 + soft semantic-weighted CT-CR + CTPV OFF.
+# w(i) = alpha + (1-alpha) * P_T^seg(mapped_class | i), alpha=0.2
+_BASE_: "./ctcmt_v2_cross_fisher_pfn_R_50_ACDC.yaml"
+
+SOLVER:
+  CTCMT_CTPV_ENABLED: False
+  CTCMT_WEIGHT_CTCR: 0.3
+  CTCMT_CTCR_MODE: "soft_seg"
+  CTCMT_CTCR_MASK_THRESH: 0.3
+  CTCMT_CTCR_WEIGHT_FLOOR: 0.2
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/ctcr_C_v2_soft_a02_no_ctpv"

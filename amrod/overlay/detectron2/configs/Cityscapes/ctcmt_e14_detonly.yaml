@@ -1,0 +1,17 @@
+# E14 — e11 with the segmentation branch switched off. ONE factor.
+#
+# Tests the last remaining explanation for the Cityscapes-C detection plateau:
+# shared-trunk negative transfer. Five hypotheses are already falsified (gate
+# closure, score-EMA drift, label starvation, threshold saturation, AMROD's
+# restoration rule); the segmentation branch is the only structural difference
+# left between us and AMROD, which is detection-only.
+#
+# CTCMT_DET_ONLY alone disables the seg loss, CT-CL, CT-CR and seg aug in
+# forward(), so nothing else needs changing. The score-EMA gate is deliberately
+# LEFT AS IN e11 so this stays a single-factor comparison.
+_BASE_: "./ctcmt_e11_bothsc_ctcrD.yaml"
+
+SOLVER:
+  CTCMT_DET_ONLY: True
+
+OUTPUT_DIR: "/workspace/output/ctta_acdc/e14_detonly"
